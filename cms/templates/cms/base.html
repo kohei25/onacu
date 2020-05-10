@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% endblock %}Django Sprint</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.0/css/bulma.min.css">
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+</head>
+
+<body>
+  <!-- NAVIGATION BAR -->
+  <header>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <!-- LOGO -->
+        <a class="navbar-item" href="/">ONACU</a>
+        <!-- HAMBURGER MENU -->
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="my-menu">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+      <div class="navbar-menu" id="my-menu">
+        <div class="navbar-end">
+          <a class="navbar-item is-grey" href="#">About</a>
+          <div class="buttons">
+            <a class="button is-info navbar-item" href="#"><strong>Sign up</strong></a>
+            <a class="button is-light navbar-item" href="#"><strong>Log in</strong></a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!-- MESSAGE -->
+  <div></div>
+  <!-- MAIN -->
+  <main>
+    {% block hero %}{% endblock %}
+    {% block tab %}{% endblock %}
+    {% block content %}{% endblock %}
+  </main>
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="content has-text-centered">
+        2020 <strong>UTokyo Project Sprint</strong>
+      </div>
+      <div class="content has-text-centered">
+        <a href="#" class="has-text-dark">About</a> |
+        <a href="#" class="has-text-dark">Contact</a> |
+        <a href="#" class="has-text-danger">Report an issue</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- FOR JAVASCRIPT -->
+  <!-- <script>
+      // < !--FOR HAMBURGER MENU-- >
+    for (const burder of document.getElementsByClassName('navbar-burger')) {
+      const menuId = burder.dataset.target;
+      const menu = document.getElementById(menuId);
+      burder.addEventListener('click', e => {
+        burder.classList.toggle('is-active');
+        menu.classList.toggle('is-active');
+      });
+    }
+    {% block extrajs %} {% endblock %}
+  </script> -->
+</body>
+
+</html>
