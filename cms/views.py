@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.views import (
-    LoginView,
+    LoginView, LogoutView,
 )
 from django.views.generic.base import TemplateView
 
@@ -18,3 +18,6 @@ class TopView(TemplateView):
 class Login(LoginView):
     form_class = LoginForm
     template_name = 'cms/login.html'
+
+class Logout(LogoutView):
+    pass
