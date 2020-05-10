@@ -1,0 +1,52 @@
+{% extends 'cms/base.html' %}
+
+{% block title %}Signup | {% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container is-mobile">
+    <h1 class="title is-4">サインアップ</h1>
+    <h2 class="subtitle is-6">Sign up</h2>
+    <hr>
+    <p class="help">アカウントをお持ちの方へ：ログインは<a href="{% url 'cms:login' }">こちら</a></p>
+    <br>
+    <form method="post" action="">
+      {% csrf_token %}
+      <div class="field">
+        <label class="label">ユーザーネーム</label>
+        <div class="control has-icons-left">
+          {{ form.username }}
+          <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">メールアドレス</label>
+        <div class="control has-icons-left">
+          {{ form.email }}
+          <span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">パスワード</label>
+        <div class="control has-icons-left">
+          {{ form.password1 }}
+          <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">パスワード（確認）</label>
+        <div class="control has-icons-left">
+          {{ form.password2 }}
+          <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
+        </div>
+      </div>
+      <div class="field">
+        <p class="control">
+          <input type="submit" value="登録" class="button is-success">
+          <input type="hidden" name="next" value="{{ next }}">
+        </p>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}
