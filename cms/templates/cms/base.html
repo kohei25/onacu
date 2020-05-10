@@ -26,17 +26,30 @@
       </div>
       <div class="navbar-menu" id="my-menu">
         <div class="navbar-end">
+          {% if user.is_authenticated %}
+          <h1>{{ user.username }}さん，こんにちは</h1>
+          <a class="navbar-item" href="{% url 'cms:logout' %}">Log out</a>
+          {% else %}
           <a class="navbar-item is-grey" href="#">About</a>
           <div class="buttons">
-            <a class="button is-info navbar-item" href="#"><strong>Sign up</strong></a>
-            <a class="button is-light navbar-item" href="#"><strong>Log in</strong></a>
+            <a class="button is-info navbar-item" href="{% url 'cms:signup' %}"><strong>Sign up</strong></a>
+            <a class="button is-light navbar-item" href="{% url 'cms:login' %}"><strong>Log in</strong></a>
           </div>
+          {% endif %}
         </div>
       </div>
     </nav>
   </header>
   <!-- MESSAGE -->
-  <div></div>
+  {% for field, errors in form.errors.items %}
+  <article class="message is-warning">
+    <div class="message-body">
+      {% for error in errors %}
+      <p><strong>{{ error }}</strong></p>
+      {% endfor %}
+    </div>
+  </article>
+  {% endfor %}
   <!-- MAIN -->
   <main>
     {% block hero %}{% endblock %}
