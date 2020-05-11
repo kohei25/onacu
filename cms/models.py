@@ -7,6 +7,7 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.mail import send_mail
 from django.db import models
+from django.urls import reverse
 from django.forms import ModelForm
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -121,7 +122,8 @@ class Event(models.Model):
   total_ticket = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(120)])
 
   def __str__(self):
-    return self.event_name
+    return self.name
+
 
 class Ticket(models.Model):
   event = models.ForeignKey(Event, on_delete=models.CASCADE)
