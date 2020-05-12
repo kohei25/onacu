@@ -27,7 +27,7 @@
         <ul>
           {% for event in coming_event_list %}
           <li>
-            <a href="#">{{ event.name }}</a>
+            <a href="{% url 'cms:eve_de' event.id %}">{{ event.name }}</a>
           </li>
           {% endfor %}
         </ul>
