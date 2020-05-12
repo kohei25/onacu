@@ -1,3 +1,4 @@
+import logging
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import (
     LoginView, LogoutView,
@@ -10,8 +11,8 @@ from django.views.generic.base import TemplateView
 # from django.views.generic import CreateView
 from django.views.generic.edit import CreateView
 
-from .models import Event
-from .forms import LoginForm, UserCreateForm, EventForm
+from .models import Event, Ticket
+from .forms import LoginForm, UserCreateForm, EventForm, EventBuyForm
 
 
 UserModel = get_user_model()
@@ -41,9 +42,8 @@ class TopView(generic.ListView):
   context_object_name = 'coming_event_list'
 
   def get_queryset(self):
+    print("####IP Address for debug-toolbar: " + self.request.META['REMOTE_ADDR'] + "###")
     return Event.objects.all()
-
-
 
 class EventCreateView(CreateView):
     model = Event
@@ -56,3 +56,51 @@ class EventCreateView(CreateView):
       event.host = self.request.user
       event.save()
       return super(EventCreateView, self).form_valid(form)
+
+class EventDetailView(generic.DetailView):
+  model = Event
+  template_name = 'cms/event_detail.html'
+
+class EventBuyView(CreateView):
+  model = Ticket
+  form_class = EventBuyForm
+  template_name = 'cms/event_buy.html'
+  # Event詳細画面にアクセスする
+  success_url = reverse_lazy('cms:top')
+
+  def form_valid(self, form):
+    ticket = form.save(commit=False)
+    ticket.event.total_ticket -= 1
+    ticket.customer = self.request.user
+    ticket.save()
+    return super(EventBuyView, self).form_valid(form)
+
+
+# def buy(request, event_id):
+#   event = get_object_or_404(Event, pk=event_id)
+#   print("event: " + str(event))
+#   try:
+#     print("try: " + str(event))
+#     ticket_purchased = event.ticket_set.get(pk=request.POST['ticket'])
+#     print("ticket_purchaced: " + str(ticket_purchased))
+#   except(KeyError, Ticket.DoesNotExist):
+#     print("**************************************")
+#     return render(request, 'cms/event_detail.html', {
+#       'event': event,
+#       'error_messege': "購入に失敗しました。",
+#     })
+#   else:
+#     print("else: " + str(event))
+#     event.total_ticket -= 1
+#     ticket_purchased.event_id = event_id
+#     ticket_purchased.customer = self.request.user
+#     ticket_purchased.save()
+#     print("return: " + str(event))
+#   # finally:
+#   #   return HttpResponseRedirect(reverse('cms:top'))
+
+
+
+
+  # def get_queryset(set):
+  #   return Event.objects()
