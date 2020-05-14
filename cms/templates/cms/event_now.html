@@ -1,0 +1,21 @@
+{% extends 'cms/base.html' %}
+
+{% load static %}
+
+{% block title %}Signup | {% endblock %}
+
+{% block content %}
+{% if user == event.host%}
+  <h1 class="title is-4">ホスト</h1>
+  <h2 class="subtitle is-6">You are Host</h2>
+  <hr>
+{% endif %}
+<video id="my-video" width="400px" autoplay muted playsinline></video>
+<p id="my-id"></p>
+<textarea id="their-id"></textarea>
+<button id="make-call">発信</button>
+<video id="their-video" width="400px" autoplay muted playsinline></video>
+<script type="text/javascript" src="{% static 'js/video.js' %}"></script>
+<script src="https://cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
+<a href="{% url 'cms:eve_de' event.id %}">詳細画面に戻る</a>
+{% endblock %}
