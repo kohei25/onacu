@@ -117,8 +117,12 @@ class Event(models.Model):
   host = models.ForeignKey('User', on_delete=models.CASCADE)
   date = models.DateTimeField('event date')
   # 1人あたりのビデオチャット時間，30s - 300s(5min)
-  personal_time = models.IntegerField(validators=[MinValueValidator(30), MaxValueValidator(300)])
-  # 120枚は,30s/回で60分の計算 
+  personal_time = models.IntegerField(validators=[MinValueValidator(10), MaxValueValidator(300)])
+  # 1人あたり購入できるチケット数
+  # person_max = models.IntegerField(default=1, validators=[MaxValueValidator(5)])
+  # 購入されたチケットの数
+  purchaced_ticket = models.IntegerField(default=0)
+  # 120枚は,30s/回で60分の計算
   total_ticket = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(120)])
 
   def __str__(self):
@@ -128,6 +132,7 @@ class Event(models.Model):
 class Ticket(models.Model):
   event = models.ForeignKey(Event, on_delete=models.CASCADE)
   customer = models.ForeignKey(User, on_delete=models.CASCADE)
+  order = models.IntegerField(default=0)
 
   def __str__(self):
-    return self.event
+    return self.event.name
