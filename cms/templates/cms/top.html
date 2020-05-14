@@ -8,9 +8,9 @@
     <div class="container">
       <h1 class="title">Title</h1>
       <h2 class="subtitle">Subtitle</h2>
-      <a href="#">
+      <a href="{% url 'cms:eve_new' %}">
         <button class="button is-info is-inverted is-outlined">
-          <strong>More Info</strong>
+          <strong>イベント作成</strong>
         </button>
       </a>
     </div>
@@ -23,9 +23,17 @@
   <div class="container">
     <div class="has-text-centered">
       <h1 class="title">Section</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat.</p>
+      {% if coming_event_list %}
+        <ul>
+          {% for event in coming_event_list %}
+          <li>
+            <a href="{% url 'cms:eve_de' event.id %}">{{ event.name }}</a>
+          </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>予定のイベントはありません。</p>
+      {% endif %}
     </div>
   </div>
 </section>

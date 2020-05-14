@@ -1,0 +1,51 @@
+{% extends 'cms/base.html' %}
+
+{% block title %}Signup | {% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container is-mobile">
+    <h1 class="title is-4">イベント作成</h1>
+    <h2 class="subtitle is-6">Create Event</h2>
+    <hr>
+    <br>
+    <form method="post" action="">
+      {% csrf_token %}
+      <div class="field">
+        <label class="label">イベント名</label>
+        <div class="control has-icons-left">
+          {{ form.name }}
+          <!-- <span class="icon is-small is-left"><i class="fas fa-user"></i></span> -->
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">開催日</label>
+        <div class="control has-icons-left">
+          {{ form.date }}
+          <!-- <span class="icon is-small is-left"><i class="fas fa-envelope"></i></span> -->
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">1人あたりの時間（秒）</label>
+        <div class="control has-icons-left">
+          {{ form.personal_time }}
+          <!-- <span class="icon is-small is-left"><i class="fas fa-lock"></i></span> -->
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">チケット発行数（枚）</label>
+        <div class="control has-icons-left">
+          {{ form.total_ticket }}
+          <!-- <span class="icon is-small is-left"><i class="fas fa-lock"></i></span> -->
+        </div>
+      </div>
+      <div class="field">
+        <p class="control">
+          <input type="submit" value="作成" class="button is-success">
+          <input type="hidden" name="next" value="{{ next }}">
+        </p>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

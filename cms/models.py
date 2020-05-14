@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.base_user import (
     AbstractBaseUser, BaseUserManager,
 )
@@ -5,9 +7,12 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.mail import send_mail
 from django.db import models
+from django.urls import reverse
+from django.forms import ModelForm
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-
+# for validators=[MinValueValidator(), MaxValueValidator()] @ IntegerField
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 # User-related
 class UserManager(BaseUserManager):
@@ -104,3 +109,30 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
 class User(AbstractUser):
     class Meta(AbstractUser.Meta):
         swappable = "AUTH_USER_MODEL"
+
+
+# event model
+class Event(models.Model):
+  name = models.CharField(max_length=100)
+  host = models.ForeignKey('User', on_delete=models.CASCADE)
+  date = models.DateTimeField('event date')
+  # 1人あたりのビデオチャット時間，30s - 300s(5min)
+  personal_time = models.IntegerField(validators=[MinValueValidator(10), MaxValueValidator(300)])
+  # 1人あたり購入できるチケット数
+  # person_max = models.IntegerField(default=1, validators=[MaxValueValidator(5)])
+  # 購入されたチケットの数
+  purchaced_ticket = models.IntegerField(default=0)
+  # 120枚は,30s/回で60分の計算
+  total_ticket = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(120)])
+
+  def __str__(self):
+    return self.name
+
+
+class Ticket(models.Model):
+  event = models.ForeignKey(Event, on_delete=models.CASCADE)
+  customer = models.ForeignKey(User, on_delete=models.CASCADE)
+  order = models.IntegerField(default=0)
+
+  def __str__(self):
+    return self.event.name
