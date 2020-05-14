@@ -10,5 +10,5 @@ urlpatterns = [
     path('signup/', views.UserCreate.as_view(), name='signup'),
     path('event/new/', views.EventCreateView.as_view(), name='eve_new'),
     path('event/<int:pk>/', views.EventDetailView.as_view(), name='eve_de'),
-    path('event/<int:pk>/buy/', views.EventBuyView.as_view(), name='buy'),
+    path('event/<int:event_id>/buy/', views.EventBuyView.as_view(), name='buy'),
 ]

@@ -70,7 +70,13 @@ class EventBuyView(CreateView):
 
   def form_valid(self, form):
     ticket = form.save(commit=False)
-    ticket.event.total_ticket -= 1
+    event = ticket.event
+    ticket.order = event.purchaced_ticket + 1
+    # print(ticket.order)
+    print(event.purchaced_ticket)
+    event.purchaced_ticket += 1
+    event.save()
+    print(event.purchaced_ticket)
     ticket.customer = self.request.user
     ticket.save()
     return super(EventBuyView, self).form_valid(form)
