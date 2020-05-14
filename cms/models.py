@@ -124,6 +124,9 @@ class Event(models.Model):
   purchaced_ticket = models.IntegerField(default=0)
   # 120枚は,30s/回で60分の計算
   total_ticket = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(120)])
+  # eventの状態を表す
+  # 0: イベント前，1: イベント前, 2: イベント中，3:イベント後
+  status = models.IntegerField(default=0)
 
   def __str__(self):
     return self.name
