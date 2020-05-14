@@ -18,6 +18,10 @@
     <a href="{% url 'cms:buy' event.id%}">
         <strong>購入する</strong>
     </a>
+    {% else %}
+      <a href="#">
+        <strong>イベントを開催する</strong>
+      </a>
     {% endif %}
     <!-- <form method="post" action="">
       {% csrf_token %}
