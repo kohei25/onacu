@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.views import generic
-from django.views.generic.base import TemplateView
+from django.views.generic import TemplateView
 # from django.views.generic import CreateView
 from django.views.generic.edit import CreateView
 
@@ -82,6 +82,14 @@ class EventBuyView(CreateView):
     return super(EventBuyView, self).form_valid(form)
 
 
+def event_now(request, pk):
+  event = get_object_or_404(Event, pk=pk)
+  if request.user == event.host:
+    event.status +=1
+    event.save()
+  return render(request, 'cms/event_now.html', {'event': event})
+
+#   def get_context_data(self, **)
 # def buy(request, event_id):
 #   event = get_object_or_404(Event, pk=event_id)
 #   print("event: " + str(event))
