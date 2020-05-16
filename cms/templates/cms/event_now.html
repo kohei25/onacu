@@ -10,11 +10,28 @@
   <h2 class="subtitle is-6">You are Host</h2>
   <hr>
 {% endif %}
-<video id="my-video" width="400px" autoplay muted playsinline></video>
-<p id="my-id"></p>
-<textarea id="their-id"></textarea>
-<button id="make-call">発信</button>
-<video id="their-video" width="400px" autoplay muted playsinline></video>
+<div class="container">
+  <div id="timer"></div>
+  <button id="start">start</button>
+  <button id="reset">reset</button>
+  <h1 class="heading">P2P Media example</h1>
+  <p class="note">
+    Enter remote peer ID to call.
+  </p>
+  <div class="p2p-media">
+    <div class="remote-stream">
+      <video id="js-remote-stream"></video>
+    </div>
+    <div class="local-stream">
+      <video id="js-local-stream"></video>
+      <p>Your ID: <span id="js-local-id"></span></p>
+      <input type="text" placeholder="Remote Peer ID" id="js-remote-id">
+      <button id="js-call-trigger">Call</button>
+      <button id="js-close-trigger">Close</button>
+    </div>
+  </div>
+  <p class="meta" id="js-meta"></p>
+</div>
 <script type="text/javascript" src="{% static 'js/video.js' %}"></script>
 <script src="https://cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
 <a href="{% url 'cms:eve_de' event.id %}">詳細画面に戻る</a>
