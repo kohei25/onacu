@@ -14,7 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
+    'sass_processor',
     'cms.apps.CmsConfig',
 ]
 
@@ -123,9 +124,22 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-
 STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'cms.User'
 LOGIN_URL = 'cms:login'
 LOGIN_REDIRECT_URL = 'cms:top'
 LOGOUT_REDIRECT_URL = 'cms:top'
+
+# SASS
+SASS_PROCESSOR_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+SASS_PROCESSOR_AUTO_INCLUDE = False
+SASS_PROCESSOR_INCLUDE_DIRS = [
+    os.path.join(PROJECT_ROOT, 'static/scss'),
+    os.path.join(PROJECT_ROOT, 'node_modules'),
+]
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'sass_processor.finders.CssFinder',
+]
+SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r'^.+\.scss$'
