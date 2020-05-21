@@ -36,6 +36,28 @@ class UserCreate(CreateView):
         self.object = user
         return HttpResponseRedirect(self.get_success_url())
 
+# Ajax
+# def ticketGet(request):
+#   userPeerId = request.GET.get('userPeerId', None);
+#   ticketOrdder = request.GET.get('ticketOrder', None);
+#   print()
+#   data = {
+#     'userPeerId': userPeerId,
+#     'ticketOrdder': ticketOrder
+#   }
+#   return JsonResponse(data)
+
+# def ticketPost(request):
+#   userPeerId = request.POST.get('userPeerId', None);
+#   ticketId = request.POST.get('ticketId', None);
+#   ticket = get_object_or_404(Ticket, pk=ticketId);
+#   try:
+#   else:
+#     ticket.peerId = 
+
+
+
+
 # Topページ
 class TopView(generic.ListView):
   template_name = 'cms/top.html'
