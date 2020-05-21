@@ -131,11 +131,11 @@ class Event(models.Model):
   def __str__(self):
     return self.name
 
-
 class Ticket(models.Model):
   event = models.ForeignKey(Event, on_delete=models.CASCADE)
   customer = models.ForeignKey(User, on_delete=models.CASCADE)
   order = models.IntegerField(default=0)
+  peerId = models.CharField(default="0", max_length=16)
 
   def __str__(self):
     return self.event.name
