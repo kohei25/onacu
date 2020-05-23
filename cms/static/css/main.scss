@@ -1,0 +1,175 @@
+body{
+  font-size: 1em;
+  // width: 800px;
+  margin: 0 auto;
+  // padding: 0 20px;
+  min-height: 100vh;
+  display: grid;
+  grid-template: 
+    "... ...... ...... ...... ...... ...... ..."
+    "... header header header header header ..." 80px
+    "... ...... ...... ...... ...... ...... ..." 
+    "... today  ...... carous ...... tomorr ..." 400px
+    "... ...... ...... ...... ...... ...... ..." 
+    "... left   ...... center ...... right  ..." 1fr
+    "... ...... ...... ...... ...... ...... ..." 
+    "... footer footer footer footer footer ..." 100px
+    "... ...... ...... ...... ...... ...... ..."
+    /0   1fr    auto   2fr     auto  1fr    0;
+}
+
+header{
+  grid-area: header;
+  background-color: #CAF1FA;
+  opacity: 0.5;
+  height: 100%;
+  display: grid;
+  grid-template:
+    "... title ..... person ..."
+    /50px 400px auto 200px 50px;
+
+  .title{
+    grid-area: title;
+    font-size: 40px;
+    line-height: 80px;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+
+  .sub_title{
+    margin-left: 20px;
+  }
+
+  .person{
+    grid-area: person;
+    line-height: 80px;
+  }
+}
+
+.today{
+  grid-area: today;
+  background-color: #d4ecf3;
+  display: grid;
+  grid-template:
+    ".....   " 50px
+    "schedule" 
+    ".....   ";
+
+  .schedule{
+    grid-area: schedule;
+    font-size: 1rem;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.carousel{
+  grid-area: carous;
+
+  .d-block{
+    height: auto;
+    width: auto;
+    max-width: 2fr;
+    max-height: 400px;
+  }
+}
+
+.tomorrow{
+  grid-area: tomorr;
+  background-color: #d4ecf3;
+  display: grid;
+  grid-template:
+    ".....   " 50px
+    "schedule" 
+    ".....   ";
+
+  .schedule{
+    grid-area: schedule;
+    font-size: 1rem;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+nav{
+  grid-area: left;
+  background-color: #f5fbfe;
+  display: grid;
+  grid-template:
+    " .... " 50px
+    "search"
+    " .... ";
+
+  .search{
+    grid-area: search;
+    font-size: 1.5rem;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+main{
+  grid-area: center;
+  width: 100%;
+  display: grid;
+  grid-template:
+    ".....     " 50px
+    "event_info" 50px
+    ".....     " 50px
+    "event_con " 1fr
+    ".....     "
+    ;
+
+  .event_info{
+    grid-area: event_info;
+    font-size: 1.5rem;
+    // display: inline-block;
+    width: 100%;
+    text-align: center;
+  }
+
+  .event_container{
+    grid-area: event_con;
+    // display: grid;
+    // grid-template:
+    //   "card card card";
+
+    // .card{
+    //   grid-area: card;
+    // }
+  }
+}
+
+aside{
+  grid-area: right;
+  background-color: #f5fbfe;
+  display: grid;
+  grid-template:
+    ".....   " 50px
+    "schedule" 
+    ".....   ";
+
+  .schedule{
+    grid-area: schedule;
+    font-size: 1.5rem;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+footer{
+  grid-area: footer;
+  background-color: #f5fbfe;
+
+}
+
+@media screen and (max-width: 1000px){
+  body{
+    grid-template:
+      "header" 150px
+      "left  "
+      "right "
+      "center" 1fr
+      "footer" 100px
+      ;
+  }
+}

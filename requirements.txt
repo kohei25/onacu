@@ -1,3 +1,8 @@
+# pip install したい物 = 読み込みたいパッケージ
 Django ~= 2.2 #Compatible release. Same as >= 2.2, == 2.*
 psycopg2>=2.7,<3.0  #config PostgresSQL
 django-debug-toolbar==2.2
+
+libsass
+django-compressor
+django-sass-processor
