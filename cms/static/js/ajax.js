@@ -42,20 +42,14 @@ const Peer = window.Peer;
     }
   }
 
-  // Register caller handler
   function makeCalll(remotePeerId){
-  // callTrigger.on("click", () => {
-    // Note that you need to ensure the peer has connected to signaling server
-    // before using methods of peer instance.
     if (!peer.open) {
       return;
     }
-    // console.log(remoteId.value)
 
     const mediaConnection = peer.call(remotePeerId, localStream);
 
     mediaConnection.on("stream", async function(stream){
-      // Render remote stream for caller
       remoteVideo.get(0).srcObject = stream;
       remoteVideo.get(0).playsInline = true;
       await remoteVideo.get(0).play().catch(console.error);
@@ -85,22 +79,17 @@ const Peer = window.Peer;
     console.log(remote_id)
   });
 
+  // host function!!
   $("#js-start").click(function(){
-    // console.log("like")
     let ticketOrder = $("#ticketOticketOrder").attr("value");
-
-    for(var i=0; i <1; i ++){
-      ajax(ticketOrder);
+    for(var i=1; i <1; i ++){
+      await getPeerId(ticketOrder);
     }
-
   })  
 
 
   function getPeerId(ticketOrder) {
     let peerId = fetchRemoteId();
-    console.log("check");
-    console.log(peerId);
-
     $.ajax({
       url: '/ajax/ticket/get',
       data: {
@@ -109,13 +98,13 @@ const Peer = window.Peer;
       },
       dataType: 'json',
       success: function(data){
-        if ( nowOrder == data.ticketOrder){
-          // つなげる
-          console.log(data)
-          // makeCalll(data.userPeerId)
-        }else{
-          // 待ち時間，人数を変える
-        }
+        makeCalll(data.userPeerId)
+        // if ( nowOrder == data.ticketOrder){
+        //   つなげる
+        //   console.log(data)
+        // }else{
+        //   待ち時間，人数を変える
+        // }
       }
     })
   }

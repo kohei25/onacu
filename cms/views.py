@@ -41,7 +41,7 @@ class UserCreate(CreateView):
 # Ajax
 def ticketGet(request):
   eventId = request.GET.get('eventId', None);
-  orderId = request.GET.get('orderId', None);
+  orderId = request.GET.get('ticketOrder', None);
   data = {
     'userPeerId': Ticket.objects.get(event_id = eventId, order = orderId).peerId,
   }
@@ -58,12 +58,6 @@ def ticketPost(request):
     'status': 'success_ajax',
   }
   return JsonResponse(data)
-  # try:
-  # else:
-  #   # ticket.peerId = 
-
-
-
 
 # Topページ
 class TopView(generic.ListView):
