@@ -4,10 +4,8 @@ const Peer = window.Peer;
   // videochat
   const localVideo = $("#js-local-stream");
   const localId = $("#js-local-id");
-  const callTrigger = $("#js-call-trigger");
   const closeTrigger = $("#js-close-trigger");
   const remoteVideo = $("#js-remote-stream");
-  const remoteId = $("#js-remote-id");
   const meta = $("#js-meta");
   const sdkSrc = document.querySelector("script[src*=skyway]");
 
@@ -34,15 +32,7 @@ const Peer = window.Peer;
     debug: 3,
   });
 
-  function fetchRemoteId() {
-    if($("#js-user").length){
-      console.log("is_user")
-      var remote_id = $("#js-local-id").text()
-      return remote_id
-    }
-  }
-
-  function makeCalll(remotePeerId){
+  function makeCalll(remotePeerId, ticketOrder){
     if (!peer.open) {
       return;
     }
@@ -63,55 +53,17 @@ const Peer = window.Peer;
 
     function closeFunc() {
       mediaConnection.close(true);
+      ticketOrder += 1
+      getPeerId(ticketOrder);
     }
 
     // Todo:4000を変数（personal time）にする
     // 4病後に回線を切断する．
     setTimeout(closeFunc, 4000);
-
-    // closeTrigger.on('click', () => mediaConnection.close(true));
   };
 
-  peer.on("open",function(){
-    localId.text(peer.id)
-    var remote_id = fetchRemoteId();
-    console.log("suc");
-    console.log(remote_id)
-  });
-
-  // host function!!
-  $("#js-start").click(function(){
-    let ticketOrder = $("#ticketOticketOrder").attr("value");
-    for(var i=1; i <1; i ++){
-      await getPeerId(ticketOrder);
-    }
-  })  
-
-
-  function getPeerId(ticketOrder) {
-    let peerId = fetchRemoteId();
-    $.ajax({
-      url: '/ajax/ticket/get',
-      data: {
-        'userPeerId': peerId,
-        'ticketOrder':  ticketOrder,
-      },
-      dataType: 'json',
-      success: function(data){
-        makeCalll(data.userPeerId)
-        // if ( nowOrder == data.ticketOrder){
-        //   つなげる
-        //   console.log(data)
-        // }else{
-        //   待ち時間，人数を変える
-        // }
-      }
-    })
-  }
-
-
-  function postPeerId(){
-    let peerId = fetchRemoteId();
+  function postPeerId(peerId) {
+    let ticketId = $("#js-ticket").attr("value")
     $.ajax({
       url: '/ajax/ticket/post',
       data: {
@@ -119,14 +71,38 @@ const Peer = window.Peer;
         'ticketId': ticketId,
       },
       dataType: 'json',
-      success: function(data){
+      success: function (data) {
 
       }
     })
   }
-  
 
+  // User側のaction
+  peer.on("open", function () {
+    if ($("#js-user").length) {
+      postPeerId(peer.id);
+    }
+  });
 
+  // host function!!
+  // Host側のaction
+  $("#js-start").click(function(){
+    getPeerId(1)
+  })
+
+  function getPeerId(ticketOrder) {
+    let eventId = $("#js-host").attr("value");
+    $.ajax({
+      url: '/ajax/ticket/get',
+      data: {
+        'eventId': eventId,
+        'ticketOrder': ticketOrder,
+      },
+      dataType: 'json',
+    }).done(function (data) {
+      makeCalll(data.userPeerId, ticketOrder)
+    })
+  }
 
   // Register callee handler
   peer.on("call", function(mediaConnection){
