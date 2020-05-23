@@ -3,6 +3,9 @@
 NG: docker-compose run --rm web python3 manage.py mig  
 OK: docker-compose up
 
+NG: docker-compose up
+OK: docker-compose run --rm --service-ports web
+
 ## Djangoコマンドの扱い方
 
 Django: django-admin startapp app  
