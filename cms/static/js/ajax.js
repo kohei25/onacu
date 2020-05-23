@@ -2,10 +2,10 @@ const Peer = window.Peer;
 // jquery
 (async function main() {
   // videochat
-  const localVideo = $("#js-local-stream");
+  const localVideo = $("#localVideo");
   const localId = $("#js-local-id");
   const closeTrigger = $("#js-close-trigger");
-  const remoteVideo = $("#js-remote-stream");
+  const remoteVideo = $("#remoteVideo");
   const meta = $("#js-meta");
   const sdkSrc = document.querySelector("script[src*=skyway]");
 

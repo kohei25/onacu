@@ -15,14 +15,11 @@
   <hr>
 {% endif %}
 <div class="container">
-  <!-- <h1 class="hea -->
-  <div class="p2p-media">
-    <div class="remote-stream">
-      <video id="js-remote-stream"></video>
-    </div>
-    <div class="local-stream">
-      <video id="js-local-stream"></video>
-    </div>
+  <div class="remoteContainer">
+    <video id="remoteVideo"></video>
+  </div>
+  <div class="localContainer">
+    <video id="localVideo"></video>
   </div>
   {% if user == event.host %}
     <button id="js-start">開始する</button>
@@ -33,7 +30,6 @@
 <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
   crossorigin="anonymous"></script>
 <script src="https://cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
-<!-- <script type="text/javascript" src="{% static 'js/video.js' %}"></script> -->
 <script type="text/javascript" src="{% static 'js/ajax.js' %}"></script>
 <a href="{% url 'cms:eve_de' event.id %}">詳細画面に戻る</a>
 {% endblock %}
