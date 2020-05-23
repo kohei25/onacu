@@ -42,14 +42,17 @@ class UserCreate(CreateView):
 def ticketGet(request):
   eventId = request.GET.get('eventId', None);
   orderId = request.GET.get('ticketOrder', None);
+  # ipdb.set_trace()
   data = {
     'userPeerId': Ticket.objects.get(event_id = eventId, order = orderId).peerId,
+    'orderId': orderId,
   }
   return JsonResponse(data)
 
 def ticketPost(request):
   userPeerId = request.GET.get('userPeerId', None);
   ticketId = request.GET.get('ticketId', None);
+  # ipdb.set_trace()
   set_ticket = Ticket.objects.get(pk=ticketId)
   set_ticket.peerId = userPeerId
   set_ticket.save()
