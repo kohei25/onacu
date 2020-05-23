@@ -68,6 +68,16 @@ class TopView(generic.ListView):
     print("####IP Address for debug-toolbar: " + self.request.META['REMOTE_ADDR'] + "###")
     return Event.objects.all()
 
+class Top1View(generic.ListView):
+  template_name = 'cms/top1.html'
+  context_object_name = 'coming_event_list'
+
+  def get_queryset(self):
+    # print("####IP Address for debug-toolbar: " + self.request.META['REMOTE_ADDR'] + "###")
+    box = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    return box
+
+
 class EventCreateView(CreateView):
     model = Event
     form_class = EventForm
