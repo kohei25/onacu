@@ -83,7 +83,7 @@ const Peer = window.Peer;
   $("#js-start").click(function(){
     let ticketOrder = $("#ticketOticketOrder").attr("value");
     for(var i=1; i <1; i ++){
-      await getPeerId(ticketOrder);
+      getPeerId(ticketOrder);
     }
   })  
 
