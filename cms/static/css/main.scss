@@ -1,7 +1,9 @@
 @import "./bootstrap-custom";
 
+$theme-color: #C4E1F2;
+
 .navbar {
-  background-color: #C4E1F2;
+  background-color: $theme-color;
 }
 
 .navbar-brand {
@@ -9,11 +11,11 @@
 }
 
 .hero {
-  background-color: #d9ecf7;
+  background-color: lighten($theme-color, 5%);
 }
 
 .events {
-  background-color: #eef7fb;
+  background-color: lighten($theme-color, 10%);
 }
 
 .carousel-item-image-outer {
