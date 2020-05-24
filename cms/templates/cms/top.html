@@ -4,7 +4,7 @@
 <div class="hero">
   <div class="container">
     <div class="row">
-      <div class="col-12 col-md-8 my-3">
+      <div class="col-12 col-md-8 mt-3">
         {% if user.is_authenticated %}
         <h3>あなたの参加予定イベント</h3>
         <ul>
@@ -20,7 +20,21 @@
         {% endif %}
       </div>
       <div class="col-12 col-md-4 my-3">
-        カレンダー
+        <h3>イベントを探す</h3>
+        <div id="datetimepicker"></div>
+        <script>
+          $(function () {
+             $('#datetimepicker').datetimepicker({
+                format: 'L',
+                minDate: new Date(),
+                inline: true,
+                locale: 'ja',
+            });
+            $('#datetimepicker').on('change.datetimepicker', ({date, oldDate}) => {
+              location.assign('/?date='+date.format('YYYY-MM-DD'));
+            });
+          });
+        </script>
       </div>
     </div>
   </div>
@@ -36,8 +50,7 @@
       {% for event in coming_event_list %}
       <div class="col">
         <div class="card mb-3">
-          <img src="https://placehold.jp/640x360.jpg"
-            class="card-img-top" alt="">
+          <img src="https://placehold.jp/640x360.jpg" class="card-img-top" alt="">
           <div class="card-body">
             <h4 class="card-title">{{ event.name }}</h4>
             <a href="{% url 'cms:eve_de' event.id %}" class="btn btn-primary">詳細</a>
