@@ -30,14 +30,9 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'cms:eve_new' %}">イベント作成</a>
-          </li>
-        </ul>
-      <div class="ml-auto mr-3">
+        <div class="ml-auto mr-3">
           {% if user.is_authenticated %}
-          <span class="navbar-text">{{ user.username }}</span>
+          <span class="navbar-text">{{ user.username }}さん</span>
           <a class="btn btn-primary" href="#">マイページ</a>
           <a class="btn btn-primary" href="{% url 'cms:logout' %}">ログアウト</a>
           {% else %}
@@ -55,7 +50,7 @@
       <div>{{ error }}</div>
       {% endfor %}
     </div>
-   </div>
+  </div>
   {% endfor %}
   <main>
     {% block hero %}{% endblock %}
