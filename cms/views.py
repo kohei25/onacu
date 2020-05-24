@@ -1,13 +1,15 @@
 import logging
+import ipdb
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import (
     LoginView, LogoutView,
 )
 from django.http import HttpResponseRedirect
+from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.views import generic
-from django.views.generic.base import TemplateView
+from django.views.generic import TemplateView
 # from django.views.generic import CreateView
 from django.views.generic.edit import CreateView
 
@@ -35,6 +37,27 @@ class UserCreate(CreateView):
         login(self.request, user)
         self.object = user
         return HttpResponseRedirect(self.get_success_url())
+
+# Ajax
+def ticketGet(request):
+  eventId = request.GET.get('eventId', None);
+  orderId = request.GET.get('ticketOrder', None);
+  data = {
+    'userPeerId': Ticket.objects.get(event_id = eventId, order = orderId).peerId,
+  }
+  return JsonResponse(data)
+
+def ticketPost(request):
+  userPeerId = request.GET.get('userPeerId', None);
+  ticketId = request.GET.get('ticketId', None);
+  set_ticket = Ticket.objects.get(pk=ticketId)
+  set_ticket.peerId = userPeerId
+  set_ticket.save()
+  # ipdb.set_trace()
+  data = {
+    'status': 'success_ajax',
+  }
+  return JsonResponse(data)
 
 # Topページ
 class TopView(generic.ListView):
@@ -71,6 +94,7 @@ class EventDetailView(generic.DetailView):
   model = Event
   template_name = 'cms/event_detail.html'
 
+
 class EventBuyView(CreateView):
   model = Ticket
   form_class = EventBuyForm
@@ -92,6 +116,18 @@ class EventBuyView(CreateView):
     return super(EventBuyView, self).form_valid(form)
 
 
+def event_now(request, pk):
+  event = get_object_or_404(Event, pk=pk)
+  if request.user == event.host:
+    event.status +=1
+    event.save()
+  else:
+    ticket = Ticket.objects.get(customer=request.user)
+    return render(request, 'cms/event_now.html', {'event': event, 'ticket': ticket})
+  return render(request, 'cms/event_now.html', {'event': event})
+  
+
+#   def get_context_data(self, **)
 # def buy(request, event_id):
 #   event = get_object_or_404(Event, pk=event_id)
 #   print("event: " + str(event))

@@ -124,15 +124,20 @@ class Event(models.Model):
   purchaced_ticket = models.IntegerField(default=0)
   # 120枚は,30s/回で60分の計算
   total_ticket = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(120)])
+  # eventの状態を表す
+  # 0: イベント前，1: イベント前, 2: イベント中，3:イベント後
+  status = models.IntegerField(default=0)
+  # 繋いでるチャットのチケット番号
+  order = models.IntegerField(default=0)
 
   def __str__(self):
-    return self.name
-
+    return self.name + "," + self.host.username
 
 class Ticket(models.Model):
   event = models.ForeignKey(Event, on_delete=models.CASCADE)
   customer = models.ForeignKey(User, on_delete=models.CASCADE)
   order = models.IntegerField(default=0)
+  peerId = models.CharField(default="0", max_length=16)
 
   def __str__(self):
-    return self.event.name
+    return  "event: " + self.event.name + ", customer: " + self.customer.username + ", peerId: " + self.peerId

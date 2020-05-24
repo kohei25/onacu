@@ -1,40 +1,129 @@
 {% extends 'cms/base.html' %}
 
-{% block title %}Home | {% endblock %}
-
 {% block hero %}
-<section class="hero is-medium is-info is-bold">
-  <div class="hero-body">
-    <div class="container">
-      <h1 class="title">Title</h1>
-      <h2 class="subtitle">Subtitle</h2>
-      <a href="{% url 'cms:eve_new' %}">
-        <button class="button is-info is-inverted is-outlined">
-          <strong>イベント作成</strong>
-        </button>
-      </a>
+<div class="hero">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-lg-6 order-lg-2">
+        <div class="carousel">
+          <div id="carousel" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+              {% if coming_event_list %}
+              {% for event in coming_event_list %}
+              <li data-target="#carousel" data-slide-to="{{ forloop.counter0 }}"{% if forloop.counter0 == 0 %} class="active"{% endif %}></li>
+              {% endfor %}
+              {% else %}
+              <li data-target="#carousel" data-slide-to="0" class="active"></li>
+              <li data-target="#carousel" data-slide-to="1"></li>
+              {% endif %}
+            </ol>
+            <div class="carousel-inner">
+              {% if coming_event_list %}
+              {% for event in coming_event_list %}
+              <div class="carousel-item{% if forloop.counter0 == 0 %} active{% endif %}">
+                <a href="{% url 'cms:eve_de' event.id %}">
+                  <div class="carousel-item-image-outer">
+                    <img src="https://placehold.jp/640x360.jpg"
+                    class="carousel-item-image" alt="{{ event.name }}">
+                  </div>
+                  <div class="carousel-caption d-none d-md-block">
+                    <h5>{{ event.name }}</h5>
+                  </div>
+                  </a>
+              </div>
+              {% endfor %}
+              {% else %}
+              <div class="carousel-item active">
+                <a href="#">
+                  <div class="carousel-item-image-outer">
+                    <img src="https://hirateyurina.jp/images/14/ee2/6def8ccb4d0e3bc9273fa97c99149/800_800_102400.jpg"
+                    class="carousel-item-image" alt="">
+                  </div>
+                  <div class="carousel-caption d-none d-md-block">
+                    <h5>平手友梨奈 握手会</h5>
+                  </div>
+                  </a>
+              </div>
+              <div class="carousel-item">
+                <a href="#">
+                  <div class="carousel-item-image-outer">
+                    <img src="https://hirateyurina.jp/images/14/688/2195c0fbb842729d83b6595309102/800_800_102400.jpg"
+                    class="carousel-item-image" alt="">
+                  </div>
+                  <div class="carousel-caption d-none d-md-block">
+                    <h5>平手友梨奈 握手会</h5>
+                  </div>
+                  </a>
+              </div>
+              {% endif %}
+            </div>
+            <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">前へ</span>
+            </a>
+            <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">次へ</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-3 order-lg-1 mt-3">
+        <h3>今日の予定</h3>
+      </div>
+      <div class="col-12 col-lg-3 order-lg-3 mt-3">
+        <h3>明日の予定</h3>
+      </div>
     </div>
   </div>
-</section>
+</div>
 {% endblock %}
 
 {% block content %}
-<section class="section is-medium">
-  <div class="container">
-    <div class="has-text-centered">
-      <h1 class="title">Section</h1>
-      {% if coming_event_list %}
-        <ul>
-          {% for event in coming_event_list %}
-          <li>
-            <a href="{% url 'cms:eve_de' event.id %}">{{ event.name }}</a>
-          </li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        <p>予定のイベントはありません。</p>
-      {% endif %}
+<div class="events">
+  <div class="container pt-3">
+    <h3>イベント情報</h3>
+    {% if coming_event_list %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+      {% for event in coming_event_list %}
+      <div class="col">
+        <div class="card mb-3">
+          <img src="https://placehold.jp/640x360.jpg"
+            class="card-img-top" alt="">
+          <div class="card-body">
+            <h4 class="card-title">{{ event.name }}</h4>
+            <a href="{% url 'cms:eve_de' event.id %}" class="btn btn-primary">詳細</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      <div class="col">
+        <div class="card mb-3">
+          <img src="https://cdn.keyakizaka46.com/images/14/a6e/f04ad5cfc4f2b7d55dc6c3e37c925-01.jpg"
+            class="card-img-top" alt="">
+          <div class="card-body">
+            <h4 class="card-title">渡邉理佐 握手会</h4>
+            <dl class="card-text row">
+              <dt class="col-3">日時</dt>
+              <dd class="col-9">2020年5月30日 12:00</dd>
+              <dt class="col-3">時間</dt>
+              <dd class="col-9">10秒</dd>
+              <dt class="col-3">料金</dt>
+              <dd class="col-9">&yen;500</dd>
+            </dl>
+            <a href="#" class="btn btn-primary">詳細</a>
+          </div>
+        </div>
+      </div>
     </div>
+    {% else %}
+    <p>予定のイベントはありません。</p>
+    {% endif %}
   </div>
-</section>
+</div>
+<div class="schedule py-3">
+  <div class="container">
+    <h3>参加予定</h3>
+  </div>
+</div>
 {% endblock %}
