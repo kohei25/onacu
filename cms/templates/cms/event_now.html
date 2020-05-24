@@ -1,35 +1,48 @@
-{% extends 'cms/base.html' %}
-
 {% load static %}
+{% load sass_tags %}
 
-{% block title %}Signup | {% endblock %}
+<!DOCTYPE html>
+<html>
 
-{% block content %}
-{% if user == event.host%}
-  <h1 class="title is-4" id="js-host" value="{{ event.id }}">ホスト</h1>
-  <h2 class="subtitle is-6">You are Host</h2>
-  <hr>
-{% else %}
-  <h1 class="title is-4 user" id="js-user" value="user">ユーザー</h1>
-  <h2 class="subtitle is-6" id="js-ticket" value="{{ ticket.id }}">You are user.</h2>
-  <hr>
-{% endif %}
-<div class="container">
-  <div class="remoteContainer">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% endblock %}ONACU</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}">
+  <!-- <link rel="stylesheet" type="text/css" href="{% sass_src 'css/main.scss' %}"> -->
+  <link rel="stylesheet" type="text/css" href="{% sass_src 'css/event.scss' %}">
+  <!-- <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script> -->
+</head>
+
+<body>
+  <header>
+    {% if user == event.host%}
+    <h1 class="title is-4" id="js-host" value="{{ event.id }}">ホスト</h1>
+    <h2 class="subtitle is-6">You are Host</h2>
+    <hr>
+    {% else %}
+    <h1 class="title is-4 user" id="js-user" value="user">ユーザー</h1>
+    <h2 class="subtitle is-6" id="js-ticket" value="{{ ticket.id }}">You are user.</h2>
+    <hr>
+    {% endif %}
+  </header>
+  <main>
     <video id="remoteVideo"></video>
-  </div>
-  <div class="localContainer">
+  </main>
+  <footer>
+    <div class="message">
+      message
+    </div>
     <video id="localVideo"></video>
-  </div>
-  {% if user == event.host %}
-    <button id="js-start">開始する</button>
-    <p id="ticketOrder" value="1">残り人数</p>
-  {% endif %}
-  <p class="meta" id="js-meta"></p>
-</div>
-<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-  crossorigin="anonymous"></script>
-<script src="https://cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
-<script type="text/javascript" src="{% static 'js/ajax.js' %}"></script>
-<a href="{% url 'cms:eve_de' event.id %}">詳細画面に戻る</a>
-{% endblock %}
+    {% if user == event.host %}
+      <button id="js-start">開始する</button>
+    {% endif %}
+  </footer>
+  <!-- ***** script ********************************************************************* -->
+  <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
+  <script type="text/javascript" src="{% static 'js/ajax.js' %}"></script>
+</body>
+
+</html>
