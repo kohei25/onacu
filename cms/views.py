@@ -63,13 +63,18 @@ def ticketPost(request):
   return JsonResponse(data)
 
 # Topページ
+def topView(request):
+  events = Event.objects.all()
+  return render(request, 'cms/top.html', {'events': events})
+
+
+
 class TopView(generic.ListView):
   template_name = 'cms/top.html'
   context_object_name = 'coming_event_list'
 
   def get_queryset(self):
-    print("####IP Address for debug-toolbar: " + self.request.META['REMOTE_ADDR'] + "###")
-    return Event.objects.all()
+    return Event.objects.filter(status=0)
 
 class Top1View(generic.ListView):
   template_name = 'cms/top1.html'
@@ -122,40 +127,16 @@ class EventBuyView(CreateView):
 def event_now(request, pk):
   event = get_object_or_404(Event, pk=pk)
   if request.user == event.host:
-    event.status +=1
+    event.status = 1
     event.save()
+    ticket = Ticket.objects.filter(event_id=event.id).last()
   else:
-    ticket = Ticket.objects.get(customer=request.user)
-    return render(request, 'cms/event_now.html', {'event': event, 'ticket': ticket})
-  return render(request, 'cms/event_now.html', {'event': event})
-  
+    ticket = Ticket.objects.get(customer=request.user, event_id=event.id)
+    # ipdb.set_trace()
+  return render(request, 'cms/event_now.html', {'event': event, 'ticket': ticket})
 
-#   def get_context_data(self, **)
-# def buy(request, event_id):
-#   event = get_object_or_404(Event, pk=event_id)
-#   print("event: " + str(event))
-#   try:
-#     print("try: " + str(event))
-#     ticket_purchased = event.ticket_set.get(pk=request.POST['ticket'])
-#     print("ticket_purchaced: " + str(ticket_purchased))
-#   except(KeyError, Ticket.DoesNotExist):
-#     print("**************************************")
-#     return render(request, 'cms/event_detail.html', {
-#       'event': event,
-#       'error_messege': "購入に失敗しました。",
-#     })
-#   else:
-#     print("else: " + str(event))
-#     event.total_ticket -= 1
-#     ticket_purchased.event_id = event_id
-#     ticket_purchased.customer = self.request.user
-#     ticket_purchased.save()
-#     print("return: " + str(event))
-#   # finally:
-#   #   return HttpResponseRedirect(reverse('cms:top'))
-
-
-
-
-  # def get_queryset(set):
-  #   return Event.objects()
+def event_finish(request, pk):
+  event = get_object_or_404(Event, pk=pk)
+  event.status = 2
+  event.save()
+  return render(request, 'cms/event_finish.html')
