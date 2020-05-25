@@ -116,8 +116,8 @@ class Event(models.Model):
   name = models.CharField(max_length=100)
   host = models.ForeignKey('User', on_delete=models.CASCADE)
   date = models.DateTimeField('event date')
-  # 1人あたりのビデオチャット時間，30s - 300s(5min)
-  personal_time = models.IntegerField(validators=[MinValueValidator(10), MaxValueValidator(300)])
+  # 1人あたりのビデオチャット時間，5s - 300s(5min)
+  personal_time = models.IntegerField(validators=[MinValueValidator(5), MaxValueValidator(300)])
   # 1人あたり購入できるチケット数
   # person_max = models.IntegerField(default=1, validators=[MaxValueValidator(5)])
   # 購入されたチケットの数
@@ -127,8 +127,6 @@ class Event(models.Model):
   # eventの状態を表す
   # 0: イベント前，1: イベント前, 2: イベント中，3:イベント後
   status = models.IntegerField(default=0)
-  # 繋いでるチャットのチケット番号
-  order = models.IntegerField(default=0)
 
   def __str__(self):
     return self.name + "," + self.host.username
