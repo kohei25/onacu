@@ -56,6 +56,15 @@
   {% endfor %}
   <!-- MAIN -->
 <main>
+  <a href="{% url 'cms:eve_new' %}">
+    <button type="button" class="btn btn-success">イベント作成</button>
+  </a>
+  <h1>所持チケット</h1>
+  {% if tickets%}
+    {% for ticket in tickets %}
+      <p>{{ ticket.event.name }}</p>
+    {% endfor %}
+  {% endif %}
   <h1>イベント情報</h1>
   {% if events %}
   <div id="cards-container">
@@ -69,13 +78,13 @@
         <div class="date">{{ event.date|date:"n/d f" }}〜</div>
         <div class="time">{{ event.personal_time }}秒/枚</div>
         {% if event.status == 2 %}
-        <a class="detail" href="{% url 'cms:eve_de' event.id %}">
-          <button type="button" class="btn btn-info">詳細</button>
-        </a>
-        {% else %}
         <div class="detail">
           <button type="button" disabled class="btn btn-danger">終了</button>
         </div>
+        {% else %}
+        <a class="detail" href="{% url 'cms:eve_de' event.id %}">
+          <button type="button" class="btn btn-info">詳細</button>
+        </a>
         {% endif %}
       </div>
     </div>

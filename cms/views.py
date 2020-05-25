@@ -6,7 +6,7 @@ from django.contrib.auth.views import (
 )
 from django.http import HttpResponseRedirect
 from django.http.response import JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django.views.generic import TemplateView
@@ -65,7 +65,8 @@ def ticketPost(request):
 # Topページ
 def topView(request):
   events = Event.objects.all()
-  return render(request, 'cms/top.html', {'events': events})
+  have_tickets = Ticket.objects.filter(customer_id=request.user.id)
+  return render(request, 'cms/top.html', {'events': events, 'tickets':have_tickets})
 
 
 
@@ -103,25 +104,36 @@ class EventDetailView(generic.DetailView):
   template_name = 'cms/event_detail.html'
 
 
-class EventBuyView(CreateView):
-  model = Ticket
-  form_class = EventBuyForm
-  template_name = 'cms/event_buy.html'
-  # Event詳細画面にアクセスする
-  success_url = reverse_lazy('cms:top')
+def eventBuyView(request, event_id):
+  event = get_object_or_404(Event, pk=event_id)
 
-  def form_valid(self, form):
-    ticket = form.save(commit=False)
-    event = ticket.event
-    ticket.order = event.purchaced_ticket + 1
-    # print(ticket.order)
-    print(event.purchaced_ticket)
+  if request.method == "POST":
+    userId = request.user.id
+    order = event.purchaced_ticket + 1
+    ticket = Ticket(customer_id=userId, event_id=event.id, order=order)
+    ticket.save()
     event.purchaced_ticket += 1
     event.save()
-    print(event.purchaced_ticket)
-    ticket.customer = self.request.user
-    ticket.save()
-    return super(EventBuyView, self).form_valid(form)
+    return redirect('cms:buy_after')
+  return render(request, 'cms/event_buy.html', {'event': event})
+
+def ticketBuyAfter(request):
+  return render(request, 'cms/event_buy_after.html')
+  # model = Ticket
+  # form_class = EventBuyForm
+  # template_name = 'cms/event_buy.html'
+  # # Event詳細画面にアクセスする
+  # success_url = reverse_lazy('cms:top')
+
+  # def form_valid(self, form):
+  #   ticket = form.save(commit=False)
+  #   event = ticket.event
+  #   ticket.order = event.purchaced_ticket + 1
+  #   event.purchaced_ticket += 1
+  #   event.save()
+  #   ticket.customer = self.request.user
+  #   ticket.save()
+  #   return super(EventBuyView, self).form_valid(form)
 
 
 def event_now(request, pk):
