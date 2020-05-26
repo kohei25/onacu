@@ -83,9 +83,10 @@ class EventCreateView(CreateView):
       event.save()
       return super(EventCreateView, self).form_valid(form)
 
-class EventDetailView(generic.DetailView):
-  model = Event
-  template_name = 'cms/event_detail.html'
+def eventDetail(request, pk):
+  event = get_object_or_404(Event, pk=pk)
+  is_ticket = Ticket.objects.filter(event_id=event.id, customer_id=request.user.id)
+  return render(request, 'cms/event_detail.html', {'event': event, 'is_ticket': is_ticket})
 
 
 def eventBuyView(request, event_id):
