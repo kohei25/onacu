@@ -34,12 +34,12 @@
 </div>
 <div class="event_info">
   <h3>イベント情報</h3>
+  <!-- TODO: -->
   {% if events %}
   <div id="cards-container">
     {% for event in events %}
     <div class="card">
-      <img
-        src='https://img-mdpr.freetls.fastly.net/article/AyLL/nm/AyLLp1iWF2PLmWppqJElOzmT4SnkPJMnpaIPm7pEMTM.jpg?width=700&disable=upscale&auto=webp'
+      <img src='https://img-mdpr.freetls.fastly.net/article/AyLL/nm/AyLLp1iWF2PLmWppqJElOzmT4SnkPJMnpaIPm7pEMTM.jpg?width=700&disable=upscale&auto=webp'
         alt='No Image'>
       <div class="info">
         <div class="name">{{ event.name }}</div>
