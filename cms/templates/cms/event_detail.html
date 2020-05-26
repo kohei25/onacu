@@ -17,11 +17,15 @@
     <h2 class="subtitle is-6">残り：{{ event.total_ticket }}枚</h2>
     <h2 class="subtitle is-6">状態：{{ event.status }}</h2>
       {% if is_ticket %}
-      <strong>購入済みです</strong>
+        <strong>購入済みです</strong>
       {% else %}
-      <a href="{% url 'cms:buy' event.id%}">
-        <strong>購入する</strong>
-      </a>
+        {%if event.total_ticket > event.purchaced_ticket %}
+          <a href="{% url 'cms:buy' event.id%}">
+            <strong>購入する</strong>
+          </a>
+        {% else %}
+          <strong>完売しました</strong>
+        {% endif %}
       {% endif %}
     {% else %}
       <a href="{% url 'cms:eve_now' event.id%}">

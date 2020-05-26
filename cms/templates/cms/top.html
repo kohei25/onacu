@@ -51,9 +51,15 @@
           <button type="button" disabled class="btn btn-danger">終了</button>
         </div>
         {% else %}
-        <a class="detail" href="{% url 'cms:eve_de' event.id %}">
-          <button type="button" class="btn btn-info">詳細</button>
-        </a>
+          {%if event.total_ticket <= event.purchaced_ticket and event.host != user%}
+            <div class="detail">
+              <button type="button" disabled class="btn btn-success">完売</button>
+            </div>
+          {% else %}
+            <a class="detail" href="{% url 'cms:eve_de' event.id %}">
+              <button type="button" class="btn btn-info">詳細</button>
+            </a>
+          {% endif %}
         {% endif %}
       </div>
     </div>
