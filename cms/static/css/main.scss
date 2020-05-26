@@ -1,213 +1,132 @@
-@import "./bootstrap-custom";
+// @import "./bootstrap-custom";
 
-$theme-color: #C4E1F2;
+// $theme-color: #C4E1F2;
 
-.navbar {
-  background-color: $theme-color;
-}
+// .navbar {
+//   background-color: $theme-color;
+// }
 
-.navbar-brand {
-  font-size: 2rem;
-}
+// .navbar-brand {
+//   font-size: 2rem;
+// }
 
-.hero {
-  background-color: lighten($theme-color, 5%);
-}
+// .hero {
+//   background-color: lighten($theme-color, 5%);
+// }
 
-.events {
-  background-color: lighten($theme-color, 10%);
-}
+// .events {
+//   background-color: lighten($theme-color, 10%);
+// }
 
-.carousel-item-image-outer {
-  padding-top: 56.25%;
-  position: relative;
-  width: 100%;
-}
+// .carousel-item-image-outer {
+//   padding-top: 56.25%;
+//   position: relative;
+//   width: 100%;
+// }
 
-.carousel-item-image {
-  height: 100%;
-  left: 0;
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  width: 100%;
-}
+// .carousel-item-image {
+//   height: 100%;
+//   left: 0;
+//   object-fit: cover;
+//   position: absolute;
+//   top: 0;
+//   width: 100%;
+// }
 
-/*
+// body{
+//   min-height: 100vh;
+//   display: grid;
+//   grid-template: 
+//     "... ...... ..."
+//     "... header ..." 1fr
+//     "... ...... ..." 
+//     "... main   ..." 20fr
+//     "... ...... ..." 
+//     "... footer ..." 1fr
+//     "... ...... ..." 0
+//     /0   100%    0;
+// }
 
-body{
-  font-size: 1em;
-  // width: 800px;
-  margin: 0 auto;
-  // padding: 0 20px;
-  min-height: 100vh;
-  display: grid;
-  grid-template: 
-    "... ...... ...... ...... ...... ...... ..."
-    "... header header header header header ..." 80px
-    "... ...... ...... ...... ...... ...... ..." 
-    "... today  ...... carous ...... tomorr ..." 400px
-    "... ...... ...... ...... ...... ...... ..." 
-    "... left   ...... center ...... right  ..." 1fr
-    "... ...... ...... ...... ...... ...... ..." 
-    "... footer footer footer footer footer ..." 100px
-    "... ...... ...... ...... ...... ...... ..."
-    /0   1fr    auto   2fr     auto  1fr    0;
-}
+// header{
+//   grid-area: header;
+//   background-color: #CAF1FA;
+//   opacity: 0.7;
+//   display: grid;
+//   grid-template:
+//     "... title ..... person ..."
+//     /2fr 2fr   auto  2fr    2fr;
 
-header{
-  grid-area: header;
-  background-color: #CAF1FA;
-  opacity: 0.5;
-  height: 100%;
-  display: grid;
-  grid-template:
-    "... title ..... person ..."
-    /50px 400px auto 200px 50px;
+//   .title{
+//     grid-area: title;
+//     font-size: 40px;
+//     background-color: #CAF1FA !important;
+//     font-family: 'Noto Sans JP', sans-serif;
+//     a{
+//       background-color: #CAF1FA;
+//     }
+//   }
 
-  .title{
-    grid-area: title;
-    font-size: 40px;
-    line-height: 80px;
-    font-family: 'Noto Sans JP', sans-serif;
-  }
-
-  .sub_title{
-    margin-left: 20px;
-  }
-
-  .person{
-    grid-area: person;
-    line-height: 80px;
-  }
-}
-
-.today{
-  grid-area: today;
-  background-color: #d4ecf3;
-  display: grid;
-  grid-template:
-    ".....   " 50px
-    "schedule" 
-    ".....   ";
-
-  .schedule{
-    grid-area: schedule;
-    font-size: 1rem;
-    width: 100%;
-    text-align: center;
-  }
-}
-
-.carousel{
-  grid-area: carous;
-
-  .d-block{
-    height: auto;
-    width: auto;
-    max-width: 2fr;
-    max-height: 400px;
-  }
-}
-
-.tomorrow{
-  grid-area: tomorr;
-  background-color: #d4ecf3;
-  display: grid;
-  grid-template:
-    ".....   " 50px
-    "schedule" 
-    ".....   ";
-
-  .schedule{
-    grid-area: schedule;
-    font-size: 1rem;
-    width: 100%;
-    text-align: center;
-  }
-}
-
-nav{
-  grid-area: left;
-  background-color: #f5fbfe;
-  display: grid;
-  grid-template:
-    " .... " 50px
-    "search"
-    " .... ";
-
-  .search{
-    grid-area: search;
-    font-size: 1.5rem;
-    width: 100%;
-    text-align: center;
-  }
-}
+//   .person{
+//     grid-area: person;
+//   }
+// }
 
 main{
-  grid-area: center;
+  grid-area: main;
   width: 100%;
+  background-color: #d4ecf3;
   display: grid;
   grid-template:
-    ".....     " 50px
-    "event_info" 50px
-    ".....     " 50px
-    "event_con " 1fr
-    ".....     "
-    ;
+    "... .....        ..." 0
+    "... header       ..." 1fr
+    "... .....        ..." 0.5fr
+    "... event_info   ..." 2fr
+    "... .....        ..." 0
+    /1fr 10fr         1fr;
+
+  .header{
+    grid-area: header;
+    // background-color: black;
+    display: grid;
+    grid-template: 
+      "... ...            ..." 1fr
+      "... tickets_wallet ..." 5fr
+      "... ...            ..." 0
+      /0   100%           0;
+
+    .tickets_wallet{
+      grid-area: tickets_wallet;
+      background-color: #CCFFCC;
+      border-radius: 30px;
+      display: grid;
+      align-items: center;
+      h3{
+        text-align: center;
+      }
+    }
+  }
 
   .event_info{
     grid-area: event_info;
-    font-size: 1.5rem;
-    // display: inline-block;
-    width: 100%;
-    text-align: center;
-  }
-
-  .event_container{
-    grid-area: event_con;
-    // display: grid;
-    // grid-template:
-    //   "card card card";
-
-    // .card{
-    //   grid-area: card;
-    // }
-  }
-}
-
-aside{
-  grid-area: right;
-  background-color: #f5fbfe;
-  display: grid;
-  grid-template:
-    ".....   " 50px
-    "schedule" 
-    ".....   ";
-
-  .schedule{
-    grid-area: schedule;
-    font-size: 1.5rem;
-    width: 100%;
-    text-align: center;
+    h3{
+      text-align: center;
+    }
   }
 }
 
 footer{
   grid-area: footer;
   background-color: #f5fbfe;
-
 }
 
-@media screen and (max-width: 1000px){
-  body{
-    grid-template:
-      "header" 150px
-      "left  "
-      "right "
-      "center" 1fr
-      "footer" 100px
-      ;
-  }
-}
-*/
+// @media screen and (max-width: 1000px){
+//   body{
+//     grid-template:
+//       "header" 150px
+//       "left  "
+//       "right "
+//       "center" 1fr
+//       "footer" 100px
+//       ;
+//   }
+// }

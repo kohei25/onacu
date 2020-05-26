@@ -1,0 +1,80 @@
+#cards-container{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 330px);
+  grid-row-gap: 20px;
+  grid-column-gap: 20px;
+  justify-content: center;
+
+  .card{
+    border-radius: 20px;
+    display: grid;
+    grid-template: 
+      '... ...    ...    ...     ...' 10px
+      '... image  ...    info    ...' 150px
+      '... ...    ...    ...     ...' 10px
+      /10px 150px 10px   150px   10px;
+
+    img{
+      border-radius: 20px;
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      grid-area: image;
+      background-color: #EEEEEE;
+    }
+
+    .info{
+      grid-area: info;
+      display: grid;
+      justify-self: left;
+      grid-template:
+        '... ...     ...'
+        '... name    ...'
+        '... ...     ...'
+        '... host    ...'
+        '... ...     ...'
+        '... date    ...'
+        '... ...     ...'
+        '... time    ...'
+        '... ...     ...'
+        '... button  ...'
+        '... ...     ...'
+        /0   150px   0;
+
+      .name{
+        font-weight: bold;
+        grid-area: name;
+        display: grid;
+        justify-self: left;
+      }
+
+      .host{
+        grid-area: host;
+        display: grid;
+        justify-self: left;
+      }
+
+      .date{
+        display: grid;
+        justify-self: left;
+        grid-area: date;
+      }
+
+      .time{
+        display: grid;
+        justify-self: left;
+        grid-area: time;
+      }
+
+      .detail{
+        display: grid;
+        justify-self: center;
+        grid-area: button;
+
+        button{
+          width: 150px;
+        }
+      }
+    }
+  }
+}

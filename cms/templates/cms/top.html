@@ -1,85 +1,66 @@
 {% extends 'cms/base.html' %}
 
-{% block hero %}
-<div class="hero">
-  <div class="container">
-    <div class="row">
-      <div class="col-12 col-md-8 mt-3">
-        {% if user.is_authenticated %}
-        <h3>あなたの参加予定イベント</h3>
-        <ul>
-        </ul>
-        {% else %}
-        <div class="jumbotron">
-          <h1 class="display-4">リモートでも会いに行ける</h1>
-          <p class="lead"></p>
-          <hr class="my-4">
-          <p>OnAcu（オンアク）は、オンライン握手会プラットフォームです。</p>
-          <a class="btn btn-secondary btn-lg" href="#" role="button">詳しく</a>
-        </div>
-        {% endif %}
-      </div>
-      <div class="col-12 col-md-4 my-3">
-        <h3>イベントを探す</h3>
-        <div id="datetimepicker"></div>
-        <script>
-          $(function () {
-             $('#datetimepicker').datetimepicker({
-                format: 'L',
-                minDate: new Date(),
-                inline: true,
-                locale: 'ja',
-            });
-            $('#datetimepicker').on('change.datetimepicker', ({date, oldDate}) => {
-              location.assign('/?date='+date.format('YYYY-MM-DD'));
-            });
-          });
-        </script>
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock %}
+{% block title %}トップページ{% endblock %}
 
 {% block content %}
-<div class="events">
-  <div class="container pt-3">
-    <h3>イベント情報</h3>
-    {% if coming_event_list %}
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
-      {% for event in coming_event_list %}
-      <div class="col">
-        <div class="card mb-3">
-          <img src="https://placehold.jp/640x360.jpg" class="card-img-top" alt="">
-          <div class="card-body">
-            <h4 class="card-title">{{ event.name }}</h4>
-            <a href="{% url 'cms:eve_de' event.id %}" class="btn btn-primary">詳細</a>
-          </div>
+<div class="header">
+  <div class="tickets_wallet">
+    <h3>所持チケット</h3>
+    {% if tickets %}
+    <div id="cards-container">
+      {% for ticket in tickets %}
+      <div class="card">
+        <img src='https://img-mdpr.freetls.fastly.net/article/AyLL/nm/AyLLp1iWF2PLmWppqJElOzmT4SnkPJMnpaIPm7pEMTM.jpg?width=700&disable=upscale&auto=webp' alt='No Image'>
+        <div class="info">
+          <div class="name">{{ ticket.event.name }}</div>
+          <div class="host">{{ ticket.event.host.username }}</div>
+          <div class="date">{{ ticket.event.date|date:"n/d f" }}〜</div>
+          <div class="time">{{ ticket.event.personal_time }}秒/枚</div>
+          {% if ticket.event.status == 2 %}
+            <div class="detail">
+              <button type="button" disabled class="btn btn-danger">終了</button>
+            </div>
+          {% else %}
+            <a class="detail" href="{% url 'cms:eve_now' ticket.event_id %}">
+              <button type="button" class="btn btn-info">参加</button>
+            </a>
+          {% endif %}
         </div>
       </div>
       {% endfor %}
-      <div class="col">
-        <div class="card mb-3">
-          <img src="https://cdn.keyakizaka46.com/images/14/a6e/f04ad5cfc4f2b7d55dc6c3e37c925-01.jpg"
-            class="card-img-top" alt="">
-          <div class="card-body">
-            <h4 class="card-title">渡邉理佐 握手会</h4>
-            <dl class="card-text row">
-              <dt class="col-3">日時</dt>
-              <dd class="col-9">2020年5月30日 12:00</dd>
-              <dt class="col-3">時間</dt>
-              <dd class="col-9">10秒</dd>
-              <dt class="col-3">料金</dt>
-              <dd class="col-9">&yen;500</dd>
-            </dl>
-            <a href="#" class="btn btn-primary">詳細</a>
-          </div>
-        </div>
-      </div>
     </div>
-    {% else %}
-    <p>予定のイベントはありません。</p>
     {% endif %}
   </div>
+</div>
+<div class="event_info">
+  <h3>イベント情報</h3>
+  {% if events %}
+  <div id="cards-container">
+    {% for event in events %}
+    <div class="card">
+      <img
+        src='https://img-mdpr.freetls.fastly.net/article/AyLL/nm/AyLLp1iWF2PLmWppqJElOzmT4SnkPJMnpaIPm7pEMTM.jpg?width=700&disable=upscale&auto=webp'
+        alt='No Image'>
+      <div class="info">
+        <div class="name">{{ event.name }}</div>
+        <div class="host">{{ event.host.username }}</div>
+        <div class="date">{{ event.date|date:"n/d f" }}〜</div>
+        <div class="time">{{ event.personal_time }}秒/枚</div>
+        {% if event.status == 2 %}
+        <div class="detail">
+          <button type="button" disabled class="btn btn-danger">終了</button>
+        </div>
+        {% else %}
+        <a class="detail" href="{% url 'cms:eve_de' event.id %}">
+          <button type="button" class="btn btn-info">詳細</button>
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+    <p>予定のイベントはありません。</p>
+  {% endif %}
 </div>
 {% endblock %}

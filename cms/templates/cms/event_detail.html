@@ -16,10 +16,15 @@
     <h2 class="subtitle is-6">1チケットでの時間：{{ event.personal_time }}秒</h2>
     <h2 class="subtitle is-6">残り：{{ event.total_ticket }}枚</h2>
     <h2 class="subtitle is-6">状態：{{ event.status }}</h2>
-    {% if event.status == 0 %}
-      <a href="{% url 'cms:buy' event.id%}">
-        <strong>購入する</strong>
-      </a>
+    {% if is_ticket %}
+    <strong>購入済みです</strong>
+    {% else %}
+    <a href="{% url 'cms:buy' event.id%}">
+      <strong>購入する</strong>
+    </a>
+    {% endif %}
+    <!-- {% if event.status == 0 %}
+
     {% else %}
       <a href="{% url 'cms:eve_now' event.id%}">
         <strong>イベントに参加する</strong>
@@ -29,7 +34,7 @@
       <a href="{% url 'cms:eve_now' event.id%}">
         <strong>イベントを開催する</strong>
       </a>
-    {% endif %}
+    {% endif %} -->
     <!-- <form method="post" action="">
       {% csrf_token %}
       <div class="field">
