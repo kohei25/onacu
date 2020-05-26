@@ -4,75 +4,37 @@
 <div class="hero">
   <div class="container">
     <div class="row">
-      <div class="col-12 col-lg-6 order-lg-2">
-        <div class="carousel">
-          <div id="carousel" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
-              {% if coming_event_list %}
-              {% for event in coming_event_list %}
-              <li data-target="#carousel" data-slide-to="{{ forloop.counter0 }}"{% if forloop.counter0 == 0 %} class="active"{% endif %}></li>
-              {% endfor %}
-              {% else %}
-              <li data-target="#carousel" data-slide-to="0" class="active"></li>
-              <li data-target="#carousel" data-slide-to="1"></li>
-              {% endif %}
-            </ol>
-            <div class="carousel-inner">
-              {% if coming_event_list %}
-              {% for event in coming_event_list %}
-              <div class="carousel-item{% if forloop.counter0 == 0 %} active{% endif %}">
-                <a href="{% url 'cms:eve_de' event.id %}">
-                  <div class="carousel-item-image-outer">
-                    <img src="https://placehold.jp/640x360.jpg"
-                    class="carousel-item-image" alt="{{ event.name }}">
-                  </div>
-                  <div class="carousel-caption d-none d-md-block">
-                    <h5>{{ event.name }}</h5>
-                  </div>
-                  </a>
-              </div>
-              {% endfor %}
-              {% else %}
-              <div class="carousel-item active">
-                <a href="#">
-                  <div class="carousel-item-image-outer">
-                    <img src="https://hirateyurina.jp/images/14/ee2/6def8ccb4d0e3bc9273fa97c99149/800_800_102400.jpg"
-                    class="carousel-item-image" alt="">
-                  </div>
-                  <div class="carousel-caption d-none d-md-block">
-                    <h5>平手友梨奈 握手会</h5>
-                  </div>
-                  </a>
-              </div>
-              <div class="carousel-item">
-                <a href="#">
-                  <div class="carousel-item-image-outer">
-                    <img src="https://hirateyurina.jp/images/14/688/2195c0fbb842729d83b6595309102/800_800_102400.jpg"
-                    class="carousel-item-image" alt="">
-                  </div>
-                  <div class="carousel-caption d-none d-md-block">
-                    <h5>平手友梨奈 握手会</h5>
-                  </div>
-                  </a>
-              </div>
-              {% endif %}
-            </div>
-            <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="sr-only">前へ</span>
-            </a>
-            <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="sr-only">次へ</span>
-            </a>
-          </div>
+      <div class="col-12 col-md-8 mt-3">
+        {% if user.is_authenticated %}
+        <h3>あなたの参加予定イベント</h3>
+        <ul>
+        </ul>
+        {% else %}
+        <div class="jumbotron">
+          <h1 class="display-4">リモートでも会いに行ける</h1>
+          <p class="lead"></p>
+          <hr class="my-4">
+          <p>OnAcu（オンアク）は、オンライン握手会プラットフォームです。</p>
+          <a class="btn btn-secondary btn-lg" href="#" role="button">詳しく</a>
         </div>
+        {% endif %}
       </div>
-      <div class="col-12 col-lg-3 order-lg-1 mt-3">
-        <h3>今日の予定</h3>
-      </div>
-      <div class="col-12 col-lg-3 order-lg-3 mt-3">
-        <h3>明日の予定</h3>
+      <div class="col-12 col-md-4 my-3">
+        <h3>イベントを探す</h3>
+        <div id="datetimepicker"></div>
+        <script>
+          $(function () {
+             $('#datetimepicker').datetimepicker({
+                format: 'L',
+                minDate: new Date(),
+                inline: true,
+                locale: 'ja',
+            });
+            $('#datetimepicker').on('change.datetimepicker', ({date, oldDate}) => {
+              location.assign('/?date='+date.format('YYYY-MM-DD'));
+            });
+          });
+        </script>
       </div>
     </div>
   </div>
@@ -88,8 +50,7 @@
       {% for event in coming_event_list %}
       <div class="col">
         <div class="card mb-3">
-          <img src="https://placehold.jp/640x360.jpg"
-            class="card-img-top" alt="">
+          <img src="https://placehold.jp/640x360.jpg" class="card-img-top" alt="">
           <div class="card-body">
             <h4 class="card-title">{{ event.name }}</h4>
             <a href="{% url 'cms:eve_de' event.id %}" class="btn btn-primary">詳細</a>
@@ -119,11 +80,6 @@
     {% else %}
     <p>予定のイベントはありません。</p>
     {% endif %}
-  </div>
-</div>
-<div class="schedule py-3">
-  <div class="container">
-    <h3>参加予定</h3>
   </div>
 </div>
 {% endblock %}
