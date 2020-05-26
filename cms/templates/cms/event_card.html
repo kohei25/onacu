@@ -1,0 +1,22 @@
+<div class="event-card card">
+    <div class="row no-gutters">
+        <div class="col-6">
+            <img class="card-img" src="https://img-mdpr.freetls.fastly.net/article/AyLL/nm/AyLLp1iWF2PLmWppqJElOzmT4SnkPJMnpaIPm7pEMTM.jpg?width=700&disable=upscale&auto=webp" alt="{{ event.name }}" loading="lazy">
+        </div>
+        <div class="col-6">
+            <div class="card-body">
+                <h5 class="card-title">{{ event.name }}</h5>
+                <div class="card-text"><i class="fas fa-user"></i> {{ event.host.username }}</div>
+                <div class="card-text"><i class="fas fa-calendar-day"></i> {{ event.date|date:"n/d f" }}〜</div>
+                <div class="card-text"><i class="fas fa-clock"></i> {{ event.personal_time }}秒/枚</div>
+                {% if event.status == 2 %}
+                <button type="button" disabled class="btn btn-danger">終了</button>
+                {% elif event.status == 1 %}
+                <a class="btn btn-info" href="{% url 'cms:eve_now' ticket.event_id %}">参加</a>
+                {% else %}
+                <a class="btn btn-info btn-block" href="{% url 'cms:eve_de' event.id %}">詳細</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
