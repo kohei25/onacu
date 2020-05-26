@@ -1,41 +1,75 @@
-body{
-  min-height: 100vh;
-  display: grid;
-  grid-template: 
-    "... ...... ..."
-    "... header ..." 1fr
-    "... ...... ..." 
-    "... main   ..." 20fr
-    "... ...... ..." 
-    "... footer ..." 1fr
-    "... ...... ..." 0
-    /0   100%    0;
-}
+// @import "./bootstrap-custom";
 
-header{
-  grid-area: header;
-  background-color: #CAF1FA;
-  opacity: 0.7;
-  // height: 100%;
-  display: grid;
-  grid-template:
-    "... title ..... person ..."
-    /2fr 2fr   auto  2fr    2fr;
+// $theme-color: #C4E1F2;
 
-  .title{
-    grid-area: title;
-    font-size: 40px;
-    background-color: #CAF1FA !important;
-    font-family: 'Noto Sans JP', sans-serif;
-    a{
-      background-color: #CAF1FA;
-    }
-  }
+// .navbar {
+//   background-color: $theme-color;
+// }
 
-  .person{
-    grid-area: person;
-  }
-}
+// .navbar-brand {
+//   font-size: 2rem;
+// }
+
+// .hero {
+//   background-color: lighten($theme-color, 5%);
+// }
+
+// .events {
+//   background-color: lighten($theme-color, 10%);
+// }
+
+// .carousel-item-image-outer {
+//   padding-top: 56.25%;
+//   position: relative;
+//   width: 100%;
+// }
+
+// .carousel-item-image {
+//   height: 100%;
+//   left: 0;
+//   object-fit: cover;
+//   position: absolute;
+//   top: 0;
+//   width: 100%;
+// }
+
+// body{
+//   min-height: 100vh;
+//   display: grid;
+//   grid-template: 
+//     "... ...... ..."
+//     "... header ..." 1fr
+//     "... ...... ..." 
+//     "... main   ..." 20fr
+//     "... ...... ..." 
+//     "... footer ..." 1fr
+//     "... ...... ..." 0
+//     /0   100%    0;
+// }
+
+// header{
+//   grid-area: header;
+//   background-color: #CAF1FA;
+//   opacity: 0.7;
+//   display: grid;
+//   grid-template:
+//     "... title ..... person ..."
+//     /2fr 2fr   auto  2fr    2fr;
+
+//   .title{
+//     grid-area: title;
+//     font-size: 40px;
+//     background-color: #CAF1FA !important;
+//     font-family: 'Noto Sans JP', sans-serif;
+//     a{
+//       background-color: #CAF1FA;
+//     }
+//   }
+
+//   .person{
+//     grid-area: person;
+//   }
+// }
 
 main{
   grid-area: main;
@@ -59,7 +93,6 @@ main{
       "... tickets_wallet ..." 5fr
       "... ...            ..." 0
       /0   100%           0;
-    // background-color: green($color: #000000);
 
     .tickets_wallet{
       grid-area: tickets_wallet;
@@ -86,14 +119,14 @@ footer{
   background-color: #f5fbfe;
 }
 
-@media screen and (max-width: 1000px){
-  body{
-    grid-template:
-      "header" 150px
-      "left  "
-      "right "
-      "center" 1fr
-      "footer" 100px
-      ;
-  }
-}
+// @media screen and (max-width: 1000px){
+//   body{
+//     grid-template:
+//       "header" 150px
+//       "left  "
+//       "right "
+//       "center" 1fr
+//       "footer" 100px
+//       ;
+//   }
+// }
