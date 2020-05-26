@@ -15,7 +15,6 @@ from django.views.generic.edit import CreateView
 from .models import Event, Ticket
 from .forms import LoginForm, UserCreateForm, EventForm, EventBuyForm
 
-
 UserModel = get_user_model()
 
 # user model
