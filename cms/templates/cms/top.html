@@ -1,77 +1,52 @@
-{% load static %}
-{% load sass_tags %}
+{% extends 'cms/base.html' %}
 
-<!DOCTYPE html>
-<html>
+{% block title %}トップページ{% endblock %}
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}{% endblock %}ONACU</title>
-  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.0/css/bulma.min.css"> -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="{% sass_src 'css/components.scss' %}">
-  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-</head>
-
-<body>
-  <!-- NAVIGATION BAR -->
-  <header>
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-      <div class="navbar-brand">
-        <!-- LOGO -->
-        <a class="navbar-item" href="/">ONACU</a>
-        <!-- HAMBURGER MENU -->
-        <!-- <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="my-menu">
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a> -->
-      </div>
-      <div class="navbar-menu" id="my-menu">
-        <div class="navbar-end">
-          {% if user.is_authenticated %}
-          <h1>{{ user.username }}さん，こんにちは</h1>
-          <a class="navbar-item" href="{% url 'cms:logout' %}">Log out</a>
+{% block content %}
+<div class="header">
+  <div class="tickets_wallet">
+    <h3>所持チケット</h3>
+    {% if tickets %}
+    <div id="cards-container">
+      {% for ticket in tickets %}
+      <div class="card">
+        <img src='https://img-mdpr.freetls.fastly.net/article/AyLL/nm/AyLLp1iWF2PLmWppqJElOzmT4SnkPJMnpaIPm7pEMTM.jpg?width=700&disable=upscale&auto=webp' alt='No Image'>
+        <div class="info">
+          <div class="name">{{ ticket.event.name }}</div>
+          <div class="host">{{ ticket.event.host.username }}</div>
+          <div class="date">{{ ticket.event.date|date:"n/d f" }}〜</div>
+          <div class="time">{{ ticket.event.personal_time }}秒/枚</div>
+          {% if ticket.event.status == 2 %}
+            <div class="detail">
+              <button type="button" disabled class="btn btn-danger">終了</button>
+            </div>
           {% else %}
-          <a class="navbar-item is-grey" href="#">About</a>
-          <div class="buttons">
-            <a class="button is-info navbar-item" href="{% url 'cms:signup' %}"><strong>Sign up</strong></a>
-            <a class="button is-light navbar-item" href="{% url 'cms:login' %}"><strong>Log in</strong></a>
-          </div>
+            <a class="detail" href="{% url 'cms:eve_now' ticket.event_id %}">
+              <button type="button" class="btn btn-info">参加</button>
+            </a>
           {% endif %}
         </div>
       </div>
-    </nav>
-  </header>
-  <!-- MESSAGE -->
-  {% for field, errors in form.errors.items %}
-  <article class="message is-warning">
-    <div class="message-body">
-      {% for error in errors %}
-      <p><strong>{{ error }}</strong></p>
       {% endfor %}
     </div>
-  </article>
-  {% endfor %}
-  <!-- MAIN -->
-<main>
-  <a href="{% url 'cms:eve_new' %}">
-    <button type="button" class="btn btn-success">イベント作成</button>
-  </a>
-  <h1>所持チケット</h1>
-  {% if tickets%}
-    {% for ticket in tickets %}
-      <p>{{ ticket.event.name }}</p>
-    {% endfor %}
-  {% endif %}
-  <h1>イベント情報</h1>
+    {% endif %}
+  </div>
+</div>
+<div class="event_info">
+  <!-- <div class='input-group date' id='datetimepicker1'>
+    <input type='text' class="form-control" />
+    <span class="input-group-addon">
+      <span class="glyphicon glyphicon-calendar"></span>
+    </span>
+  </div> -->
+  <h3>イベント情報</h3>
   {% if events %}
   <div id="cards-container">
     {% for event in events %}
     <div class="card">
-      <img src='https://img-mdpr.freetls.fastly.net/article/AyLL/nm/AyLLp1iWF2PLmWppqJElOzmT4SnkPJMnpaIPm7pEMTM.jpg?width=700&disable=upscale&auto=webp' alt='No Image'>
-
+      <img
+        src='https://img-mdpr.freetls.fastly.net/article/AyLL/nm/AyLLp1iWF2PLmWppqJElOzmT4SnkPJMnpaIPm7pEMTM.jpg?width=700&disable=upscale&auto=webp'
+        alt='No Image'>
       <div class="info">
         <div class="name">{{ event.name }}</div>
         <div class="host">{{ event.host.username }}</div>
@@ -91,30 +66,7 @@
     {% endfor %}
   </div>
   {% else %}
-  <p>予定のイベントはありません。</p>
+    <p>予定のイベントはありません。</p>
   {% endif %}
-  </main>
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="container">
-      <div class="content has-text-centered">
-        2020 <strong>UTokyo Project Sprint</strong>
-      </div>
-      <div class="content has-text-centered">
-        <a href="#" class="has-text-dark">About</a> |
-        <a href="#" class="has-text-dark">Contact</a> |
-        <a href="#" class="has-text-danger">Report an issue</a>
-      </div>
-    </div>
-  </footer>
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-</body>
-
-</html>
+</div>
+{% endblock %}
