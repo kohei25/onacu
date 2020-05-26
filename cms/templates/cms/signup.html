@@ -1,52 +1,53 @@
 {% extends 'cms/base.html' %}
 
-{% block title %}Signup | {% endblock %}
+{% block title %}会員登録 | {% endblock %}
 
 {% block content %}
-<section class="section">
-  <div class="container is-mobile">
-    <h1 class="title is-4">サインアップ</h1>
-    <h2 class="subtitle is-6">Sign up</h2>
-    <hr>
-    <p class="help">アカウントをお持ちの方へ：ログインは<a href="{% url 'cms:login' %}">こちら</a></p>
-    <br>
+<div class="bg-light">
+  <div class="container py-3">
+    <h1 class="border-bottom pb-2">会員登録 <small class="text-muted">Sign up</small></h1>
+    <p class="lead">アカウントをお持ちの方へ：ログインは<a href="{% url 'cms:login' %}">こちら</a></p>
     <form method="post" action="">
       {% csrf_token %}
-      <div class="field">
-        <label class="label">ユーザーネーム</label>
-        <div class="control has-icons-left">
+      <div class="form-group">
+        <label for="id_username">ユーザーネーム</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-user"></i></span>
+          </div>
           {{ form.username }}
-          <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
         </div>
       </div>
-      <div class="field">
-        <label class="label">メールアドレス</label>
-        <div class="control has-icons-left">
+      <div class="form-group">
+        <label for="id_email">メールアドレス</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+          </div>
           {{ form.email }}
-          <span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
         </div>
       </div>
-      <div class="field">
-        <label class="label">パスワード</label>
-        <div class="control has-icons-left">
+      <div class="form-group">
+        <label for="id_password1">パスワード</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+          </div>
           {{ form.password1 }}
-          <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
         </div>
       </div>
-      <div class="field">
-        <label class="label">パスワード（確認）</label>
-        <div class="control has-icons-left">
+      <div class="form-group">
+        <label for="id_password2">パスワード（確認）</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+          </div>
           {{ form.password2 }}
-          <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
         </div>
       </div>
-      <div class="field">
-        <p class="control">
-          <input type="submit" value="登録" class="button is-success">
-          <input type="hidden" name="next" value="{{ next }}">
-        </p>
-      </div>
+      <button type="submit" class="btn btn-primary">登録</button>
+      <input type="hidden" name="next" value="{{ next }}">
     </form>
   </div>
-</section>
+</div>
 {% endblock %}
