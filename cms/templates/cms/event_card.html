@@ -12,7 +12,7 @@
                 {% if event.status == 2 %}
                 <button type="button" disabled class="btn btn-danger">終了</button>
                 {% elif event.status == 1 %}
-                <a class="btn btn-info" href="{% url 'cms:eve_now' ticket.event_id %}">参加</a>
+                <a class="btn btn-info" href="{% url 'cms:eve_now' event.id %}">参加</a>
                 {% else %}
                 <a class="btn btn-info btn-block" href="{% url 'cms:eve_de' event.id %}">詳細</a>
                 {% endif %}
