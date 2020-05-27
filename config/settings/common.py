@@ -13,20 +13,13 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 't-g@%+lc0b(6ya@@n7+gq4sjp815axi()li(wsnp@67x=!8xop'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -72,21 +65,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 INTERNAL_IPS = ['172.20.0.1',]
 
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'HOST': 'db',
-        'PORT': 5432,
-        'PASSWORD': 'somepassword',
-    }
-}
-
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -129,16 +107,18 @@ LOGIN_REDIRECT_URL = 'cms:top'
 LOGOUT_REDIRECT_URL = 'cms:top'
 
 # SASS
-SASS_PROCESSOR_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
-SASS_PROCESSOR_AUTO_INCLUDE = False
-SASS_PROCESSOR_INCLUDE_DIRS = [
-    os.path.join(PROJECT_ROOT, 'static/scss'),
-    os.path.join(PROJECT_ROOT, 'node_modules'),
-]
-STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'sass_processor.finders.CssFinder',
-]
-SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r'^.+\.scss$'
-SASS_PRECISION = 8
+# STATICFILES_STORAGE = 'sass_processor.storage.SassS3Boto3Storage'
+# SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# SASS_PROCESSOR_AUTO_INCLUDE = False
+# SASS_PROCESSOR_INCLUDE_DIRS = [
+#     os.path.join(BASE_DIR, 'static/scss'),
+#     os.path.join(BASE_DIR, 'node_modules'),
+# ]
+# STATICFILES_FINDERS = [
+#     'django.contrib.staticfiles.finders.FileSystemFinder',
+#     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+#     'sass_processor.finders.CssFinder',
+# ]
+# SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r'^.+\.scss$'
+# SASS_PRECISION = 5
+# SASS_OUTPUT_STYLE = 'compressed'
