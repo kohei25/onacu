@@ -145,4 +145,4 @@ class Wallet(models.Model):
   wallet = models.IntegerField(default=0)
 
   def __str__(self):
-    return  "owner: " + self.owner.username + ", wallet: " + self.wallet
+    return  "owner: " + self.owner.username + ", wallet: " + str(self.wallet)
