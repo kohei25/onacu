@@ -1,0 +1,21 @@
+{% extends 'cms/base.html' %}
+
+{% block title %}Signup | {% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container is-mobile">
+    <h1 class="title is-4">ポイントを購入する</h1>
+    <hr>
+    <br>
+    <form method="post" action="">
+      {% csrf_token %}
+      <!-- TODO: 購入内容を表示する -->
+      <h3>ポイントを手に入れる</h3>
+      <input type="number" name="point">
+      <input type="submit" value="購入する" class="button is-success">
+      <input type="hidden" name="next" value="{{ next }}">
+    </form>
+  </div>
+</section>
+{% endblock %}
