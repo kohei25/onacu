@@ -3,7 +3,7 @@ from .common import *
 DEBUG = False
 
 ALLOWED_HOSTS = [
-  'onacu-env.eba-jkrp3mtv.us-east-1.elasticbeanstalk.com',
+  'onacustaging-env.eba-7ew9ywzq.us-east-1.elasticbeanstalk.com',
 ]
 
 # Database

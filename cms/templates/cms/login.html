@@ -1,39 +1,36 @@
 {% extends 'cms/base.html' %}
 
-{% block title %}Login | {% endblock %}
+{% block title %}ログイン | {% endblock %}
 
 {% block content %}
-<section class="section">
-  <div class="container is-mobile">
-    <h1 class="title is-4">ログイン</h1>
-    <h2 class="subtitle is-6">Login</h2>
-    <hr>
-    <p class="help">アカウントをお持ちでない方へ：サインアップは<a href="{% url 'cms:signup' %}">こちら</a></p>
-    <br>
+<div class="bg-light">
+  <div class="container py-3">
+    <h1 class="border-bottom pb-2">ログイン <small class="text-muted">Login</small></h1>
+    <p class="lead">アカウントをお持ちでない方へ：会員登録は<a href="{% url 'cms:signup' %}">こちら</a></p>
     <form method="post" action="">
       {% csrf_token %}
-      <!-- TODO: ユーザーネームとメールアドレスの選択 -->
-      <div class="field">
-        <label class="label">ユーザーネーム</label>
-        <div class="control has-icons-left">
+      <div class="form-group">
+        {# TODO: ユーザーネームとメールアドレスの選択 #}
+        <label for="id_username">ユーザーネーム</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-user"></i></span>
+          </div>
           {{ form.username }}
-          <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
         </div>
       </div>
-      <div class="field">
-        <label class="label">パスワード</label>
-        <div class="control has-icons-left">
+      <div class="form-group">
+        <label for="id_password">パスワード</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+          </div>
           {{ form.password }}
-          <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
         </div>
       </div>
-      <div class="field">
-        <p class="control">
-          <input type="submit" value="ログイン" class="button is-success">
-          <input type="hidden" name="next" value="{{ next }}">
-        </p>
-      </div>
+      <button type="submit" class="btn btn-primary">ログイン</button>
+      <input type="hidden" name="next" value="{{ next }}">
     </form>
   </div>
-</section>
+</div>
 {% endblock %}

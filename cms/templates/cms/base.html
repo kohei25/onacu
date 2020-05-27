@@ -6,84 +6,68 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}{% endblock %} | ONACU</title>
-  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.0/css/bulma.min.css"> -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="{% sass_src 'css/manager.scss' %}">
-  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-
-  <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" />
+  <title>{% block title %}{% endblock %}OnAcu</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"> {# Bootstrap CSS #}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha256-XPTBwC3SBoWHSmKasAk01c08M6sIA5gF5+sRxqak2Qs=" crossorigin="anonymous"> {# tempusdominus CSS #}
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous"> {# Font Awesome #}
+  <link rel="stylesheet" type="text/css" href="{% sass_src 'css/main.scss' %}">
+  <script defer src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> {# jQuery #}
+  <script defer src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment-with-locales.min.js" integrity="sha256-4HOrwHz9ACPZBxAav7mYYlbeMiAL0h6+lZ36cLNpR+E=" crossorigin="anonymous"></script> {# moment.js #}
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha256-z0oKYg6xiLq3yJGsp/LsY9XykbweQlHl42jHv2XTBz4=" crossorigin="anonymous"></script> {# tempusdominus JS (depends on moment.js) #}
 </head>
 
 <body>
-  <header>
-    <nav class="navbar navbar-light bg-light title">
-      <a class="navbar-brand" href="/">OnAcu</a>
-    </nav>
-    <ul class="nav person">
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="/"><i class="far fa-handshake"></i> OnAcu</a>
       {% if user.is_authenticated %}
-      <li class="nav-item">
-        <a class="nav-link" href="#">{{ user.username }}</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'cms:eve_new' %}">イベント作成</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">About</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'cms:logout' %}">ログアウト</a>
-      </li>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item ">
+            <a class="nav-link" href="{% url 'cms:eve_new' %}">イベント作成</a>
+          </li>
+        </ul>
+        <div class="ml-auto mr-3">
+          <span class="navbar-text">{{ user.username }}さん</span>
+          <a class="btn btn-secondary" href="#">マイページ</a>
+          <a class="btn btn-secondary" href="{% url 'cms:logout' %}">ログアウト</a>
+        </div>
+      </div>
       {% else %}
-      <li class="nav-item">
-        <a class="nav-link" href="#">About</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'cms:login' %}">ログイン</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'cms:signup' %}">新規登録</a>
-      </li>
+      <div class="ml-auto mr-3">
+        <a class="btn btn-secondary" href="{% url 'cms:signup' %}">登録</a>
+        <a class="btn btn-secondary" href="{% url 'cms:login' %}">ログイン</a>
+      </div>
       {% endif %}
-    </ul>
-  </header>
-  <!-- MESSAGE -->
-  <article class="message is-warning">
-    <div class="message-body">
+    </div>
+  </nav>
+  {% for field, errors in form.errors.items %}
+  <div class="container mt-3">
+    <div class="alert alert-warning" role="alert">
       {% for error in errors %}
-      <p><strong>{{ error }}</strong></p>
+      <div>{{ error }}</div>
       {% endfor %}
     </div>
-  </article>
+  </div>
+  {% endfor %}
   <main>
-    {% block hero %}{% endblock %}
-    {% block tab %}{% endblock %}
     {% block content %}{% endblock %}
   </main>
-  <footer class="footer">
+  <footer class="py-3">
     <div class="container">
-      <div class="content has-text-centered">
-        2020 <strong>UTokyo Project Sprint</strong>
-      </div>
-      <div class="content has-text-centered">
-        <a href="#" class="has-text-dark">About</a> |
-        <a href="#" class="has-text-dark">Contact</a> |
-        <a href="#" class="has-text-danger">Report an issue</a>
-      </div>
+      <ul class="list-inline">
+        <li class="list-inline-item">&copy; 2020 OnAcu</li>
+        <li class="list-inline-item"><a href="#">About</a></li>
+        <li class="list-inline-item"><a href="#">Contact</a></li>
+        <li class="list-inline-item"><a href="#">Report an issue</a></li>
+      </ul>
     </div>
   </footer>
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-  <!-- jQuery UI -->
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
 </body>
+
 </html>
