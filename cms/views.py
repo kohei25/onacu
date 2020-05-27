@@ -123,7 +123,9 @@ def event_finish(request, pk):
 def pointBuy(request):
   if request.method == "POST":
     userId = request.user.id
-    ipdb.set_trace()
-    personal_wallet = Wallet.objects.get_or_create(owner=userId)
+    personal_wallet = Wallet.objects.get_or_create(owner_id=userId)
+    get_point = int(request.POST['point'])
+    personal_wallet[0].wallet += get_point
+    personal_wallet[0].save()
     return redirect('cms:top')
   return render(request, 'cms/point_buy.html')
