@@ -139,3 +139,10 @@ class Ticket(models.Model):
 
   def __str__(self):
     return  "event: " + self.event.name + ", customer: " + self.customer.username + ", peerId: " + self.peerId
+
+class Wallet(models.Model):
+  owner = models.ForeignKey(User, on_delete=models.CASCADE)
+  wallet = models.IntegerField(default=0)
+
+  def __str__(self):
+    return  "owner: " + self.owner.username + ", wallet: " + str(self.wallet)

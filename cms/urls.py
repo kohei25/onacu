@@ -8,6 +8,7 @@ urlpatterns = [
     path('login/', views.Login.as_view(), name='login'),
     path('logout/', views.Logout.as_view(), name='logout'),
     path('signup/', views.UserCreate.as_view(), name='signup'),
+    path('point/buy/', views.pointBuy, name='point_buy'),
     path('event/new/', views.EventCreateView.as_view(), name='eve_new'),
     path('event/<int:pk>/', views.eventDetail, name='eve_de'),
     path('event/<int:event_id>/buy/', views.eventBuyView, name='buy'),
