@@ -18,3 +18,9 @@ NOTE: ```-rm```オプションをつけないとPCに使用済みコンテナが
 
 コンテナをすべて停止する  
 docker stop $(docker ps -q)
+
+# zip化
+zip ../onacu.zip -r * .ebextensions
+
+# sassを反映させる
+docker-compose run --rm web python manage.py sass cms/static/scss/ cms/static/css/ -g
