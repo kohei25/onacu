@@ -1,45 +1,54 @@
+{% extends 'cms/base.html' %}
 {% load static %}
-{% load sass_tags %}
 
-<!DOCTYPE html>
-<html>
+{% block title %}{{ event.name }}に参加中 | {% endblock %}
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}{% endblock %}EVENT NOW</title>
-  <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}">
-  <link rel="stylesheet" type="text/css" href="{% sass_src 'css/event.scss' %}">
-</head>
-
-<body>
-  <header>
-    <div id="js-event" value="{{ event.id }}"></div>
-    {% if user == event.host%}
-      <div id="js-lastTicket" value="{{ ticket.order }}"></div>
-      <div id="js-personalTime" value="{{ event.personal_time }}"></div>
-    {% else %}
-      <div id="js-user" value="user"></div>
-      <div id="js-ticket" value="{{ ticket.id }}"></div>
-    {% endif %}
-  </header>
-  <main>
-    <video id="remoteVideo"></video>
-  </main>
-  <footer>
-    <div class="message">
-      message
+{% block content %}
+<div class="hero pt-3">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12 col-sm-7 mb-3">
+        <h1>{{ event.name }}</h1>
+      </div>
+      <div class="col-12 col-sm-5 mb-3">
+        <div class="card">
+          <div class="card-header">
+            {{ event.host.username }}からのメッセージ
+          </div>
+          <div class="card-body">
+            message
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-10 mb-3">
+        <p id="pleaseWait">このままお待ちください</p>{# TODO: 握手の順番が来たら消す？ #}
+        <div class="video-container embed-responsive embed-responsive-4by3">
+          <video id="remoteVideo" class="embed-responsive-item" width="640" height="480"></video>
+        </div>
+      </div>
+      <div class="col-12 col-sm-2 mb-3">
+        {% if user == event.host %}
+        <button id="js-start" class="btn btn-primary mb-2"><i class="fas fa-video"></i> 開始する</button>
+        {% endif %}
+        <div class="video-container embed-responsive embed-responsive-4by3">
+          <video id="localVideo" class="embed-responsive-item" width="640" height="480"></video>
+          <div class="video-name">{{ user.username }}</div>
+        </div>
+      </div>
     </div>
-    <video id="localVideo"></video>
-    {% if user == event.host %}
-      <button id="js-start">開始する</button>
-    {% endif %}
-  </footer>
-  <!-- ***** script ********************************************************************* -->
-  <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
-  <script type="text/javascript" src="{% static 'js/video.js' %}"></script>
-</body>
+  </div>
+</div>
 
-</html>
+{# TODO: インラインJSでデータ記述 #}
+<div id="js-event" value="{{ event.id }}"></div>
+{% if user == event.host%}
+<div id="js-lastTicket" value="{{ ticket.order }}"></div>
+<div id="js-personalTime" value="{{ event.personal_time }}"></div>
+{% else %}
+<div id="js-user" value="user"></div>
+<div id="js-ticket" value="{{ ticket.id }}"></div>
+{% endif %}
+
+<script src="https://cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
+<script src="{% static 'js/video.js' %}"></script>
+{% endblock %}
