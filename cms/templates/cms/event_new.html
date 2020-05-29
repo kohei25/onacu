@@ -6,7 +6,7 @@
 <div class="bg-light">
   <div class="container py-3">
     <h1 class="border-bottom pb-2">イベント作成 <small class="text-muted">Create Event</small></h1>
-    <form method="post" action="">
+    <form method="post" action="" autocomplete="off">
       {% csrf_token %}
       <div class="form-group">
         <label for="{{ form.name.id_for_label }}">イベント名</label>
