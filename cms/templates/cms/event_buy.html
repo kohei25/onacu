@@ -1,27 +1,40 @@
 {% extends 'cms/base.html' %}
 
-{% block title %}Signup | {% endblock %}
+{% block title %}{{ event.name }}のチケット購入 | {% endblock %}
 
 {% block content %}
-<section class="section">
-  <div class="container is-mobile">
-    <h1 class="title is-4">チケットを購入する</h1>
-    <h2 class="subtitle is-6">Buy Ticket</h2>
-    <hr>
-    <br>
-    <form method="post" action="">
-      {% csrf_token %}
-      <!-- TODO: 購入内容を表示する -->
-      <p>{{ event.name }}</p>
-      <p>{{ event.date }}</p>
-      <p>{{ event.personal_time }}</p>
-      <div class="field">
-        <p class="control">
-          <input type="submit" value="購入する" class="button is-success">
-          <input type="hidden" name="next" value="{{ next }}">
-        </p>
+<div class="bg-light">
+  <div class="container pt-3">
+    <h1 class="border-bottom pb-2"><b>{{ event.name }}</b>のチケットを購入</h1>
+    <div class="row">
+      <div class="col-12 col-md-5 col-lg-6 text-center mb-3">
+        {# TODO: イベント画像 #}
+        <img class="img-fluid img-thumbnail" src="https://img-mdpr.freetls.fastly.net/article/AyLL/nm/AyLLp1iWF2PLmWppqJElOzmT4SnkPJMnpaIPm7pEMTM.jpg?width=700&disable=upscale&auto=webp" alt="{{ event.name }}">
       </div>
-    </form>
+      <div class="col-12 col-md-7 col-lg-6 mb-3">
+        <ul class="list-group mb-2">
+          <li class="list-group-item"><i class="fas fa-user"></i> <b>主催</b> {{ event.host.username }}</li>
+          <li class="list-group-item"><i class="fas fa-calendar"></i> <b>日時</b> {{ event.date }}</li>
+          <li class="list-group-item"><i class="fas fa-clock"></i> <b>時間</b> {{ event.personal_time }}秒</li>
+          <li class="list-group-item"><i class="fas fa-ticket-alt"></i> <b>残り</b> {{ event.total_ticket }}枚</li>
+          <li class="list-group-item"><i class="fas fa-bullhorn"></i> <b>状態</b>
+            {% if event.status == 0 %}{# TODO: 完売表示 #}
+            販売中
+            {% elif event.status == 1 %}
+            開催中
+            {% elif event.status == 2 %}
+            終了
+            {% endif %}
+          </li>
+        </ul>
+        {% if event.status == 0 %}{# TODO: 完売では表示しない．開催中も表示する？ #}
+        <form method="post" action="">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> 購入を確定する</button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
   </div>
-</section>
+</div>
 {% endblock %}
