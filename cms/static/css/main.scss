@@ -12,6 +12,7 @@ $theme-color: #fd3;
   background-color: lighten($theme-color, 15%);
   .tickets {
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
 

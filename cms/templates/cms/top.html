@@ -8,19 +8,48 @@
     <div class="row">
       <div class="col-12 col-md-6 col-lg-8 mt-3">
         {% if user.is_authenticated %}
-        <h3><i class="fas fa-ticket-alt"></i> 所持チケット</h3>
-        {% if tickets %}
-        <div class="tickets row row-cols-1 row-cols-lg-2 flex-nowrap">
-        {% for ticket in tickets %}
-          <div class="col">
-          {% include "./event_card.html" with event=ticket.event %}
+        <ul class="nav nav-tabs mb-2" id="ticketsTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="purchasedTickets-tab" data-toggle="tab" href="#purchasedTickets" role="tab" aria-controls="purchasedTickets" aria-selected="true"><i class="fas fa-ticket-alt"></i> 所持チケット</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="hostingTickets-tab" data-toggle="tab" href="#hostingTickets" role="tab" aria-controls="hostingTickets" aria-selected="false"><i class="fas fa-bullhorn"></i> 開催イベント</a>
+          </li>
+        </ul>
+        <div class="tab-content" id="ticketsTabContent">
+          <div class="tab-pane fade show active" id="purchasedTickets" role="tabpanel" aria-labelledby="purchasedTickets-tab">
+            {% if tickets %}
+            <div class="tickets mb-3">
+              <div class="row flex-nowrap">
+                {% for ticket in tickets %}
+                <div class="col-10 col-lg-7">
+                  {% include "./event_card.html" with event=ticket.event %}
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            {% else %}
+            <p>所持チケットはありません。</p>
+            {% endif %}
           </div>
-        {% endfor %}
+          <div class="tab-pane fade" id="hostingTickets" role="tabpanel" aria-labelledby="hostingTickets-tab">
+            {# TODO: hosting_eventsを渡す #}
+            {% if hosting_events %}
+            <div class="tickets mb-3">
+              <div class="row flex-nowrap">
+                {% for event in hosting_events %}
+                <div class="col-10 col-lg-7">
+                  {% include "./event_card.html" with event=event %}
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            {% else %}
+            <p>あなたが開催予定のイベントはありません。</p>
+            {% endif %}
+          </div>
         </div>
-        {% else %}
-        <p>所持チケットはありません。</p>
-        {% endif %}
-        {% else %}
+        {% else %}{# 未ログイン時 #}
         <div class="jumbotron">
           <h1 class="display-5">リモートだから会いに行ける</h1>
           <p class="lead"></p>
