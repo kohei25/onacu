@@ -60,8 +60,10 @@ def ticketPost(request):
 # Topページ
 def topView(request):
   events = Event.objects.all()
+  hosting_events = Event.objects.filter(host_id=request.user.id).exclude(status=2)
   have_tickets = Ticket.objects.filter(customer_id=request.user.id)
-  return render(request, 'cms/top.html', {'events': events, 'tickets':have_tickets})
+  purchased_events = list(map(lambda x: x.event, have_tickets))
+  return render(request, 'cms/top.html', {'events': events, 'purchased_events': purchased_events, 'hosting_events': hosting_events})
 
 class TopView(generic.ListView):
   template_name = 'cms/top.html'
