@@ -9,7 +9,7 @@ const Peer = window.Peer;
   // TODO: audio false -> true
   const localStream = await navigator.mediaDevices
     .getUserMedia({
-      audio: false,
+      audio: true,
       video: true,
     })
     .catch(console.error);
