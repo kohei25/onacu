@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import (
     LoginView, LogoutView,
 )
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
@@ -71,6 +72,10 @@ class TopView(generic.ListView):
 
   def get_queryset(self):
     return Event.objects.filter(status=0)
+
+@login_required
+def myPageView(request):
+  return render(request, 'cms/mypage.html')
 
 class EventCreateView(CreateView):
     model = Event
