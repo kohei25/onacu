@@ -22,7 +22,7 @@
         <button type="button" disabled class="btn btn-danger">終了</button>
         {% elif event.total_ticket <= event.purchaced_ticket %}
         <button type="button" disabled class="btn btn-success">完売</button>
-        {% elif event.status == 1 and event in purchased_events %}
+        {% elif event in purchased_events %}
         <a class="btn btn-info" href="{% url 'cms:eve_now' event.id %}">参加</a>
         {% else %}
         <a class="btn btn-info btn-block" href="{% url 'cms:eve_de' event.id %}">詳細</a>
