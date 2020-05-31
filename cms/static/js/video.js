@@ -50,8 +50,6 @@ const Peer = window.Peer;
       getPeerId(ticketOrder, lastTicket, personalTime);
     }
 
-    // TODO:4000を変数（personal time）にする
-    // 4病後に回線を切断する．
     console.log(personalTime*1000)
     setTimeout(closeFunc, personalTime*1000);
   };
