@@ -46,7 +46,7 @@
         </ul>
         <div class="ml-auto mr-3">
           <span class="navbar-text">{{ user.username }}さん</span>
-          <a class="btn btn-secondary" href="#">マイページ</a>
+          <a class="btn btn-secondary" href="{% url 'cms:mypage' %}">マイページ</a>
           <a class="btn btn-secondary" href="{% url 'cms:logout' %}">ログアウト</a>
         </div>
       </div>

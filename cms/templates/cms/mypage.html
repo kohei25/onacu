@@ -1,0 +1,11 @@
+{% extends 'cms/base.html' %}
+
+{% block title %}マイページ | {% endblock %}
+
+{% block content %}
+<div class="bg-light">
+  <div class="container py-3">
+    <h1 class="border-bottom pb-2">{{ user.username }}のマイページ</h1>
+  </div>
+</div>
+{% endblock %}
