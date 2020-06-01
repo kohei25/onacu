@@ -70,15 +70,19 @@ const Peer = window.Peer;
         'ticketId': ticketId,
       },
       dataType: 'json',
-      success: function (data) {
-        window.onbeforeunload = onBeforeunloadHandler; // イベント中のページ移動を阻止
-      }
     })
+    .done(function(data){
+      window.onbeforeunload = onBeforeunloadHandler; // イベント中のページ移動を阻止
+      $('#js-join').remove(); // 「参加する」ボタンを削除
+    }).fail(function(){
+      $('#js-join').removeAttr('disabled'); // 「参加する」ボタンを有効化
+    });
   }
 
   // User側のaction
   peer.on('open', function () {
     $('#js-join').click(function () { // onbeforeunloadをトリガーするためにはクリック等の操作が必要
+      $('#js-join').attr('disabled','disabled'); // 「参加する」ボタンを無効化
       postPeerId(peer.id);
     });
   });
@@ -86,6 +90,7 @@ const Peer = window.Peer;
   // host function!!
   // Host側のaction
   $('#js-start').click(function () {
+    $('#js-start').remove(); // 「開始する」ボタンを削除
     const lastTicket = $('#js-lastTicket').attr('value')
     const personalTime = $('#js-personalTime').attr('value')
     pleaseWait.remove(); // 「お待ちください」を消して
