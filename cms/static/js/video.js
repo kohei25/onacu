@@ -71,16 +71,16 @@ const Peer = window.Peer;
       },
       dataType: 'json',
       success: function (data) {
-
+        window.onbeforeunload = onBeforeunloadHandler; // イベント中のページ移動を阻止
       }
     })
   }
 
   // User側のaction
   peer.on('open', function () {
-    if ($('#js-user').length) {
+    $('#js-join').click(function () { // onbeforeunloadをトリガーするためにはクリック等の操作が必要
       postPeerId(peer.id);
-    }
+    });
   });
 
   // host function!!
@@ -90,6 +90,7 @@ const Peer = window.Peer;
     const personalTime = $('#js-personalTime').attr('value')
     pleaseWait.remove(); // 「お待ちください」を消して
     remoteVideo.removeClass('d-none').addClass('d-block'); // remoteVideoを表示する．
+    window.onbeforeunload = onBeforeunloadHandler; // イベント中のページ移動を阻止
     getPeerId(1, lastTicket, personalTime)
   })
 
@@ -113,11 +114,17 @@ const Peer = window.Peer;
         }
       })
     } else {
+      window.onbeforeunload = null; // イベント離脱を許可
       let finUrl = '/event/' + eventId + '/finish'
       window.location.href = finUrl;
     }
 
   }
+
+  // ページ移動を阻止するイベントハンドラ
+  var onBeforeunloadHandler = function (e) {
+    return 'イベントを中断しますか？';
+  };
 
   // Register callee handler
   // call function
@@ -136,6 +143,7 @@ const Peer = window.Peer;
     mediaConnection.once('close', function () {
       remoteVideo.get(0).srcObject.getTracks().forEach(function (track) { track.stop() });
       remoteVideo.get(0).srcObject = null;
+      window.onbeforeunload = null; // イベント離脱を許可
       let finUrl = '/event/' + eventId + '/finish'
       window.location.href = finUrl;
     });
