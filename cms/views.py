@@ -1,5 +1,4 @@
 import logging
-import ipdb
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import (
     LoginView, LogoutView,
@@ -12,7 +11,7 @@ from django.views import generic
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 
-from .models import Event, Ticket
+from .models import Event, Ticket, Wallet
 from .forms import LoginForm, UserCreateForm, EventForm, EventBuyForm
 
 UserModel = get_user_model()
@@ -60,8 +59,14 @@ def ticketPost(request):
 # Topページ
 def topView(request):
   events = Event.objects.all()
+  hosting_events = Event.objects.filter(host_id=request.user.id).exclude(status=2)
   have_tickets = Ticket.objects.filter(customer_id=request.user.id)
-  return render(request, 'cms/top.html', {'events': events, 'tickets':have_tickets})
+  purchased_events = list(map(lambda x: x.event, have_tickets))
+  return render(request, 'cms/top.html', {'events': events, 'purchased_events': purchased_events, 'hosting_events': hosting_events})
+
+def myPageView(request):
+  user = request.user
+  return render(request, 'cms/mypage.html', {'user': user})
 
 class TopView(generic.ListView):
   template_name = 'cms/top.html'
@@ -119,3 +124,13 @@ def event_finish(request, pk):
   event.status = 2
   event.save()
   return render(request, 'cms/event_finish.html')
+
+def pointBuy(request):
+  if request.method == "POST":
+    userId = request.user.id
+    personal_wallet = Wallet.objects.get_or_create(owner_id=userId)
+    get_point = int(request.POST['point'])
+    personal_wallet[0].wallet += get_point
+    personal_wallet[0].save()
+    return redirect('cms:top')
+  return render(request, 'cms/point_buy.html')

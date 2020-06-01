@@ -1,0 +1,24 @@
+{% extends 'cms/base.html' %}
+
+{% block title %}ポイント購入 | {% endblock %}
+
+{% block content %}
+<div class="bg-light">
+  <div class="container py-3">
+    <h1 class="border-bottom pb-2"><i class="fas fa-coins"></i> ポイントを購入する</h1>
+    <form method="post" action="">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="id_point">購入ポイント</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><b>P</b></span>
+          </div>
+          <input id="id_point" class="form-control" type="number" name="point" min="1">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary"><i class="fas fa-cash-register"></i> 購入する</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,72 +1,117 @@
 {% extends 'cms/base.html' %}
 
-{% block title %}トップページ{% endblock %}
+{% block title %}{% endblock %}
 
 {% block content %}
-<div class="header">
-  <div class="tickets_wallet">
-    <h3>所持チケット</h3>
-    {% if tickets %}
-    <div id="cards-container">
-      {% for ticket in tickets %}
-      <div class="card">
-        <img src='https://img-mdpr.freetls.fastly.net/article/AyLL/nm/AyLLp1iWF2PLmWppqJElOzmT4SnkPJMnpaIPm7pEMTM.jpg?width=700&disable=upscale&auto=webp' alt='No Image'>
-        <div class="info">
-          <div class="name">{{ ticket.event.name }}</div>
-          <div class="host">{{ ticket.event.host.username }}</div>
-          <div class="date">{{ ticket.event.date|date:"n/d f" }}〜</div>
-          <div class="time">{{ ticket.event.personal_time }}秒/枚</div>
-          {% if ticket.event.status == 2 %}
-            <div class="detail">
-              <button type="button" disabled class="btn btn-danger">終了</button>
+<div class="hero">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-6 col-lg-8 my-3">
+        {% if user.is_authenticated %}
+        {% if purchased_events and hosting_events %}
+        <ul class="nav nav-tabs mb-2" id="eventsTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="purchasedEvents-tab" data-toggle="tab" href="#purchasedEvents" role="tab" aria-controls="purchasedEvents" aria-selected="true"><i class="fas fa-ticket-alt"></i> 所持チケット</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="hostingEvents-tab" data-toggle="tab" href="#hostingEvents" role="tab" aria-controls="hostingEvents" aria-selected="false"><i class="fas fa-bullhorn"></i> 開催イベント</a>
+          </li>
+        </ul>
+        <div class="tab-content" id="eventsTabContent">
+          <div class="tab-pane fade show active" id="purchasedEvents" role="tabpanel" aria-labelledby="purchasedEvents-tab">
+            <div class="tickets">
+              <div class="row flex-nowrap">
+                {% for event in purchased_events %}
+                <div class="col-10 col-lg-7">
+                  {% include "./event_card.html" with event=event purchased_events=purchased_events %}
+                </div>
+                {% endfor %}
+              </div>
             </div>
-          {% else %}
-            <a class="detail" href="{% url 'cms:eve_now' ticket.event_id %}">
-              <button type="button" class="btn btn-info">参加</button>
-            </a>
-          {% endif %}
+          </div>
+          <div class="tab-pane fade" id="hostingEvents" role="tabpanel" aria-labelledby="hostingEvents-tab">
+            <div class="tickets">
+              <div class="row flex-nowrap">
+                {% for event in hosting_events %}
+                <div class="col-10 col-lg-7">
+                  {% include "./event_card.html" with event=event purchased_events=purchased_events %}
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
         </div>
+        {% elif hosting_events %}
+        <h3><i class="fas fa-bullhorn"></i> あなたの開催イベント</h3>
+        <div class="tickets">
+          <div class="row flex-nowrap">
+            {% for event in hosting_events %}
+            <div class="col-10 col-lg-7">
+              {% include "./event_card.html" with event=event purchased_events=purchased_events %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% else %}
+        <h3><i class="fas fa-ticket-alt"></i> 所持チケット</h3>
+        {% if purchased_events %}
+        <div class="tickets">
+          <div class="row flex-nowrap">
+            {% for event in purchased_events %}
+            <div class="col-10 col-lg-7">
+              {% include "./event_card.html" with event=event purchased_events=purchased_events %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% else %}
+        <p class="mb-0">所持チケットはありません。</p>
+        {% endif %}
+        {% endif %}
+        {% else %}{# 未ログイン時 #}
+        <div class="jumbotron">
+          <h1 class="display-5">リモートだから会いに行ける</h1>
+          <p class="lead"></p>
+          <hr class="my-4">
+          <p>OnAcu（オンアク）は、オンライン握手会プラットフォームです。</p>
+          <a class="btn btn-primary btn-lg" href="#" role="button">詳しく</a>
+        </div>
+        {% endif %}
+      </div>
+      <div class="col-12 col-md-6 col-lg-4 my-3">
+        <h3><i class="fas fa-search"></i> イベントを探す</h3>
+        <div id="datetimepicker"></div>
+        <script>
+          document.addEventListener('DOMContentLoaded', (event) => {
+            $('#datetimepicker').datetimepicker({
+              format: 'L',
+              minDate: new Date(),
+              inline: true,
+              locale: 'ja',
+            });
+            $('#datetimepicker').on('change.datetimepicker', ({ date, oldDate }) => {
+              location.assign('/?date=' + date.format('YYYY-MM-DD'));
+            });
+          }); 
+        </script>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="events">
+  <div class="container pt-3">
+    <h3><i class="far fa-calendar-check"></i> イベント情報</h3>
+    {% if events %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+      {% for event in events %}
+      <div class="col mb-3">
+        {% include "./event_card.html" with event=event purchased_events=purchased_events %}
       </div>
       {% endfor %}
     </div>
+    {% else %}
+    <p>予定のイベントはありません。</p>
     {% endif %}
   </div>
-</div>
-<div class="event_info">
-  <h3>イベント情報</h3>
-  <!-- TODO: -->
-  {% if events %}
-  <div id="cards-container">
-    {% for event in events %}
-    <div class="card">
-      <img src='https://img-mdpr.freetls.fastly.net/article/AyLL/nm/AyLLp1iWF2PLmWppqJElOzmT4SnkPJMnpaIPm7pEMTM.jpg?width=700&disable=upscale&auto=webp'
-        alt='No Image'>
-      <div class="info">
-        <div class="name">{{ event.name }}</div>
-        <div class="host">{{ event.host.username }}</div>
-        <div class="date">{{ event.date|date:"n/d f" }}〜</div>
-        <div class="time">{{ event.personal_time }}秒/枚</div>
-        {% if event.status == 2 %}
-        <div class="detail">
-          <button type="button" disabled class="btn btn-danger">終了</button>
-        </div>
-        {% else %}
-          {%if event.total_ticket <= event.purchaced_ticket and event.host != user%}
-            <div class="detail">
-              <button type="button" disabled class="btn btn-success">完売</button>
-            </div>
-          {% else %}
-            <a class="detail" href="{% url 'cms:eve_de' event.id %}">
-              <button type="button" class="btn btn-info">詳細</button>
-            </a>
-          {% endif %}
-        {% endif %}
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-  {% else %}
-    <p>予定のイベントはありません。</p>
-  {% endif %}
 </div>
 {% endblock %}

@@ -1,37 +1,40 @@
 {% extends 'cms/base.html' %}
 
-{% block title %}Signup | {% endblock %}
+{% block title %}{{ event.name }} イベント詳細 | {% endblock %}
 
 {% block content %}
-<section class="section">
-  <div class="container is-mobile">
-    <h1 class="title is-4">{{ event.name }}</h1>
-    <hr>
-    <br>
-    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-    <!--  イベントのホストユーザー以外のビュー -->
-    {% if user != event.host %}
-    <h2 class="subtitle is-6">開催者：{{ event.host.username }}</h2>
-    <h2 class="subtitle is-6">{{ event.date }}</h2>
-    <h2 class="subtitle is-6">1チケットでの時間：{{ event.personal_time }}秒</h2>
-    <h2 class="subtitle is-6">残り：{{ event.total_ticket }}枚</h2>
-    <h2 class="subtitle is-6">状態：{{ event.status }}</h2>
-      {% if is_ticket %}
-        <strong>購入済みです</strong>
-      {% else %}
-        {%if event.total_ticket > event.purchaced_ticket %}
-          <a href="{% url 'cms:buy' event.id%}">
-            <strong>購入する</strong>
-          </a>
+<div class="events">
+  <div class="container pt-3">
+    <h1 class="border-bottom pb-2">{{ event.name }} <small class="text-muted">イベント詳細</small></h1>
+    {% if error_message %}<div class="alert alert-danger" role="alert">{{ error_message }}</div>{% endif %}
+    <div class="row">
+      <div class="col-12 col-md-5 col-lg-6 text-center mb-3">
+        {# TODO: イベント画像 #}
+        <img class="img-fluid img-thumbnail" src="https://img-mdpr.freetls.fastly.net/article/AyLL/nm/AyLLp1iWF2PLmWppqJElOzmT4SnkPJMnpaIPm7pEMTM.jpg?width=700&disable=upscale&auto=webp" alt="{{ event.name }}">
+      </div>
+      <div class="col-12 col-md-7 col-lg-6 mb-3">
+        <ul class="list-group mb-2">
+          <li class="list-group-item"><i class="fas fa-user"></i> <b>主催</b> {{ event.host.username }}</li>
+          <li class="list-group-item"><i class="fas fa-calendar"></i> <b>日時</b> {{ event.date }}</li>
+          <li class="list-group-item"><i class="fas fa-clock"></i> <b>時間</b> {{ event.personal_time }}秒</li>
+          <li class="list-group-item"><i class="fas fa-ticket-alt"></i> <b>残り</b> {{ event.total_ticket }}枚</li>
+          <li class="list-group-item"><i class="fas fa-bullhorn"></i> <b>状態</b>
+            {% if event.status == 0 %}{# TODO: 完売表示 #}
+            販売中
+            {% elif event.status == 1 %}
+            開催中
+            {% elif event.status == 2 %}
+            終了
+            {% endif %}
+          </li>
+        </ul>
+        {% if is_ticket %}
+        <button class="btn btn-primary" disabled><i class="fas fa-shopping-cart"></i> 購入済み</button>
         {% else %}
-          <strong>完売しました</strong>
+        <a class="btn btn-primary" href="{% url 'cms:buy' event.id%}"><i class="fas fa-shopping-cart"></i> 購入する</a>
         {% endif %}
-      {% endif %}
-    {% else %}
-      <a href="{% url 'cms:eve_now' event.id%}">
-        <strong>イベントを開催する</strong>
-      </a>
-    {% endif %}
+      </div>
+    </div>
   </div>
-</section>
+</div>
 {% endblock %}

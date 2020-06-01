@@ -9,7 +9,7 @@ const Peer = window.Peer;
   // TODO: audio false -> true
   const localStream = await navigator.mediaDevices
     .getUserMedia({
-      audio: false,
+      audio: true,
       video: true,
     })
     .catch(console.error);
@@ -22,7 +22,6 @@ const Peer = window.Peer;
 
   const peer = new Peer({
     key: '889cd639-6a9e-4947-b168-35ad15fb44cb',
-    debug: 3,
   });
 
   function makeCalll(remotePeerId, ticketOrder, lastTicket, personalTime){
@@ -50,8 +49,6 @@ const Peer = window.Peer;
       getPeerId(ticketOrder, lastTicket, personalTime);
     }
 
-    // TODO:4000を変数（personal time）にする
-    // 4病後に回線を切断する．
     console.log(personalTime*1000)
     setTimeout(closeFunc, personalTime*1000);
   };

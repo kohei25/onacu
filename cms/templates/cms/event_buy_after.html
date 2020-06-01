@@ -1,10 +1,12 @@
 {% extends 'cms/base.html' %}
 
-{% block title %}Signup | {% endblock %}
+{% block title %}購入完了 | {% endblock %}
 
 {% block content %}
-<p>ご購入ありがとうございました</p>
-<a href="{% url 'cms:top' %}">
-  <h1>TOPページへ戻る</h1>
-</a>
+<div class="events">
+  <div class="container py-3">
+    <h1>ご購入ありがとうございました</h1>
+    <a class="btn btn-primary btn-block" href="{% url 'cms:top' %}">TOPページへ戻る</a>
+  </div>
+</div>
 {% endblock %}

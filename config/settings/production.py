@@ -3,7 +3,8 @@ from .common import *
 DEBUG = False
 
 ALLOWED_HOSTS = [
-  'onacu-env.eba-jkrp3mtv.us-east-1.elasticbeanstalk.com',
+  'onacuproduction-env.eba-izd3p7h2.ap-northeast-1.elasticbeanstalk.com',
+  'onacu.org',
 ]
 
 # Database
@@ -19,13 +20,5 @@ DATABASES = {
     }
 }
 
-# STATICFILES_STORAGE = 'sass_processor.storage.SassS3Boto3Storage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'www', 'static')
-# STATIC_URL = '/static/'
-# STATICFILES_FINDERS = [
-#     'django.contrib.staticfiles.finders.FileSystemFinder',
-#     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#     'sass_processor.finders.CssFinder',
-# ]
-# SASS_PRECISION = 5
-# SASS_OUTPUT_STYLE = 'compressed'
+
