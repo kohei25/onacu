@@ -22,6 +22,7 @@ const Peer = window.Peer;
 
   const peer = new Peer({
     key: '889cd639-6a9e-4947-b168-35ad15fb44cb',
+    debug: 3,
   });
 
   function makeCalll(remotePeerId, ticketOrder, lastTicket, personalTime){
@@ -49,6 +50,8 @@ const Peer = window.Peer;
       getPeerId(ticketOrder, lastTicket, personalTime);
     }
 
+    // TODO:4000を変数（personal time）にする
+    // 4病後に回線を切断する．
     console.log(personalTime*1000)
     setTimeout(closeFunc, personalTime*1000);
   };
@@ -94,7 +97,6 @@ const Peer = window.Peer;
         },
         dataType: 'json',
       }).done(function (data) {
-        // TODO: 一度退出した人に対してのスキップ処理
         if(data.userPeerId != 0){
           makeCalll(data.userPeerId, ticketOrder, lastTicket, personalTime)
         }else{

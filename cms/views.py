@@ -1,4 +1,5 @@
 import logging
+import ipdb
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import (
     LoginView, LogoutView,
@@ -63,10 +64,6 @@ def topView(request):
   have_tickets = Ticket.objects.filter(customer_id=request.user.id)
   purchased_events = list(map(lambda x: x.event, have_tickets))
   return render(request, 'cms/top.html', {'events': events, 'purchased_events': purchased_events, 'hosting_events': hosting_events})
-
-def myPageView(request):
-  user = request.user
-  return render(request, 'cms/mypage.html', {'user': user})
 
 class TopView(generic.ListView):
   template_name = 'cms/top.html'

@@ -2,6 +2,11 @@
 Django ~= 2.2 #Compatible release. Same as >= 2.2, == 2.*
 psycopg2>=2.7,<3.0  #config PostgresSQL
 
+ipython
+ipdb
 libsass
 django-compressor
 django-sass-processor
+pillow
+boto3
+django-storages
