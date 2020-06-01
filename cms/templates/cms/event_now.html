@@ -16,6 +16,7 @@
             </div>
           </div>
           <video id="remoteVideo" class="d-none"></video>
+          <div id="remoteVideoName" class="video-name d-none">{% if user != event.host %}{{ event.host.username }}{% endif %}</div>
         </div>
       </div>
       <div class="col-12 col-sm-3 mb-3">

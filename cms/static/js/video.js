@@ -71,19 +71,19 @@ const Peer = window.Peer;
       },
       dataType: 'json',
     })
-    .done(function(data){
-      window.onbeforeunload = onBeforeunloadHandler; // イベント中のページ移動を阻止
-      $('#js-join').remove(); // 「参加する」ボタンを削除
-      $('#pleaseWaitInner').append('<p>このままお待ちください。</p>');
-    }).fail(function(){
-      $('#js-join').removeAttr('disabled'); // 「参加する」ボタンを有効化
-    });
+      .done(function (data) {
+        window.onbeforeunload = onBeforeunloadHandler; // イベント中のページ移動を阻止
+        $('#js-join').remove(); // 「参加する」ボタンを削除
+        $('#pleaseWaitInner').append('<p>このままお待ちください。</p>');
+      }).fail(function () {
+        $('#js-join').removeAttr('disabled'); // 「参加する」ボタンを有効化
+      });
   }
 
   // User側のaction
   peer.on('open', function () {
     $('#js-join').click(function () { // onbeforeunloadをトリガーするためにはクリック等の操作が必要
-      $('#js-join').attr('disabled','disabled'); // 「参加する」ボタンを無効化
+      $('#js-join').attr('disabled', 'disabled'); // 「参加する」ボタンを無効化
       postPeerId(peer.id);
     });
   });
@@ -96,6 +96,7 @@ const Peer = window.Peer;
     const personalTime = $('#js-personalTime').attr('value')
     pleaseWait.remove(); // 「お待ちください」を消して
     remoteVideo.removeClass('d-none').addClass('d-block'); // remoteVideoを表示する．
+    $('#remoteVideoName').removeClass('d-none').addClass('d-block');
     window.onbeforeunload = onBeforeunloadHandler; // イベント中のページ移動を阻止
     getPeerId(1, lastTicket, personalTime)
   })
@@ -112,13 +113,18 @@ const Peer = window.Peer;
         dataType: 'json',
       }).done(function (data) {
         if (data.userPeerId != 0) {
-          makeCalll(data.userPeerId, ticketOrder, lastTicket, personalTime)
+          makeCalll(data.userPeerId, ticketOrder, lastTicket, personalTime);
+          $('#remoteVideoName').text(data.username);
         } else {
-          console.log('skip')
-          ticketOrder += 1
-          getPeerId(ticketOrder, lastTicket)
+          console.log('skip');
+          ticketOrder += 1;
+          getPeerId(ticketOrder, lastTicket, personalTime);
         }
-      })
+      }).fail(() => {
+        console.log('Failed to get remote peer id.');
+        ticketOrder += 1;
+        getPeerId(ticketOrder, lastTicket, personalTime);
+      });
     } else {
       window.onbeforeunload = null; // イベント離脱を許可
       let finUrl = '/event/' + eventId + '/finish'
@@ -140,6 +146,7 @@ const Peer = window.Peer;
     mediaConnection.on('stream', async function (stream) {
       pleaseWait.remove(); // 「お待ちください」を消して
       remoteVideo.removeClass('d-none').addClass('d-block'); // remoteVideoを表示する．
+      $('#remoteVideoName').removeClass('d-none').addClass('d-block');
       // Render remote stream for callee
       remoteVideo.get(0).srcObject = stream;
       remoteVideo.get(0).playsInline = true;

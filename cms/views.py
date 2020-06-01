@@ -46,6 +46,7 @@ def ticketGet(request):
   data = {
     'userPeerId': ticket.peerId,
     'orderId': orderId,
+    'username': ticket.customer.username,
   }
   return JsonResponse(data)
 
