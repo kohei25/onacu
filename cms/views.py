@@ -37,10 +37,14 @@ class UserCreate(CreateView):
 
 # Ajax
 def ticketGet(request):
-  eventId = request.GET.get('eventId', None);
-  orderId = request.GET.get('ticketOrder', None);
+  """ホストがAjaxでファンのPeerIdを取得するエンドポイント"""
+  eventId = request.GET.get('eventId', None)
+  orderId = request.GET.get('ticketOrder', None)
+  ticket = get_object_or_404(Ticket, event_id = eventId, order = orderId)
+  if ticket.event.host != request.user:
+    return HttpResponse('You are not the host of the event.', status=403)
   data = {
-    'userPeerId': Ticket.objects.get(event_id = eventId, order = orderId).peerId,
+    'userPeerId': ticket.peerId,
     'orderId': orderId,
   }
   return JsonResponse(data)
