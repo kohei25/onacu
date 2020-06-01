@@ -94,6 +94,7 @@ const Peer = window.Peer;
         },
         dataType: 'json',
       }).done(function (data) {
+        // TODO: 一度退出した人に対してのスキップ処理
         if(data.userPeerId != 0){
           makeCalll(data.userPeerId, ticketOrder, lastTicket, personalTime)
         }else{
