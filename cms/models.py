@@ -128,7 +128,7 @@ class Event(models.Model):
   # 0: イベント前，1: イベント中, 2: イベント後
   status = models.IntegerField(default=0)
   # イベントの写真URL
-  image = models.ImageField(upload_to='images', blank=true, null=true)
+  image = models.ImageField(upload_to='images', blank=True, null=True)
 
   def __str__(self):
     return self.name + "," + self.host.username
