@@ -1,5 +1,4 @@
 import logging
-import ipdb
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import (
     LoginView, LogoutView,
