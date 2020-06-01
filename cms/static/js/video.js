@@ -64,7 +64,7 @@ const Peer = window.Peer;
   function postPeerId(peerId) {
     let ticketId = $('#js-ticket').attr('value')
     $.ajax({
-      url: '/ajax/ticket/post',
+      url: '/ajax/ticket/post/',
       data: {
         'userPeerId': peerId,
         'ticketId': ticketId,
@@ -104,7 +104,7 @@ const Peer = window.Peer;
 
     if (ticketOrder <= lastTicket) {
       $.ajax({
-        url: '/ajax/ticket/get',
+        url: '/ajax/ticket/get/',
         data: {
           'eventId': eventId,
           'ticketOrder': ticketOrder,
