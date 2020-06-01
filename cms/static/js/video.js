@@ -4,16 +4,24 @@ const Peer = window.Peer;
   // videochat
   const localVideo = $('#localVideo');
   const remoteVideo = $('#remoteVideo');
-  const eventId =$('#js-event').attr('value');
+  const eventId = $('#js-event').attr('value');
 
   // TODO: audio false -> true
   const localStream = await navigator.mediaDevices
     .getUserMedia({
-      audio: true,
-      video: true,
+      video: {
+        aspectRatio: 1.77777777778, // 16:9
+        facingMode: 'user',
+        resizeMode: 'none'
+      },
+      audio: {
+        autoGainControl: true,
+        echoCancellation: true,
+        noiseSuppression: true
+      }
     })
     .catch(console.error);
-  
+
   // Render local stream
   localVideo.get(0).muted = true;
   localVideo.get(0).srcObject = localStream;
@@ -24,21 +32,21 @@ const Peer = window.Peer;
     key: '889cd639-6a9e-4947-b168-35ad15fb44cb',
   });
 
-  function makeCalll(remotePeerId, ticketOrder, lastTicket, personalTime){
+  function makeCalll(remotePeerId, ticketOrder, lastTicket, personalTime) {
     if (!peer.open) {
       return;
     }
 
     const mediaConnection = peer.call(remotePeerId, localStream);
 
-    mediaConnection.on('stream', async function(stream){
+    mediaConnection.on('stream', async function (stream) {
       remoteVideo.get(0).srcObject = stream;
       remoteVideo.get(0).playsInline = true;
       await remoteVideo.get(0).play().catch(console.error);
     });
 
-    mediaConnection.once('close', function(){
-      remoteVideo.get(0).srcObject.getTracks().forEach(function(track){track.stop()});
+    mediaConnection.once('close', function () {
+      remoteVideo.get(0).srcObject.getTracks().forEach(function (track) { track.stop() });
       remoteVideo.get(0).srcObject = null;
     });
 
@@ -49,8 +57,8 @@ const Peer = window.Peer;
       getPeerId(ticketOrder, lastTicket, personalTime);
     }
 
-    console.log(personalTime*1000)
-    setTimeout(closeFunc, personalTime*1000);
+    console.log(personalTime * 1000)
+    setTimeout(closeFunc, personalTime * 1000);
   };
 
   function postPeerId(peerId) {
@@ -77,7 +85,7 @@ const Peer = window.Peer;
 
   // host function!!
   // Host側のaction
-  $('#js-start').click(function(){
+  $('#js-start').click(function () {
     const lastTicket = $('#js-lastTicket').attr('value')
     const personalTime = $('#js-personalTime').attr('value')
     getPeerId(1, lastTicket, personalTime)
@@ -85,7 +93,7 @@ const Peer = window.Peer;
 
   function getPeerId(ticketOrder, lastTicket, personalTime) {
 
-    if(ticketOrder <= lastTicket){
+    if (ticketOrder <= lastTicket) {
       $.ajax({
         url: '/ajax/ticket/get',
         data: {
@@ -94,15 +102,15 @@ const Peer = window.Peer;
         },
         dataType: 'json',
       }).done(function (data) {
-        if(data.userPeerId != 0){
+        if (data.userPeerId != 0) {
           makeCalll(data.userPeerId, ticketOrder, lastTicket, personalTime)
-        }else{
+        } else {
           console.log('skip')
           ticketOrder += 1
           getPeerId(ticketOrder, lastTicket)
         }
       })
-    }else{
+    } else {
       let finUrl = '/event/' + eventId + '/finish'
       window.location.href = finUrl;
     }
@@ -111,18 +119,18 @@ const Peer = window.Peer;
 
   // Register callee handler
   // call function
-  peer.on('call', function(mediaConnection){
+  peer.on('call', function (mediaConnection) {
     mediaConnection.answer(localStream);
 
-    mediaConnection.on('stream', async function(stream){
+    mediaConnection.on('stream', async function (stream) {
       // Render remote stream for callee
       remoteVideo.get(0).srcObject = stream;
       remoteVideo.get(0).playsInline = true;
       await remoteVideo.get(0).play().catch(console.error);
     });
 
-    mediaConnection.once('close', function(){
-      remoteVideo.get(0).srcObject.getTracks().forEach(function(track){track.stop()});
+    mediaConnection.once('close', function () {
+      remoteVideo.get(0).srcObject.getTracks().forEach(function (track) { track.stop() });
       remoteVideo.get(0).srcObject = null;
       let finUrl = '/event/' + eventId + '/finish'
       window.location.href = finUrl;
