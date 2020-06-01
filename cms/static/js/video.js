@@ -5,6 +5,7 @@ const Peer = window.Peer;
   const localVideo = $('#localVideo');
   const remoteVideo = $('#remoteVideo');
   const eventId = $('#js-event').attr('value');
+  const pleaseWait = $('#pleaseWait');
 
   const localStream = await navigator.mediaDevices
     .getUserMedia({
@@ -87,6 +88,8 @@ const Peer = window.Peer;
   $('#js-start').click(function () {
     const lastTicket = $('#js-lastTicket').attr('value')
     const personalTime = $('#js-personalTime').attr('value')
+    pleaseWait.remove(); // 「お待ちください」を消して
+    remoteVideo.removeClass('d-none').addClass('d-block'); // remoteVideoを表示する．
     getPeerId(1, lastTicket, personalTime)
   })
 
@@ -122,6 +125,8 @@ const Peer = window.Peer;
     mediaConnection.answer(localStream);
 
     mediaConnection.on('stream', async function (stream) {
+      pleaseWait.remove(); // 「お待ちください」を消して
+      remoteVideo.removeClass('d-none').addClass('d-block'); // remoteVideoを表示する．
       // Render remote stream for callee
       remoteVideo.get(0).srcObject = stream;
       remoteVideo.get(0).playsInline = true;
