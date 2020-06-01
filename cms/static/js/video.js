@@ -6,11 +6,10 @@ const Peer = window.Peer;
   const remoteVideo = $('#remoteVideo');
   const eventId = $('#js-event').attr('value');
 
-  // TODO: audio false -> true
   const localStream = await navigator.mediaDevices
     .getUserMedia({
       video: {
-        aspectRatio: 1.77777777778, // 16:9
+        aspectRatio: 1,
         facingMode: 'user',
         resizeMode: 'none'
       },
