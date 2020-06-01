@@ -8,3 +8,5 @@ libsass
 django-compressor
 django-sass-processor
 pillow
+boto3
+django-storages
