@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sass_processor',
     'cms.apps.CmsConfig',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -106,19 +107,17 @@ LOGIN_URL = 'cms:login'
 LOGIN_REDIRECT_URL = 'cms:top'
 LOGOUT_REDIRECT_URL = 'cms:top'
 
-# SASS
-# STATICFILES_STORAGE = 'sass_processor.storage.SassS3Boto3Storage'
-# SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# SASS_PROCESSOR_AUTO_INCLUDE = False
-# SASS_PROCESSOR_INCLUDE_DIRS = [
-#     os.path.join(BASE_DIR, 'static/scss'),
-#     os.path.join(BASE_DIR, 'node_modules'),
-# ]
-# STATICFILES_FINDERS = [
-#     'django.contrib.staticfiles.finders.FileSystemFinder',
-#     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#     'sass_processor.finders.CssFinder',
-# ]
-# SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r'^.+\.scss$'
-# SASS_PRECISION = 5
-# SASS_OUTPUT_STYLE = 'compressed'
+# S3
+AWS_ACCESS_KEY_ID = os.environ["ACCESS_KEY_ID"]
+AWS_SECRET_ACCESS_KEY = os.environ["SECRET_ACCESS_KEY"]
+AWS_STORAGE_BUCKET_NAME = os.environ["BUCKET_NAME"]
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',  # 1日はそのキャッシュを使う
+}
+
+AWS_LOCATION = 'static'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+
+DEFAULT_FILE_STORAGE = 'config.storage_backends.MediaStorage'
