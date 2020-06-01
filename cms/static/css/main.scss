@@ -36,18 +36,6 @@ $theme-color: #fd3;
   }
 }
 
-.video-container {
-  max-height: 95vh;
-  .video-name {
-    background-color: rgba(0,0,0,.3);
-    color: #fff;
-    bottom: 0;
-    left: 0;
-    padding: 0 .1rem;
-    position: absolute;
-  }
-}
-
 .remote-video-container {
   background-color: gray;
   position: relative;
@@ -57,11 +45,20 @@ $theme-color: #fd3;
   background-size: cover;
 }
 #pleaseWaitInner {
-  background-color: rgba(255,255,255,.8);
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 #remoteVideo {
   height: auto;
   max-height: 80vh;
   width: 100%;
+}
+
+.video-name {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  bottom: 0;
+  left: 0;
+  padding: 0 0.1rem;
+  position: absolute;
 }
