@@ -74,6 +74,7 @@ const Peer = window.Peer;
     .done(function(data){
       window.onbeforeunload = onBeforeunloadHandler; // イベント中のページ移動を阻止
       $('#js-join').remove(); // 「参加する」ボタンを削除
+      $('#pleaseWaitInner').append('<p>このままお待ちください。</p>');
     }).fail(function(){
       $('#js-join').removeAttr('disabled'); // 「参加する」ボタンを有効化
     });
