@@ -1,7 +1,9 @@
 <div class="event-card card">
   <div class="row no-gutters">
     <div class="col-6">
-      <img class="card-img" src="https://img-mdpr.freetls.fastly.net/article/AyLL/nm/AyLLp1iWF2PLmWppqJElOzmT4SnkPJMnpaIPm7pEMTM.jpg?width=700&disable=upscale&auto=webp" alt="{{ event.name }}" loading="lazy">
+      {% if event.image %}
+      <img class="card-img" src="{{ event.image.url }}" alt="{{ event.name }}" loading="lazy">
+      {% endif %}
     </div>
     <div class="col-6">
       <div class="card-body">
