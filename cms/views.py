@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import (
     LoginView, LogoutView,
 )
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy, reverse
@@ -46,14 +46,15 @@ def ticketGet(request):
   return JsonResponse(data)
 
 def ticketPost(request):
-  userPeerId = request.GET.get('userPeerId', None);
-  ticketId = request.GET.get('ticketId', None);
-  set_ticket = Ticket.objects.get(pk=ticketId)
-  set_ticket.peerId = userPeerId
-  set_ticket.save()
-  data = {
-    'status': 'success_ajax',
-  }
+  """ファンがAjaxでTicketのPeerIdを設定するエンドポイント"""
+  ticketId = request.GET.get('ticketId', None)
+  ticket = get_object_or_404(Ticket, pk=ticketId)
+  if ticket.customer_id != request.user.id:
+    return HttpResponse('You do not have the ticket.', status=403)
+  userPeerId = request.GET.get('userPeerId', None)
+  ticket.peerId = userPeerId
+  ticket.save()
+  data = {}
   return JsonResponse(data)
 
 # Topページ
