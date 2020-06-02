@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import (
     LoginView, LogoutView,
 )
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
@@ -83,6 +84,7 @@ class EventCreateView(CreateView):
       event.save()
       return super(EventCreateView, self).form_valid(form)
 
+@login_required(login_url="/login/")
 def eventDetail(request, pk):
   event = get_object_or_404(Event, pk=pk)
   is_ticket = Ticket.objects.filter(event_id=event.id, customer_id=request.user.id)
