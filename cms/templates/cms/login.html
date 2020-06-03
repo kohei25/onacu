@@ -11,24 +11,26 @@
       {% csrf_token %}
       <div class="form-group">
         {# TODO: ユーザーネームとメールアドレスの選択 #}
-        <label for="id_username">ユーザーネーム</label>
+        <label for="id_username">{{ form.username.label }}</label>
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text"><i class="fas fa-user"></i></span>
           </div>
           {{ form.username }}
         </div>
+        {% if form.username.help_text %}<small class="form-text text-muted">{{ form.username.help_text }}</small>{% endif %}
       </div>
       {% include "./error_alert.html" with errors=form.username.errors %}
 
       <div class="form-group">
-        <label for="id_password">パスワード</label>
+        <label for="id_password">{{ form.password.label }}</label>
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text"><i class="fas fa-lock"></i></span>
           </div>
           {{ form.password }}
         </div>
+        {% if form.password.help_text %}<small class="form-text text-muted">{{ form.password.help_text }}</small>{% endif %}
       </div>
       {% include "./error_alert.html" with errors=form.password.errors %}
 
