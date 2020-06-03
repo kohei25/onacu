@@ -113,10 +113,10 @@ class User(AbstractUser):
 # event model
 class Event(models.Model):
     name = models.CharField(
-        "イベント名", max_length=100, help_text="この項目は必須です。「○田□花 握手会」など。100文字以内にしてください。",
+        "イベント名", max_length=100, help_text="この項目は必須です。100文字以内にしてください。例: ○田□花 握手会",
     )
     host = models.ForeignKey("User", on_delete=models.CASCADE)
-    date = models.DateTimeField("開催日時", help_text="この項目は必須です。",)
+    date = models.DateTimeField("開催日時", help_text="この項目は必須です。例: 2020-07-01 13:00",)
     # 1人あたりのビデオチャット時間，5s - 300s(5min)
     MIN_PERSONAL_TIME = 5
     MAX_PERSONAL_TIME = 300
