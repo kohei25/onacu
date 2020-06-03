@@ -9,7 +9,9 @@
     {% if error_message %}<div class="alert alert-danger" role="alert">{{ error_message }}</div>{% endif %}
     <div class="row">
       <div class="col-12 col-md-5 col-lg-6 text-center mb-3">
+        {% if event.image %}
         <img class="img-fluid img-thumbnail" src="{{ event.image.url }}" alt="{{ event.name }}">
+        {% endif %}
       </div>
       <div class="col-12 col-md-7 col-lg-6 mb-3">
         <ul class="list-group mb-2">
