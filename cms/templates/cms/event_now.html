@@ -7,31 +7,26 @@
 <div class="hero pt-3">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-12 col-sm-7 mb-3">
-        <h1>{{ event.name }}</h1>
-      </div>
-      <div class="col-12 col-sm-5 mb-3">
-        <div class="card">
-          <div class="card-header">
-            {{ event.host.username }}からのメッセージ
+      <div class="col-12 col-sm-9 mb-3">
+        <div class="remote-video-container">
+          <div id="pleaseWait" class="embed-responsive embed-responsive-16by9" style="background-image: url('https://img-mdpr.freetls.fastly.net/article/AyLL/nm/AyLLp1iWF2PLmWppqJElOzmT4SnkPJMnpaIPm7pEMTM.jpg');">{# TODO: event.image #}
+            <div id="pleaseWaitInner" class="embed-responsive-item p-2 d-flex flex-column align-items-center justify-content-center">
+              <h1 class="h2">{{ event.name }}</h1>
+              <p><b>{{ event.host.username }}</b>: 今日は楽しんでいきましょう！</p>{# TODO: message（約100文字以内） #}
+            </div>
           </div>
-          <div class="card-body">
-            message
-          </div>
+          <video id="remoteVideo" class="d-none"></video>
+          <div id="remoteVideoName" class="video-name d-none">{% if user != event.host %}{{ event.host.username }}{% endif %}</div>
         </div>
       </div>
-      <div class="col-12 col-sm-10 mb-3">
-        <p id="pleaseWait">このままお待ちください</p>{# TODO: 握手の順番が来たら消す？ #}
-        <div class="video-container embed-responsive embed-responsive-4by3">
-          <video id="remoteVideo" class="embed-responsive-item" width="640" height="480"></video>
-        </div>
-      </div>
-      <div class="col-12 col-sm-2 mb-3">
+      <div class="col-12 col-sm-3 mb-3">
         {% if user == event.host %}
-        <button id="js-start" class="btn btn-primary mb-2"><i class="fas fa-video"></i> 開始する</button>
+        <button id="js-start" class="btn btn-primary btn-lg btn-block mb-2"><i class="fas fa-video"></i> 開始する</button>
+        {% else %}
+        <button id="js-join" class="btn btn-primary btn-lg btn-block mb-2"><i class="fas fa-video"></i> 参加する</button>
         {% endif %}
-        <div class="video-container embed-responsive embed-responsive-4by3">
-          <video id="localVideo" class="embed-responsive-item" width="640" height="480"></video>
+        <div class="local-video-container bg-light">
+          <video id="localVideo" class="img-fluid d-block"></video>
           <div class="video-name">{{ user.username }}</div>
         </div>
       </div>

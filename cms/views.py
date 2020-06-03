@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import (
     LoginView, LogoutView,
 )
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.http.response import JsonResponse
@@ -38,23 +39,29 @@ class UserCreate(CreateView):
 
 # Ajax
 def ticketGet(request):
-  eventId = request.GET.get('eventId', None);
-  orderId = request.GET.get('ticketOrder', None);
+  """ホストがAjaxでファンのPeerIdを取得するエンドポイント"""
+  eventId = request.GET.get('eventId', None)
+  orderId = request.GET.get('ticketOrder', None)
+  ticket = get_object_or_404(Ticket, event_id = eventId, order = orderId)
+  if ticket.event.host != request.user:
+    return HttpResponse('You are not the host of the event.', status=403)
   data = {
-    'userPeerId': Ticket.objects.get(event_id = eventId, order = orderId).peerId,
+    'userPeerId': ticket.peerId,
     'orderId': orderId,
+    'username': ticket.customer.username,
   }
   return JsonResponse(data)
 
 def ticketPost(request):
-  userPeerId = request.GET.get('userPeerId', None);
-  ticketId = request.GET.get('ticketId', None);
-  set_ticket = Ticket.objects.get(pk=ticketId)
-  set_ticket.peerId = userPeerId
-  set_ticket.save()
-  data = {
-    'status': 'success_ajax',
-  }
+  """ファンがAjaxでTicketのPeerIdを設定するエンドポイント"""
+  ticketId = request.GET.get('ticketId', None)
+  ticket = get_object_or_404(Ticket, pk=ticketId)
+  if ticket.customer_id != request.user.id:
+    return HttpResponse('You do not have the ticket.', status=403)
+  userPeerId = request.GET.get('userPeerId', None)
+  ticket.peerId = userPeerId
+  ticket.save()
+  data = {}
   return JsonResponse(data)
 
 # Topページ
