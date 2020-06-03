@@ -17,6 +17,8 @@
           {{ form.name }}
         </div>
       </div>
+      {% include "./error_alert.html" with errors=form.name.errors %}
+
       <div class="form-group">
         <label for="{{ form.date.id_for_label }}">開催日時</label>
         <div class="input-group">
@@ -43,6 +45,8 @@
           });
         </script>
       </div>
+      {% include "./error_alert.html" with errors=form.date.errors %}
+
       <div class="form-group">
         <label for="{{ form.personal_time.id_for_label }}">1人あたりの時間（秒）</label>
         <div class="input-group">
@@ -52,6 +56,8 @@
           {{ form.personal_time }}
         </div>
       </div>
+      {% include "./error_alert.html" with errors=form.personal_time.errors %}
+
       <div class="form-group">
         <label for="{{ form.total_ticket.id_for_label }}">チケット発行数（枚）</label>
         <div class="input-group">
@@ -61,6 +67,8 @@
           {{ form.total_ticket }}
         </div>
       </div>
+      {% include "./error_alert.html" with errors=form.total_ticket.errors %}
+
       <div class="form-group">
         <label for="{{ form.image.id_for_label }}">イメージ画像</label>
         <div class="input-group">
@@ -88,6 +96,8 @@
           });
         </script>
       </div>
+      {% include "./error_alert.html" with errors=form.image.errors %}
+
       <button type="submit" class="btn btn-primary">作成</button>
     </form>
   </div>
