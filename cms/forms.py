@@ -36,6 +36,10 @@ class EventForm(forms.ModelForm):
     self.fields['date'].widget.attrs['data-toggle'] = 'datetimepicker'
     self.fields['date'].widget.attrs['data-target'] = '#id_date'
     self.fields['image'].widget.attrs['class'] = 'form-control-file'
+    self.fields['personal_time'].widget.attrs['min'] = self.Meta.model.MIN_PERSONAL_TIME
+    self.fields['personal_time'].widget.attrs['max'] = self.Meta.model.MAX_PERSONAL_TIME
+    self.fields['total_ticket'].widget.attrs['min'] = self.Meta.model.MIN_TOTAL_TICKET
+    self.fields['total_ticket'].widget.attrs['max'] = self.Meta.model.MAX_TOTAL_TICKET
 
 class EventBuyForm(forms.ModelForm):
   class Meta:
