@@ -35,6 +35,7 @@ class EventForm(forms.ModelForm):
     self.fields['date'].widget.attrs['class'] = 'form-control datetimepicker-input'
     self.fields['date'].widget.attrs['data-toggle'] = 'datetimepicker'
     self.fields['date'].widget.attrs['data-target'] = '#id_date'
+    self.fields['image'].widget.attrs['class'] = 'form-control-file'
 
 class EventBuyForm(forms.ModelForm):
   class Meta:
