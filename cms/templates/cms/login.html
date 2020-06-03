@@ -19,6 +19,8 @@
           {{ form.username }}
         </div>
       </div>
+      {% include "./error_alert.html" with errors=form.username.errors %}
+
       <div class="form-group">
         <label for="id_password">パスワード</label>
         <div class="input-group">
@@ -28,6 +30,8 @@
           {{ form.password }}
         </div>
       </div>
+      {% include "./error_alert.html" with errors=form.password.errors %}
+
       <button type="submit" class="btn btn-primary">ログイン</button>
       <input type="hidden" name="next" value="{{ next }}">
     </form>
