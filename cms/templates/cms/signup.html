@@ -10,46 +10,50 @@
     <form method="post" action="">
       {% csrf_token %}
       <div class="form-group">
-        <label for="id_username">ユーザーネーム（本名可）</label>
+        <label for="id_username">{{ form.username.label }}</label>
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text"><i class="fas fa-user"></i></span>
           </div>
           {{ form.username }}
         </div>
+        {% if form.username.help_text %}<small class="form-text text-muted">{{ form.username.help_text }}</small>{% endif %}
       </div>
       {% include "./error_alert.html" with errors=form.username.errors %}
 
       <div class="form-group">
-        <label for="id_email">メールアドレス</label>
+        <label for="id_email">{{ form.email.label }}</label>
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text"><i class="fas fa-envelope"></i></span>
           </div>
           {{ form.email }}
         </div>
+        {% if form.email.help_text %}<small class="form-text text-muted">{{ form.email.help_text }}</small>{% endif %}
       </div>
       {% include "./error_alert.html" with errors=form.email.errors %}
 
       <div class="form-group">
-        <label for="id_password1">パスワード</label>
+        <label for="id_password1">{{ form.password1.label }}</label>
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text"><i class="fas fa-lock"></i></span>
           </div>
           {{ form.password1 }}
         </div>
+        {% if form.password1.help_text %}<small class="form-text text-muted">{{ form.password1.help_text }}</small>{% endif %}
       </div>
       {% include "./error_alert.html" with errors=form.password1.errors %}
 
       <div class="form-group">
-        <label for="id_password2">パスワード（確認）</label>
+        <label for="id_password2">{{ form.password2.label }}</label>
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text"><i class="fas fa-lock"></i></span>
           </div>
           {{ form.password2 }}
         </div>
+        {% if form.password2.help_text %}<small class="form-text text-muted">{{ form.password2.help_text }}</small>{% endif %}
       </div>
       {% include "./error_alert.html" with errors=form.password2.errors %}
 
