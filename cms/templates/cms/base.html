@@ -58,7 +58,11 @@
       {% endif %}
     </div>
   </nav>
-  {% include "./error_alert.html" with errors=form.non_field_errors %}{# FormのFieldに依存しないエラーを表示 #}
+  {% if form.non_field_errors %}{# FormのFieldに依存しないエラーを表示 #}
+  <div class="container mt-3">
+    {% include "./error_alert.html" with errors=form.non_field_errors %}
+  </div>
+  {% endif %}
   <main>
     {% block content %}{% endblock %}
   </main>
