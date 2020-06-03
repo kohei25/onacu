@@ -62,14 +62,33 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="{{ form.total_ticket.id_for_label }}">イベントイメージ写真</label>
+        <label for="{{ form.image.id_for_label }}">イメージ画像</label>
         <div class="input-group">
           {{ form.image }}
         </div>
       </div>
-      <!-- TODO: 画像プレビュー -->
+      <div id="preview">
+        <script>
+          document.getElementById('{{ form.image.id_for_label }}').addEventListener('change', e => {
+            var reader = new FileReader();
+            var preview = document.getElementById('preview');
+            var previewImage = document.getElementById('previewImage');
+            var file = e.target.files[0];
+            if (previewImage != null) preview.removeChild(previewImage);
+            reader.onload = (e => {
+              var img = document.createElement('img');
+              img.setAttribute('src', reader.result);
+              img.setAttribute('id', 'previewImage');
+              img.classList.add('img-fluid');
+              img.classList.add('img-thumbnail');
+              img.classList.add('mb-3');
+              preview.appendChild(img);
+            });
+            if (file instanceof Blob || file instanceof File) reader.readAsDataURL(file);
+          });
+        </script>
+      </div>
       <button type="submit" class="btn btn-primary">作成</button>
-      <input type="hidden" name="next" value="{{ next }}">
     </form>
   </div>
 </div>
