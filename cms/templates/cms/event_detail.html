@@ -9,8 +9,7 @@
     {% if error_message %}<div class="alert alert-danger" role="alert">{{ error_message }}</div>{% endif %}
     <div class="row">
       <div class="col-12 col-md-5 col-lg-6 text-center mb-3">
-        {# TODO: イベント画像 #}
-        <img class="img-fluid img-thumbnail" src="https://img-mdpr.freetls.fastly.net/article/AyLL/nm/AyLLp1iWF2PLmWppqJElOzmT4SnkPJMnpaIPm7pEMTM.jpg?width=700&disable=upscale&auto=webp" alt="{{ event.name }}">
+        <img class="img-fluid img-thumbnail" src="{{ event.image.url }}" alt="{{ event.name }}">
       </div>
       <div class="col-12 col-md-7 col-lg-6 mb-3">
         <ul class="list-group mb-2">

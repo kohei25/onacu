@@ -30,6 +30,7 @@ const Peer = window.Peer;
 
   const peer = new Peer({
     key: '889cd639-6a9e-4947-b168-35ad15fb44cb',
+    debug: 3,
   });
 
   function makeCalll(remotePeerId, ticketOrder, lastTicket, personalTime) {
@@ -59,6 +60,7 @@ const Peer = window.Peer;
 
     console.log(personalTime * 1000)
     setTimeout(closeFunc, personalTime * 1000);
+
   };
 
   function postPeerId(peerId) {
