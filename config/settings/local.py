@@ -30,3 +30,6 @@ STATICFILES_FINDERS = [
 ]
 SASS_PRECISION = 5
 SASS_OUTPUT_STYLE = 'compressed'
+
+# Email
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # Emailをコンソールに表示

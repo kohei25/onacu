@@ -36,3 +36,13 @@ AWS_S3_OBJECT_PARAMETERS = {
 # STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 
 DEFAULT_FILE_STORAGE = 'config.storage_backends.MediaStorage'
+
+# Email
+EMAIL_BACKEND = 'django_ses.SESBackend'
+# us-east-1 以外のAWSリージョンを使用する場合はこれも必要↓
+# AWS_SES_REGION_NAME = 'us-west-2'
+# AWS_SES_REGION_ENDPOINT = 'email.us-west-2.amazonaws.com'
+
+# DEFAULT_FROM_EMAIL: サイト管理者からの自動送信メールに使用するデフォルトの Email アドレス
+# SERVER_EMAIL: ADMINS や MANAGERS に送信されるエラーメッセージの送信元 Email アドレス
+DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'no-reply <noreply@onacu.org>'
