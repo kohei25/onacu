@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import (
     LoginView, LogoutView,
 )
-
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.http.response import JsonResponse
@@ -78,6 +77,18 @@ class TopView(generic.ListView):
 
   def get_queryset(self):
     return Event.objects.filter(status=0)
+
+@login_required
+def myPageView(request):
+  hosted_events = Event.objects.filter(host_id=request.user.id).filter(status=2)
+  hosting_events = Event.objects.filter(host_id=request.user.id).exclude(status=2)
+  have_tickets = Ticket.objects.filter(customer_id=request.user.id)
+  purchased_events = list(map(lambda x: x.event, have_tickets))
+  past_events = list(hosted_events) + list(filter(lambda x: x.status == 2, purchased_events))
+  future_events = list(hosting_events) + list(filter(lambda x: x.status != 2, purchased_events))
+  past_events.sort(key=lambda x: x.date, reverse=True) # 過去のイベントは降順でソート
+  future_events.sort(key=lambda x: x.date) #今後のイベントは昇順でソート
+  return render(request, 'cms/mypage.html', {'past_events': past_events, 'future_events': future_events, 'purchased_events': purchased_events})
 
 class EventCreateView(CreateView):
     model = Event
