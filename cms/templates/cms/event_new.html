@@ -5,26 +5,30 @@
 {% block content %}
 <div class="bg-light">
   <div class="container py-3">
-    <h1 class="border-bottom pb-2">イベント作成 <small class="text-muted">Create Event</small></h1>
-    <form method="post" action="" autocomplete="off">
+    <h1 class="border-bottom pb-2">イベント作成</h1>
+    <form method="post" action="" autocomplete="off" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="form-group">
-        <label for="{{ form.name.id_for_label }}">イベント名</label>
+        <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text"><i class="fas fa-bullhorn"></i></span>
           </div>
           {{ form.name }}
         </div>
+        {% if form.name.help_text %}<small class="form-text text-muted">{{ form.name.help_text }}</small>{% endif %}
       </div>
+      {% include "./error_alert.html" with errors=form.name.errors %}
+
       <div class="form-group">
-        <label for="{{ form.date.id_for_label }}">開催日時</label>
+        <label for="{{ form.date.id_for_label }}">{{ form.date.label }}</label>
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text"><i class="fas fa-calendar-day"></i></span>
           </div>
           {{ form.date }}
         </div>
+        {% if form.date.help_text %}<small class="form-text text-muted">{{ form.date.help_text }}</small>{% endif %}
         <script>
           document.addEventListener('DOMContentLoaded', (event) => {
             $('#{{ form.date.id_for_label }}').datetimepicker({
@@ -39,30 +43,68 @@
               },
               locale: 'ja',
               minDate: moment().format('L'),
+              stepping: 15,
             });
           });
         </script>
       </div>
+      {% include "./error_alert.html" with errors=form.date.errors %}
+
       <div class="form-group">
-        <label for="{{ form.personal_time.id_for_label }}">1人あたりの時間（秒）</label>
+        <label for="{{ form.personal_time.id_for_label }}">{{ form.personal_time.label }}</label>
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text"><i class="fas fa-clock"></i></span>
           </div>
           {{ form.personal_time }}
         </div>
+        {% if form.personal_time.help_text %}<small class="form-text text-muted">{{ form.personal_time.help_text }}</small>{% endif %}
       </div>
+      {% include "./error_alert.html" with errors=form.personal_time.errors %}
+
       <div class="form-group">
-        <label for="{{ form.total_ticket.id_for_label }}">チケット発行数（枚）</label>
+        <label for="{{ form.total_ticket.id_for_label }}">{{ form.total_ticket.label }}</label>
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text"><i class="fas fa-ticket-alt"></i></span>
           </div>
           {{ form.total_ticket }}
         </div>
+        {% if form.total_ticket.help_text %}<small class="form-text text-muted">{{ form.total_ticket.help_text }}</small>{% endif %}
       </div>
+      {% include "./error_alert.html" with errors=form.total_ticket.errors %}
+
+      <div class="form-group">
+        <label for="{{ form.image.id_for_label }}">{{ form.image.label }}</label>
+        <div class="input-group">
+          {{ form.image }}
+        </div>
+        {% if form.image.help_text %}<small class="form-text text-muted">{{ form.image.help_text }}</small>{% endif %}
+      </div>
+      <div id="preview">
+        <script>
+          document.getElementById('{{ form.image.id_for_label }}').addEventListener('change', e => {
+            var reader = new FileReader();
+            var preview = document.getElementById('preview');
+            var previewImage = document.getElementById('previewImage');
+            var file = e.target.files[0];
+            if (previewImage != null) preview.removeChild(previewImage);
+            reader.onload = (e => {
+              var img = document.createElement('img');
+              img.setAttribute('src', reader.result);
+              img.setAttribute('id', 'previewImage');
+              img.classList.add('img-fluid');
+              img.classList.add('img-thumbnail');
+              img.classList.add('mb-3');
+              preview.appendChild(img);
+            });
+            if (file instanceof Blob || file instanceof File) reader.readAsDataURL(file);
+          });
+        </script>
+      </div>
+      {% include "./error_alert.html" with errors=form.image.errors %}
+
       <button type="submit" class="btn btn-primary">作成</button>
-      <input type="hidden" name="next" value="{{ next }}">
     </form>
   </div>
 </div>

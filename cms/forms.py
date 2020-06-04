@@ -26,7 +26,7 @@ class UserCreateForm(UserCreationForm):
 class EventForm(forms.ModelForm):
   class Meta:
     model = Event
-    fields = ("name", "date", "personal_time", "total_ticket")
+    fields = ("name", "date", "personal_time", "total_ticket", "image")
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
@@ -35,6 +35,11 @@ class EventForm(forms.ModelForm):
     self.fields['date'].widget.attrs['class'] = 'form-control datetimepicker-input'
     self.fields['date'].widget.attrs['data-toggle'] = 'datetimepicker'
     self.fields['date'].widget.attrs['data-target'] = '#id_date'
+    self.fields['image'].widget.attrs['class'] = 'form-control-file'
+    self.fields['personal_time'].widget.attrs['min'] = self.Meta.model.MIN_PERSONAL_TIME
+    self.fields['personal_time'].widget.attrs['max'] = self.Meta.model.MAX_PERSONAL_TIME
+    self.fields['total_ticket'].widget.attrs['min'] = self.Meta.model.MIN_TOTAL_TICKET
+    self.fields['total_ticket'].widget.attrs['max'] = self.Meta.model.MAX_TOTAL_TICKET
 
 class EventBuyForm(forms.ModelForm):
   class Meta:
