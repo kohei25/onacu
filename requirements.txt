@@ -8,3 +8,4 @@ django-sass-processor
 pillow
 boto3
 django-storages
+django-ses
