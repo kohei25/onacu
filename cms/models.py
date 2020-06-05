@@ -11,6 +11,7 @@ from django.db import models
 from django.urls import reverse
 from django.forms import ModelForm
 from django.utils import timezone
+from django.utils.timezone import make_aware
 from django.utils.translation import gettext_lazy as _
 
 # for validators=[MinValueValidator(), MaxValueValidator()] @ IntegerField
@@ -156,6 +157,11 @@ class Event(models.Model):
     status = models.IntegerField(default=0)
     # イベントの写真URL
     image = models.ImageField("イメージ画像", blank=True, null=True, help_text="この項目は任意です。",)
+
+    @property
+    def is_able_to_enter(self):
+        """開催日時の10分前から入場可能"""
+        return self.status <= 1 and self.date - timezone.timedelta(minutes=10) < make_aware(timezone.datetime.now())
 
     def __str__(self):
         return self.name + "," + self.host.username
