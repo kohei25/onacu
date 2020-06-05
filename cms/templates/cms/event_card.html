@@ -2,7 +2,7 @@
 <div class="event-card card">
   <div class="row no-gutters">
     <div class="col-6">
-      <img class="card-img" src="{% if event.image %}{{ event.image.url }}{% else %}{% static 'image/handshake-dummy.png' %}{% endif %}" alt="{{ event.name }}" loading="lazy">
+      <img class="card-img" src="{% if event.image %}{{ event.image.url }}{% else %}{% static 'image/handshake-dummy.png' %}{% endif %}" alt="{{ event.name }}">
     </div>
     <div class="col-6">
       <div class="card-body">
