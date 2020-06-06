@@ -181,7 +181,6 @@ def myPageView(request):
     )
 
 
-@login_required
 class EventCreateView(CreateView):
     model = Event
     form_class = EventForm
