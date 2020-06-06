@@ -163,6 +163,11 @@ class Event(models.Model):
         """開催日時の10分前から入場可能"""
         return self.status <= 1 and self.date - timezone.timedelta(minutes=10) < make_aware(timezone.datetime.now())
 
+    @property
+    def remains_ticket(self):
+        """チケットの残り枚数"""
+        return self.total_ticket - self.purchaced_ticket
+
     def __str__(self):
         return self.name + "," + self.host.username
 
