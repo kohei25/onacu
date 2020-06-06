@@ -181,6 +181,7 @@ def myPageView(request):
     )
 
 
+@login_required
 class EventCreateView(CreateView):
     model = Event
     form_class = EventForm
@@ -202,7 +203,7 @@ def eventDetail(request, pk):
     )
 
 
-@login_required(login_url="/login/")
+@login_required
 def eventBuyView(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
 
@@ -223,6 +224,7 @@ def ticketBuyAfter(request):
     return render(request, "cms/event_buy_after.html")
 
 
+@login_required
 def event_now(request, pk):
     event = get_object_or_404(Event, pk=pk)
     if request.user == event.host:
@@ -234,6 +236,7 @@ def event_now(request, pk):
     return render(request, "cms/event_now.html", {"event": event, "ticket": ticket})
 
 
+@login_required
 def event_finish(request, pk):
     event = get_object_or_404(Event, pk=pk)
     event.status = 2
@@ -241,6 +244,7 @@ def event_finish(request, pk):
     return render(request, "cms/event_finish.html")
 
 
+@login_required
 def pointBuy(request):
     if request.method == "POST":
         userId = request.user.id
