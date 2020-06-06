@@ -68,7 +68,7 @@
           <div class="row flex-nowrap">
             {% for event in purchased_events %}
             <div class="col-10 col-lg-7">
-              {% include "./event_card.html" with event=event purchased_events=purchased_events %}
+              {% include "./event_card.html" with event=event %}
             </div>
             {% endfor %}
           </div>
