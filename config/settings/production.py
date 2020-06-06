@@ -1,6 +1,6 @@
 from .common import *
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
   'onacuproduction-env.eba-izd3p7h2.ap-northeast-1.elasticbeanstalk.com',
