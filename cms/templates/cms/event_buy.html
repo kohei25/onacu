@@ -1,11 +1,11 @@
 {% extends 'cms/base.html' %}
 
-{% block title %}{{ event.name }}のチケット購入 | {% endblock %}
+{% block title %}{{ event.name }}のチケット入手 | {% endblock %}
 
 {% block content %}
 <div class="bg-light">
   <div class="container pt-3">
-    <h1 class="border-bottom pb-2"><b>{{ event.name }}</b>のチケットを購入</h1>
+    <h1 class="border-bottom pb-2"><b>{{ event.name }}</b>のチケットを入手</h1>
     <div class="row">
       {% if event.image %}
       <div class="col-12 col-md-5 col-lg-6 text-center mb-3">
@@ -17,10 +17,14 @@
           <li class="list-group-item"><i class="fas fa-user"></i> <b>主催</b> {{ event.host.username }}</li>
           <li class="list-group-item"><i class="fas fa-calendar"></i> <b>日時</b> {{ event.date }}</li>
           <li class="list-group-item"><i class="fas fa-clock"></i> <b>時間</b> {{ event.personal_time }}秒</li>
-          <li class="list-group-item"><i class="fas fa-ticket-alt"></i> <b>残り</b> {{ event.total_ticket }}枚</li>
+          <li class="list-group-item"><i class="fas fa-ticket-alt"></i> <b>残り</b> {{ event.remains_ticket }}枚</li>
           <li class="list-group-item"><i class="fas fa-bullhorn"></i> <b>状態</b>
-            {% if event.status == 0 %}{# TODO: 完売表示 #}
-            販売中
+            {% if event.status == 0 %}
+            {% if event.remains_ticket > 0 %}
+            入手可能
+            {% else %}
+            完売
+            {% endif %}
             {% elif event.status == 1 %}
             開催中
             {% elif event.status == 2 %}
@@ -28,10 +32,10 @@
             {% endif %}
           </li>
         </ul>
-        {% if event.status == 0 %}{# TODO: 完売では表示しない．開催中も表示する？ #}
+        {% if event.status == 0 and event.remains_ticket > 0 and event.host != request.user %}{# TODO: 開催中も表示する？ #}
         <form method="post" action="">
           {% csrf_token %}
-          <button type="submit" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> 購入を確定する</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fas fa-ticket-alt"></i> 入手を確定する</button>
         </form>
         {% endif %}
       </div>

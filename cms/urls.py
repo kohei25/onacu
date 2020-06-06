@@ -1,4 +1,5 @@
 from django.urls import path
+from django.contrib.auth.decorators import login_required
 
 from . import views
 
@@ -12,7 +13,7 @@ urlpatterns = [
     path('signup/complete/<token>/', views.UserCreateComplete.as_view(), name='signup_complete'),
     path('mypage/', views.myPageView, name='mypage'),
     path('point/buy/', views.pointBuy, name='point_buy'),
-    path('event/new/', views.EventCreateView.as_view(), name='eve_new'),
+    path('event/new/', login_required(views.EventCreateView.as_view()), name='eve_new'),
     path('event/<int:pk>/', views.eventDetail, name='eve_de'),
     path('event/<int:event_id>/buy/', views.eventBuyView, name='buy'),
     path('event/buy/after', views.ticketBuyAfter, name='buy_after'),
