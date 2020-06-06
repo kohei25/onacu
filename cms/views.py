@@ -207,6 +207,8 @@ def eventBuyView(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
 
     if request.method == "POST":
+        if event.host == request.user: # ホストは自分のイベントチケットを買えない
+            return HttpResponseBadRequest()
         userId = request.user.id
         order = event.purchaced_ticket + 1
         ticket = Ticket(customer_id=userId, event_id=event.id, order=order)

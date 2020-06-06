@@ -32,7 +32,7 @@
             {% endif %}
           </li>
         </ul>
-        {% if event.status == 0 and event.remains_ticket > 0 %}{# TODO: 開催中も表示する？ #}
+        {% if event.status == 0 and event.remains_ticket > 0 and event.host != request.user %}{# TODO: 開催中も表示する？ #}
         <form method="post" action="">
           {% csrf_token %}
           <button type="submit" class="btn btn-primary"><i class="fas fas fa-ticket-alt"></i> 入手を確定する</button>
