@@ -20,6 +20,7 @@ class UserCreateForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['username'].help_text = 'この項目は必須です。150文字以下にしてください。例: オンアク太郎'
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
 
