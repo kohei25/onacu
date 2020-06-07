@@ -2,6 +2,11 @@
 
 {% block title %}ポイント購入 | {% endblock %}
 
+{% load static %}
+{% block js %}
+<script defer src="{% static 'js/prevent-double-submit.js' %}"></script>
+{% endblock %}
+
 {% block content %}
 <div class="bg-light">
   <div class="container py-3">

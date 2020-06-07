@@ -3,6 +3,11 @@
 
 {% block title %}{{ event.name }}に参加中 | {% endblock %}
 
+{% block js %}
+<script defer src="https://cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
+<script defer src="{% static 'js/video.js' %}"></script>
+{% endblock %}
+
 {% block content %}
 <div class="hero pt-3">
   <div class="container-fluid">
@@ -44,6 +49,15 @@
 <div id="js-ticket" value="{{ ticket.id }}"></div>
 {% endif %}
 
-<script src="https://cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
-<script src="{% static 'js/video.js' %}"></script>
+<script>
+window.onacu = {
+  event: {{ event.id }},
+  {% if user == event.host %}
+    lastTicket: {% if ticket %}{{ ticket.order }}{% else %}0{% endif %},
+    personalTime: {{ event.personal_time }}
+  {% else %}
+    ticket:  {{ ticket.id }}
+  {% endif %}
+};
+</script>
 {% endblock %}
