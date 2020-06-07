@@ -82,6 +82,12 @@ class Ticket(models.Model):
     order = models.IntegerField(default=0)
     peerId = models.CharField(default="0", max_length=16)
 
+    class Meta:
+        unique_together = (
+            ("event", "customer"), # チケットは1人1枚
+            ("event", "order"), # 各イベントでorderはユニーク
+        )
+
     def __str__(self):
         return (
             "event: "
