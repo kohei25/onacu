@@ -1,11 +1,15 @@
 import logging
-from datetime import date
+from datetime import date, timedelta
 from django.conf import settings
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import (
     LoginView,
     LogoutView,
+    PasswordChangeView,
+    PasswordChangeDoneView,
+    PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView,
 )
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponseBadRequest, Http404
 from django.http.response import JsonResponse, HttpResponse
@@ -19,7 +23,7 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 
 from .models import User, Event, Ticket, Wallet
-from .forms import LoginForm, UserCreateForm, EventForm, EventBuyForm
+from .forms import LoginForm, UserCreateForm, PwChangeForm, PwResetForm, PwSetForm, EventForm, EventBuyForm
 
 UserModel = get_user_model()
 
@@ -134,10 +138,12 @@ def ticketPost(request):
 
 # Topページ
 def topView(request):
-    events = Event.objects.all()
-    hosting_events = Event.objects.filter(host_id=request.user.id).exclude(status=2)
+    events = list(Event.objects.filter(status=0).order_by('date'))+list(Event.objects.exclude(status=0).order_by('status', '-date')) # 開催前は日時の昇順，その他は降順
+    hosting_events = Event.objects.filter(host_id=request.user.id).exclude(status=2).order_by('date') # 終了した開催イベントは含まない
     have_tickets = Ticket.objects.filter(customer_id=request.user.id)
-    purchased_events = list(map(lambda x: x.event, have_tickets))
+    purchased_events = list(filter(lambda event: event.status != 2, map(lambda ticket: ticket.event, have_tickets))) # 終了した購入済みイベントは含まない
+    purchased_events.sort(key=lambda event: event.date)
+    # ipdb.set_trace()
     return render(
         request,
         "cms/top.html",
@@ -200,6 +206,44 @@ def myPageView(request):
     )
 
 
+class PasswordChange(LoginRequiredMixin, PasswordChangeView):
+    """パスワード変更ビュー"""
+    form_class = PwChangeForm
+    success_url = reverse_lazy('cms:password_change_done')
+    template_name = 'cms/password_change.html'
+
+
+class PasswordChangeDone(LoginRequiredMixin, PasswordChangeDoneView):
+    """パスワード変更完了"""
+    template_name = 'cms/password_change_done.html'
+
+
+class PasswordReset(PasswordResetView):
+    """パスワード変更用URLの送付ページ"""
+    subject_template_name = 'cms/mail_template/password_reset/subject.txt'
+    email_template_name = 'cms/mail_template/password_reset/message.txt'
+    template_name = 'cms/password_reset_form.html'
+    form_class = PwResetForm
+    success_url = reverse_lazy('cms:password_reset_done')
+
+
+class PasswordResetDone(PasswordResetDoneView):
+    """パスワード変更用URLを送りましたページ"""
+    template_name = 'cms/password_reset_done.html'
+
+
+class PasswordResetConfirm(PasswordResetConfirmView):
+    """新パスワード入力ページ"""
+    form_class = PwSetForm
+    success_url = reverse_lazy('cms:password_reset_complete')
+    template_name = 'cms/password_reset_confirm.html'
+
+
+class PasswordResetComplete(PasswordResetCompleteView):
+    """新パスワード設定しましたページ"""
+    template_name = 'cms/password_reset_complete.html'
+
+
 class EventCreateView(CreateView):
     model = Event
     form_class = EventForm
@@ -224,9 +268,10 @@ def eventDetail(request, pk):
 @login_required
 def eventBuyView(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
+    is_ticket = Ticket.objects.filter(event_id=event.id, customer_id=request.user.id)
 
-    if request.method == "POST":
-        if event.host == request.user: # ホストは自分のイベントチケットを買えない
+    if request.method == "POST": # チケット購入処理
+        if is_ticket or event.host == request.user: # 既に持っている or ホストはイベントチケットを買えない
             return HttpResponseBadRequest()
         userId = request.user.id
         order = event.purchaced_ticket + 1
@@ -234,13 +279,32 @@ def eventBuyView(request, event_id):
         ticket.save()
         event.purchaced_ticket += 1
         event.save()
-        return redirect("cms:buy_after")
+        return redirect("cms:buy_after", event_id)
     return render(request, "cms/event_buy.html", {"event": event})
 
 
-def ticketBuyAfter(request):
-    return render(request, "cms/event_buy_after.html")
 
+def ticketBuyAfter(request, event_id):
+    return render(request, "cms/event_buy_after.html", {"event_id": event_id})
+
+def event_ical(request, pk):
+    """イベントのカレンダーファイルを配信"""
+    event = get_object_or_404(Event, pk=pk)
+    start = event.date.strftime("%Y%m%dT%H%M%SZ")
+    end = (event.date + timedelta(seconds=(event.personal_time*event.total_ticket))).strftime("%Y%m%dT%H%M%SZ")
+    content = """BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//OnAcu///JP
+BEGIN:VEVENT
+DTSTART:{}
+DTEND:{}
+SUMMARY:{}
+URL:{}://{}/event/{}/
+END:VEVENT
+END:VCALENDAR""".format(start,end,event.name, request.scheme, request.get_host(), event.pk)
+    response = HttpResponse(content, content_type='text/calendar')
+    response['Content-Disposition'] = 'attachment; filename=event{}.ics'.format(event.pk)
+    return response
 
 @login_required
 def event_now(request, pk):

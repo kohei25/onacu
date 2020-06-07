@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous"> {# Font Awesome #}
   {% block css %}{% endblock %}
   <link rel="stylesheet" type="text/css" href="{% sass_src 'css/main.scss' %}">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
   <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
   {% block js %}{% endblock %}
@@ -45,7 +45,7 @@
           </li>
         </ul>
         <div class="ml-auto mr-3">
-          <span class="navbar-text">{{ user.username }}さん</span>
+          <span class="navbar-text">{{ user.username }}</span>
           <a class="btn btn-secondary" href="{% url 'cms:mypage' %}">マイページ</a>
           <a class="btn btn-secondary" href="{% url 'cms:logout' %}">ログアウト</a>
         </div>
@@ -70,12 +70,15 @@
     <div class="container d-flex justify-content-between">
       <ul class="list-inline">
         <li class="list-inline-item">&copy; 2020 OnAcu</li>
-        <!-- <li class="list-inline-item"><a href="#">About</a></li> -->
-        <li class="list-inline-item"><a href="https://docs.google.com/forms/d/e/1FAIpQLSelAkzXzBNkS02jyZyqIu2I4i-v2DqKLYnqFiaoquZJXZxDWA/viewform?usp=sf_link">Report an issue</a></li>
-        <li class="list-inline-item"><a href="https://twitter.com/onacu_official" target="_blank" rel="noopener">Twitter</a></li>
+        <li class="list-inline-item"><a href="https://twitter.com/onacu_official" target="_blank" rel="noopener"><i class="fab fa-twitter" style="color:#1DA1F2" title="Twitter"></i></a></li>
+      </ul>
+      <ul class="list-inline">
+        <li class="list-inline-item"><a href="https://note.com/onacu_official" target="_blank" rel="noopener">OnAcuについて</a></li>
+        <li class="list-inline-item"><a href="https://docs.google.com/forms/d/e/1FAIpQLSfUajmm9uGB_N05Ib8e0H60MigJ9JRKlizsuQ7ACVRdgeTUfg/viewform?usp=sf_link" target="_blank" rel="noopener nofollow">お問い合わせ</a></li>
+        <li class="list-inline-item"><a href="https://docs.google.com/forms/d/e/1FAIpQLSelAkzXzBNkS02jyZyqIu2I4i-v2DqKLYnqFiaoquZJXZxDWA/viewform?usp=sf_link" target="_blank" rel="noopener nofollow">不具合を報告する</a></li>
       </ul>
       <a href="https://sites.google.com/g.ecc.u-tokyo.ac.jp/utokyo-project-sprint/" target="_blank" rel="noopener nofollow">
-        <img src="{% static "image/ProjectSprint_logo2.svg" %}" alt="UTokyo Project Sprint" width="32" height="32" loading="lazy">
+        <img src="{% static "image/ProjectSprint_logo2.svg" %}" alt="UTokyo Project Sprint" width="48" height="48" loading="lazy">
       </a>
     </div>
   </footer>

@@ -55,7 +55,7 @@ SASS_OUTPUT_STYLE = 'compressed'
 
 # Email
 EMAIL_BACKEND = 'django_ses.SESBackend'
-DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'no-reply <noreply@onacu.org>'
+DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'OnAcu <no-reply@onacu.org>'
 
 DEFAULT_FILE_STORAGE = 'config.storage_backends.MediaStorage'
 AWS_DEFAULT_ACL = None

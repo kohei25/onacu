@@ -45,6 +45,12 @@ th.dow {
   }
 }
 
+// イベント作成画面
+#id_date {
+  background-color: #fff;
+}
+
+// ビデオチャット画面
 .remote-video-container,
 .local-video-container {
   background-color: lightgray;
@@ -64,6 +70,10 @@ th.dow {
   height: auto;
   max-height: 80vh;
   width: 100%;
+}
+
+#localVideo {
+  transform: scaleX(-1); // 自分の映像は左右反転
 }
 
 .video-name {

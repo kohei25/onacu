@@ -1,6 +1,5 @@
-const Peer = window.Peer;
-// jquery
-(async function main() {
+var main = async () => {
+  const Peer = window.Peer;
   // videochat
   const localVideo = $('#localVideo');
   const remoteVideo = $('#remoteVideo');
@@ -165,4 +164,5 @@ const Peer = window.Peer;
   });
 
   peer.on('error', console.error);
-})();
+};
+document.addEventListener('DOMContentLoaded', main);

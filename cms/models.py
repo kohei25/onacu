@@ -21,7 +21,7 @@ class Event(models.Model):
         "イベント名", max_length=100, help_text="この項目は必須です。100文字以内にしてください。例: ○田□花 握手会",
     )
     host = models.ForeignKey(User, on_delete=models.CASCADE)
-    date = models.DateTimeField("開催日時", help_text="この項目は必須です。例: 2020-07-01 13:00",)
+    date = models.DateTimeField("開催日時", help_text="この項目は必須です。",)
     # 1人あたりのビデオチャット時間，5s - 300s(5min)
     MIN_PERSONAL_TIME = 5
     MAX_PERSONAL_TIME = 300
@@ -73,7 +73,7 @@ class Event(models.Model):
         return self.total_ticket - self.purchaced_ticket
 
     def __str__(self):
-        return self.name + "," + self.host.username
+        return self.name + "," + self.host.username + str(self.date)
 
 
 class Ticket(models.Model):
@@ -81,6 +81,12 @@ class Ticket(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
     order = models.IntegerField(default=0)
     peerId = models.CharField(default="0", max_length=16)
+
+    class Meta:
+        unique_together = (
+            ("event", "customer"), # チケットは1人1枚
+            ("event", "order"), # 各イベントでorderはユニーク
+        )
 
     def __str__(self):
         return (
