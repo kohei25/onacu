@@ -147,6 +147,19 @@ def topView(request):
         },
     )
 
+def searchView(request, year, month, day):
+    displaydate = str(month) + '月' + str(day) + '日'
+    serch_events = Event.objects.filter(date__year=year, date__month=month, date__day=day)
+    return render(
+      request,
+      'cms/event_search.html',
+      {
+        "events": serch_events,
+        "displaydate": displaydate,
+      },
+    )
+
+
 
 class TopView(generic.ListView):
     template_name = "cms/top.html"
