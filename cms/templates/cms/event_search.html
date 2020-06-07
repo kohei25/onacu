@@ -1,0 +1,61 @@
+{% extends 'cms/base.html' %}
+
+{% block title %}{{ date }}のイベント | {% endblock %}
+
+{% block css %}
+<link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css"
+  integrity="sha256-XPTBwC3SBoWHSmKasAk01c08M6sIA5gF5+sRxqak2Qs=" crossorigin="anonymous"> {# tempusdominus CSS #}
+{% endblock %}
+
+{% block js %}
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment-with-locales.min.js"
+  integrity="sha256-4HOrwHz9ACPZBxAav7mYYlbeMiAL0h6+lZ36cLNpR+E=" crossorigin="anonymous"></script> {# moment.js #}
+<script defer
+  src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js"
+  integrity="sha256-z0oKYg6xiLq3yJGsp/LsY9XykbweQlHl42jHv2XTBz4=" crossorigin="anonymous"></script>
+{# tempusdominus JS (depends on moment.js) #}
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-6 col-lg-4 my-3">
+        <h3><i class="fas fa-search"></i> イベントを探す</h3>
+        <div id="datetimepicker"></div>
+        <script>
+          document.addEventListener('DOMContentLoaded', (event) => {
+            $('#datetimepicker').datetimepicker({
+              defaultDate: '{{ date|date:"c" }}',
+              format: 'L',
+              minDate: '2020-06-01',
+              inline: true,
+              locale: 'ja',
+            });
+            $('#datetimepicker').on('change.datetimepicker', ({ date, oldDate }) => {
+              location.assign('/search/date/' + date.format('YYYY/M/D') + '/');
+            });
+          }); 
+        </script>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="events">
+  <div class="container py-3">
+    <h3><i class="far fa-calendar-check"></i> {{ date }}のイベント情報</h3>
+    {% if events %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+      {% for event in events %}
+      <div class="col mb-3">
+        {% include "./event_card.html" with event=event %}
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p>予定のイベントはありません。</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

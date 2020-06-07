@@ -1,5 +1,5 @@
 import logging
-from datetime import timedelta
+from datetime import date, timedelta
 from django.conf import settings
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import (
@@ -11,7 +11,7 @@ from django.contrib.auth.views import (
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponseRedirect, HttpResponseBadRequest, Http404
 from django.http.response import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.sites.shortcuts import get_current_site
@@ -152,6 +152,24 @@ def topView(request):
             "purchased_events": purchased_events,
             "hosting_events": hosting_events,
         },
+    )
+
+def searchView(request, year, month, day):
+    MIN_DATE = date(2020,6,1) # サイト開設日（event_search.html中にも記載あり）
+    try:
+        d = date(year,month,day)
+    except ValueError:
+        raise Http404("The date is invalid")
+    if d < MIN_DATE:
+        raise Http404("The date is invalid") # サイト開設日以前の検索は無効
+    search_events = Event.objects.filter(date__year=year, date__month=month, date__day=day)
+    return render(
+      request,
+      'cms/event_search.html',
+      {
+        "events": search_events,
+        "date": d,
+      },
     )
 
 
