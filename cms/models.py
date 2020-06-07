@@ -73,7 +73,7 @@ class Event(models.Model):
         return self.total_ticket - self.purchaced_ticket
 
     def __str__(self):
-        return self.name + "," + self.host.username
+        return self.name + "," + self.host.username + str(self.date)
 
 
 class Ticket(models.Model):
