@@ -99,7 +99,7 @@
               locale: 'ja',
             });
             $('#datetimepicker').on('change.datetimepicker', ({ date, oldDate }) => {
-              location.pathname = 'search/date/' + date.format('YYYY/M/D') + '/';
+              location.assign('/search/date/' + date.format('YYYY/M/D') + '/');
             });
           }); 
         </script>
