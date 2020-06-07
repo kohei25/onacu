@@ -133,10 +133,11 @@ def ticketPost(request):
 
 # Topページ
 def topView(request):
-    events = Event.objects.order_by('date').order_by('status')
-    hosting_events = Event.objects.filter(host_id=request.user.id).exclude(status=2)
+    events = list(Event.objects.filter(status=0).order_by('date'))+list(Event.objects.exclude(status=0).order_by('status', '-date')) # 開催前は日時の昇順，その他は降順
+    hosting_events = Event.objects.filter(host_id=request.user.id).exclude(status=2).order_by('date') # 終了した開催イベントは含まない
     have_tickets = Ticket.objects.filter(customer_id=request.user.id)
-    purchased_events = list(map(lambda x: x.event, have_tickets))
+    purchased_events = list(filter(lambda event: event.status != 2, map(lambda ticket: ticket.event, have_tickets))) # 終了した購入済みイベントは含まない
+    purchased_events.sort(key=lambda event: event.date)
     # ipdb.set_trace()
     return render(
         request,
