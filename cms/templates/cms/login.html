@@ -2,6 +2,11 @@
 
 {% block title %}ログイン | {% endblock %}
 
+{% load static %}
+{% block js %}
+<script defer src="{% static 'js/prevent-double-submit.js' %}"></script>
+{% endblock %}
+
 {% block content %}
 <div class="bg-light">
   <div class="container py-3">
@@ -31,6 +36,7 @@
           {{ form.password }}
         </div>
         {% if form.password.help_text %}<small class="form-text text-muted">{{ form.password.help_text }}</small>{% endif %}
+        <p class="text-right"><i class="fas fa-info-circle"></i> <a href="{% url 'cms:password_reset' %}">パスワードをお忘れの場合</a></p>
       </div>
       {% include "./error_alert.html" with errors=form.password.errors %}
 

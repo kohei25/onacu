@@ -1,0 +1,9 @@
+{{ user.username }} 様
+
+下記URLよりサイトにアクセスの上、パスワードをリセットしてください。
+
+再設定用URL
+{{ protocol}}://{{ domain }}{% url 'cms:password_reset_confirm' uid token %}
+
+OnAcu（オンアク）
+{{ protocol}}://{{ domain }}{% url 'cms:top' %}

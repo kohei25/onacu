@@ -5,7 +5,11 @@ from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import (
     LoginView,
     LogoutView,
+    PasswordChangeView,
+    PasswordChangeDoneView,
+    PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView,
 )
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.http.response import JsonResponse, HttpResponse
@@ -19,7 +23,7 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 
 from .models import User, Event, Ticket, Wallet
-from .forms import LoginForm, UserCreateForm, EventForm, EventBuyForm
+from .forms import LoginForm, UserCreateForm, PwChangeForm, PwResetForm, PwSetForm, EventForm, EventBuyForm
 
 UserModel = get_user_model()
 
@@ -182,6 +186,44 @@ def myPageView(request):
     )
 
 
+class PasswordChange(LoginRequiredMixin, PasswordChangeView):
+    """パスワード変更ビュー"""
+    form_class = PwChangeForm
+    success_url = reverse_lazy('cms:password_change_done')
+    template_name = 'cms/password_change.html'
+
+
+class PasswordChangeDone(LoginRequiredMixin, PasswordChangeDoneView):
+    """パスワード変更完了"""
+    template_name = 'cms/password_change_done.html'
+
+
+class PasswordReset(PasswordResetView):
+    """パスワード変更用URLの送付ページ"""
+    subject_template_name = 'cms/mail_template/password_reset/subject.txt'
+    email_template_name = 'cms/mail_template/password_reset/message.txt'
+    template_name = 'cms/password_reset_form.html'
+    form_class = PwResetForm
+    success_url = reverse_lazy('cms:password_reset_done')
+
+
+class PasswordResetDone(PasswordResetDoneView):
+    """パスワード変更用URLを送りましたページ"""
+    template_name = 'cms/password_reset_done.html'
+
+
+class PasswordResetConfirm(PasswordResetConfirmView):
+    """新パスワード入力ページ"""
+    form_class = PwSetForm
+    success_url = reverse_lazy('cms:password_reset_complete')
+    template_name = 'cms/password_reset_confirm.html'
+
+
+class PasswordResetComplete(PasswordResetCompleteView):
+    """新パスワード設定しましたページ"""
+    template_name = 'cms/password_reset_complete.html'
+
+
 class EventCreateView(CreateView):
     model = Event
     form_class = EventForm
@@ -206,9 +248,10 @@ def eventDetail(request, pk):
 @login_required
 def eventBuyView(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
+    is_ticket = Ticket.objects.filter(event_id=event.id, customer_id=request.user.id)
 
-    if request.method == "POST":
-        if event.host == request.user: # ホストは自分のイベントチケットを買えない
+    if request.method == "POST": # チケット購入処理
+        if is_ticket or event.host == request.user: # 既に持っている or ホストはイベントチケットを買えない
             return HttpResponseBadRequest()
         userId = request.user.id
         order = event.purchaced_ticket + 1
@@ -218,6 +261,7 @@ def eventBuyView(request, event_id):
         event.save()
         return redirect("cms:buy_after", event_id)
     return render(request, "cms/event_buy.html", {"event": event})
+
 
 
 def ticketBuyAfter(request, event_id):
