@@ -6,6 +6,7 @@ from . import views
 app_name = 'cms'
 urlpatterns = [
     path('', views.topView, name='top'),
+    path('search/date/<int:year>/<int:month>/<int:day>/', views.searchView, name='search'),
     path('login/', views.Login.as_view(), name='login'),
     path('logout/', views.Logout.as_view(), name='logout'),
     path('signup/', views.UserCreate.as_view(), name='signup'),
