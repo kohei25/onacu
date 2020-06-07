@@ -41,6 +41,7 @@ class EventForm(forms.ModelForm):
     self.fields['date'].widget.attrs['class'] = 'form-control datetimepicker-input'
     self.fields['date'].widget.attrs['data-toggle'] = 'datetimepicker'
     self.fields['date'].widget.attrs['data-target'] = '#id_date'
+    self.fields['date'].widget.attrs['readonly'] = 'readonly'
     self.fields['image'].widget.attrs['class'] = 'form-control-file'
     self.fields['personal_time'].widget.attrs['min'] = self.Meta.model.MIN_PERSONAL_TIME
     self.fields['personal_time'].widget.attrs['max'] = self.Meta.model.MAX_PERSONAL_TIME

@@ -36,6 +36,12 @@ $theme-color: #fd3;
   }
 }
 
+// イベント作成画面
+#id_date {
+  background-color: #fff;
+}
+
+// ビデオチャット画面
 .remote-video-container,
 .local-video-container {
   background-color: lightgray;

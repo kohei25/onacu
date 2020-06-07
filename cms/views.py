@@ -205,9 +205,10 @@ def eventDetail(request, pk):
 @login_required
 def eventBuyView(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
+    is_ticket = Ticket.objects.filter(event_id=event.id, customer_id=request.user.id)
 
-    if request.method == "POST":
-        if event.host == request.user: # ホストは自分のイベントチケットを買えない
+    if request.method == "POST": # チケット購入処理
+        if is_ticket or event.host == request.user: # 既に持っている or ホストはイベントチケットを買えない
             return HttpResponseBadRequest()
         userId = request.user.id
         order = event.purchaced_ticket + 1
@@ -216,7 +217,7 @@ def eventBuyView(request, event_id):
         event.purchaced_ticket += 1
         event.save()
         return redirect("cms:buy_after")
-    return render(request, "cms/event_buy.html", {"event": event})
+    return render(request, "cms/event_buy.html", {"event": event, "is_ticket": is_ticket})
 
 
 def ticketBuyAfter(request):
