@@ -133,10 +133,11 @@ def ticketPost(request):
 
 # Topページ
 def topView(request):
-    events = Event.objects.all()
+    events = Event.objects.order_by('date').order_by('status')
     hosting_events = Event.objects.filter(host_id=request.user.id).exclude(status=2)
     have_tickets = Ticket.objects.filter(customer_id=request.user.id)
     purchased_events = list(map(lambda x: x.event, have_tickets))
+    # ipdb.set_trace()
     return render(
         request,
         "cms/top.html",
