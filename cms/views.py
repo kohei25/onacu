@@ -1,4 +1,5 @@
 import logging
+from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import (
@@ -258,13 +259,32 @@ def eventBuyView(request, event_id):
         ticket.save()
         event.purchaced_ticket += 1
         event.save()
-        return redirect("cms:buy_after")
-    return render(request, "cms/event_buy.html", {"event": event, "is_ticket": is_ticket})
+        return redirect("cms:buy_after", event_id)
+    return render(request, "cms/event_buy.html", {"event": event})
 
 
-def ticketBuyAfter(request):
-    return render(request, "cms/event_buy_after.html")
 
+def ticketBuyAfter(request, event_id):
+    return render(request, "cms/event_buy_after.html", {"event_id": event_id})
+
+def event_ical(request, pk):
+    """イベントのカレンダーファイルを配信"""
+    event = get_object_or_404(Event, pk=pk)
+    start = event.date.strftime("%Y%m%dT%H%M%SZ")
+    end = (event.date + timedelta(seconds=(event.personal_time*event.total_ticket))).strftime("%Y%m%dT%H%M%SZ")
+    content = """BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//OnAcu///JP
+BEGIN:VEVENT
+DTSTART:{}
+DTEND:{}
+SUMMARY:{}
+URL:{}://{}/event/{}/
+END:VEVENT
+END:VCALENDAR""".format(start,end,event.name, request.scheme, request.get_host(), event.pk)
+    response = HttpResponse(content, content_type='text/calendar')
+    response['Content-Disposition'] = 'attachment; filename=event{}.ics'.format(event.pk)
+    return response
 
 @login_required
 def event_now(request, pk):
