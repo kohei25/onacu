@@ -4,7 +4,10 @@ from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import (
     LoginView,
     LogoutView,
+    PasswordChangeView,
+    PasswordChangeDoneView,
 )
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.http.response import JsonResponse, HttpResponse
@@ -18,7 +21,7 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 
 from .models import User, Event, Ticket, Wallet
-from .forms import LoginForm, UserCreateForm, EventForm, EventBuyForm
+from .forms import LoginForm, UserCreateForm, PwChangeForm, EventForm, EventBuyForm
 
 UserModel = get_user_model()
 
@@ -179,6 +182,18 @@ def myPageView(request):
             "purchased_events": purchased_events,
         },
     )
+
+
+class PasswordChange(LoginRequiredMixin, PasswordChangeView):
+    """パスワード変更ビュー"""
+    form_class = PwChangeForm
+    success_url = reverse_lazy('cms:password_change_done')
+    template_name = 'cms/password_change.html'
+
+
+class PasswordChangeDone(LoginRequiredMixin, PasswordChangeDoneView):
+    """パスワード変更完了"""
+    template_name = 'cms/password_change_done.html'
 
 
 class EventCreateView(CreateView):
