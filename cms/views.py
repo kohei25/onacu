@@ -143,7 +143,6 @@ def topView(request):
     have_tickets = Ticket.objects.filter(customer_id=request.user.id)
     purchased_events = list(filter(lambda event: event.status != 2, map(lambda ticket: ticket.event, have_tickets))) # 終了した購入済みイベントは含まない
     purchased_events.sort(key=lambda event: event.date)
-    # ipdb.set_trace()
     return render(
         request,
         "cms/top.html",
@@ -171,15 +170,6 @@ def searchView(request, year, month, day):
         "date": d,
       },
     )
-
-
-class TopView(generic.ListView):
-    template_name = "cms/top.html"
-    context_object_name = "coming_event_list"
-
-    def get_queryset(self):
-        return Event.objects.filter(status=0)
-
 
 @login_required
 def myPageView(request):
