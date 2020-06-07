@@ -6,6 +6,7 @@ from django.contrib.auth.views import (
     LogoutView,
     PasswordChangeView,
     PasswordChangeDoneView,
+    PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView,
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -21,7 +22,7 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 
 from .models import User, Event, Ticket, Wallet
-from .forms import LoginForm, UserCreateForm, PwChangeForm, EventForm, EventBuyForm
+from .forms import LoginForm, UserCreateForm, PwChangeForm, PwResetForm, PwSetForm, EventForm, EventBuyForm
 
 UserModel = get_user_model()
 
@@ -194,6 +195,32 @@ class PasswordChange(LoginRequiredMixin, PasswordChangeView):
 class PasswordChangeDone(LoginRequiredMixin, PasswordChangeDoneView):
     """パスワード変更完了"""
     template_name = 'cms/password_change_done.html'
+
+
+class PasswordReset(PasswordResetView):
+    """パスワード変更用URLの送付ページ"""
+    subject_template_name = 'cms/mail_template/password_reset/subject.txt'
+    email_template_name = 'cms/mail_template/password_reset/message.txt'
+    template_name = 'cms/password_reset_form.html'
+    form_class = PwResetForm
+    success_url = reverse_lazy('cms:password_reset_done')
+
+
+class PasswordResetDone(PasswordResetDoneView):
+    """パスワード変更用URLを送りましたページ"""
+    template_name = 'cms/password_reset_done.html'
+
+
+class PasswordResetConfirm(PasswordResetConfirmView):
+    """新パスワード入力ページ"""
+    form_class = PwSetForm
+    success_url = reverse_lazy('cms:password_reset_complete')
+    template_name = 'cms/password_reset_confirm.html'
+
+
+class PasswordResetComplete(PasswordResetCompleteView):
+    """新パスワード設定しましたページ"""
+    template_name = 'cms/password_reset_complete.html'
 
 
 class EventCreateView(CreateView):
