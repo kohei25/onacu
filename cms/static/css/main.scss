@@ -35,6 +35,15 @@ $theme-color: #fd3;
     justify-content: space-between;
   }
 }
+// datepicker
+th.dow {
+  &:first-child {
+    color: #dc3545;
+  }
+  &:last-child {
+    color: #007bff;
+  }
+}
 
 .remote-video-container,
 .local-video-container {
