@@ -63,6 +63,10 @@ $theme-color: #fd3;
   width: 100%;
 }
 
+#localVideo {
+  transform: scaleX(-1); // 自分の映像は左右反転
+}
+
 .video-name {
   background-color: rgba(0, 0, 0, 0.3);
   color: #fff;
