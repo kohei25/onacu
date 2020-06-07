@@ -2,6 +2,11 @@
 
 {% block title %}会員登録 | {% endblock %}
 
+{% load static %}
+{% block js %}
+<script defer src="{% static 'js/prevent-double-submit.js' %}"></script>
+{% endblock %}
+
 {% block content %}
 <div class="bg-light">
   <div class="container py-3">
@@ -58,7 +63,6 @@
       {% include "./error_alert.html" with errors=form.password2.errors %}
 
       <button type="submit" class="btn btn-primary">登録</button>
-      <input type="hidden" name="next" value="{{ next }}">
     </form>
   </div>
 </div>
