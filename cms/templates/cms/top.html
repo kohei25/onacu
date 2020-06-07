@@ -94,12 +94,12 @@
           document.addEventListener('DOMContentLoaded', (event) => {
             $('#datetimepicker').datetimepicker({
               format: 'L',
-              minDate: new Date(),
+              minDate: '2020-06-01',
               inline: true,
               locale: 'ja',
             });
             $('#datetimepicker').on('change.datetimepicker', ({ date, oldDate }) => {
-              location.assign('/search/date/' + date.format('YYYY/MM/DD') + '/');
+              location.pathname = 'search/date/' + date.format('YYYY/M/D') + '/';
             });
           }); 
         </script>

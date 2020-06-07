@@ -1,6 +1,6 @@
 {% extends 'cms/base.html' %}
 
-{% block title %}{% endblock %}
+{% block title %}{{ date }}のイベント | {% endblock %}
 
 {% block css %}
 <link rel="stylesheet"
@@ -20,95 +20,21 @@
 {% block content %}
 <div class="hero">
   <div class="container">
-    <div class="row">
-      <div class="col-12 col-md-6 col-lg-8 my-3">
-        {% if user.is_authenticated %}
-        {% if purchased_events and hosting_events %}
-        <ul class="nav nav-tabs mb-2" id="eventsTab" role="tablist">
-          <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="purchasedEvents-tab" data-toggle="tab" href="#purchasedEvents" role="tab"
-              aria-controls="purchasedEvents" aria-selected="true"><i class="fas fa-ticket-alt"></i> 所持チケット</a>
-          </li>
-          <li class="nav-item" role="presentation">
-            <a class="nav-link" id="hostingEvents-tab" data-toggle="tab" href="#hostingEvents" role="tab"
-              aria-controls="hostingEvents" aria-selected="false"><i class="fas fa-bullhorn"></i> 開催イベント</a>
-          </li>
-        </ul>
-        <div class="tab-content" id="eventsTabContent">
-          <div class="tab-pane fade show active" id="purchasedEvents" role="tabpanel"
-            aria-labelledby="purchasedEvents-tab">
-            <div class="tickets">
-              <div class="row flex-nowrap">
-                {% for event in purchased_events %}
-                <div class="col-10 col-lg-7">
-                  {% include "./event_card.html" with event=event purchased_events=purchased_events %}
-                </div>
-                {% endfor %}
-              </div>
-            </div>
-          </div>
-          <div class="tab-pane fade" id="hostingEvents" role="tabpanel" aria-labelledby="hostingEvents-tab">
-            <div class="tickets">
-              <div class="row flex-nowrap">
-                {% for event in hosting_events %}
-                <div class="col-10 col-lg-7">
-                  {% include "./event_card.html" with event=event purchased_events=purchased_events %}
-                </div>
-                {% endfor %}
-              </div>
-            </div>
-          </div>
-        </div>
-        {% elif hosting_events %}
-        <h3><i class="fas fa-bullhorn"></i> あなたの開催イベント</h3>
-        <div class="tickets">
-          <div class="row flex-nowrap">
-            {% for event in hosting_events %}
-            <div class="col-10 col-lg-7">
-              {% include "./event_card.html" with event=event purchased_events=purchased_events %}
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-        {% else %}
-        <h3><i class="fas fa-ticket-alt"></i> 所持チケット</h3>
-        {% if purchased_events %}
-        <div class="tickets">
-          <div class="row flex-nowrap">
-            {% for event in purchased_events %}
-            <div class="col-10 col-lg-7">
-              {% include "./event_card.html" with event=event %}
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-        {% else %}
-        <p class="mb-0">所持チケットはありません。</p>
-        {% endif %}
-        {% endif %}
-        {% else %}{# 未ログイン時 #}
-        <div class="jumbotron">
-          <h1 class="display-5">リモートだから会いに行ける</h1>
-          <p class="lead"></p>
-          <hr class="my-4">
-          <p>OnAcu（オンアク）は、オンライン握手会プラットフォームです。</p>
-          <a class="btn btn-primary btn-lg" href="#" role="button">詳しく</a>
-        </div>
-        {% endif %}
-      </div>
+    <div class="row justify-content-center">
       <div class="col-12 col-md-6 col-lg-4 my-3">
         <h3><i class="fas fa-search"></i> イベントを探す</h3>
         <div id="datetimepicker"></div>
         <script>
           document.addEventListener('DOMContentLoaded', (event) => {
             $('#datetimepicker').datetimepicker({
+              defaultDate: '{{ date|date:"c" }}',
               format: 'L',
-              minDate: new Date(),
+              minDate: '2020-06-01',
               inline: true,
               locale: 'ja',
             });
             $('#datetimepicker').on('change.datetimepicker', ({ date, oldDate }) => {
-              location.pathname = 'search/date/' + date.format('YYYY/MM/DD') + '/';
+              location.pathname = 'search/date/' + date.format('YYYY/M/D') + '/';
             });
           }); 
         </script>
@@ -118,12 +44,12 @@
 </div>
 <div class="events">
   <div class="container py-3">
-    <h3><i class="far fa-calendar-check"></i> {{ displaydate }}のイベント情報</h3>
+    <h3><i class="far fa-calendar-check"></i> {{ date }}のイベント情報</h3>
     {% if events %}
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
       {% for event in events %}
       <div class="col mb-3">
-        {% include "./event_card.html" with event=event purchased_events=purchased_events %}
+        {% include "./event_card.html" with event=event %}
       </div>
       {% endfor %}
     </div>
