@@ -246,7 +246,7 @@ class EventCreateView(CreateView):
         event.save()
         return super(EventCreateView, self).form_valid(form)
 
-
+@login_required
 def eventDetail(request, pk):
     event = get_object_or_404(Event, pk=pk)
     is_ticket = Ticket.objects.filter(event_id=event.id, customer_id=request.user.id)
@@ -255,7 +255,6 @@ def eventDetail(request, pk):
     )
 
 
-@login_required
 def eventBuyView(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     is_ticket = Ticket.objects.filter(event_id=event.id, customer_id=request.user.id)
