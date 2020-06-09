@@ -20,6 +20,7 @@ from django.core.signing import BadSignature, SignatureExpired, loads, dumps
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
 from django.views import generic
+from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 
@@ -154,6 +155,7 @@ def topView(request):
         },
     )
 
+@cache_page(60) # 1分間キャッシュ
 def searchView(request, year, month, day):
     MIN_DATE = date(2020,6,1) # サイト開設日（event_search.html中にも記載あり）
     try:
@@ -279,6 +281,8 @@ def eventBuyView(request, event_id):
 def ticketBuyAfter(request, event_id):
     return render(request, "cms/event_buy_after.html", {"event_id": event_id})
 
+
+@cache_page(60 * 60 * 24)
 def event_ical(request, pk):
     """イベントのカレンダーファイルを配信"""
     event = get_object_or_404(Event, pk=pk)
@@ -293,10 +297,11 @@ DTEND:{}
 SUMMARY:{}
 URL:{}://{}/event/{}/
 END:VEVENT
-END:VCALENDAR""".format(start,end,event.name, request.scheme, request.get_host(), event.pk)
+END:VCALENDAR""".format(start,end,event.name, request.scheme, request.get_host(), event.id)
     response = HttpResponse(content, content_type='text/calendar')
-    response['Content-Disposition'] = 'attachment; filename=event{}.ics'.format(event.pk)
+    response['Content-Disposition'] = 'attachment; filename=event{}.ics'.format(event.id)
     return response
+
 
 @login_required
 def event_now(request, pk):
