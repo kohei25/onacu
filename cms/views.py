@@ -1,6 +1,7 @@
 import logging
 from datetime import date, timedelta
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import (
     LoginView,
@@ -234,7 +235,7 @@ class PasswordResetComplete(PasswordResetCompleteView):
     template_name = 'cms/password_reset_complete.html'
 
 
-class EventCreateView(CreateView):
+class EventCreateView(LoginRequiredMixin, CreateView):
     model = Event
     form_class = EventForm
     template_name = "cms/event_new.html"
@@ -244,7 +245,9 @@ class EventCreateView(CreateView):
         event = form.save(commit=False)
         event.host = self.request.user
         event.save()
+        messages.success(self.request, f'イベント「{event.name}」を作成しました。')
         return super(EventCreateView, self).form_valid(form)
+
 
 @login_required
 def eventDetail(request, pk):

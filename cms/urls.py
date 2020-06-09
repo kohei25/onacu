@@ -1,5 +1,4 @@
 from django.urls import path
-from django.contrib.auth.decorators import login_required
 
 from . import views
 
@@ -20,7 +19,7 @@ urlpatterns = [
     path('password/reset/confirm/<uidb64>/<token>/', views.PasswordResetConfirm.as_view(), name='password_reset_confirm'),
     path('password/reset/complete', views.PasswordResetComplete.as_view(), name='password_reset_complete'),
     path('point/buy/', views.pointBuy, name='point_buy'),
-    path('event/new/', login_required(views.EventCreateView.as_view()), name='eve_new'),
+    path('event/new/', views.EventCreateView.as_view(), name='eve_new'),
     path('event/<int:pk>/', views.eventDetail, name='eve_de'),
     path('event/<int:event_id>/buy/', views.eventBuyView, name='buy'),
     path('event/<int:event_id>/buy/after', views.ticketBuyAfter, name='buy_after'),
