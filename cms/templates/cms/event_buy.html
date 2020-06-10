@@ -11,13 +11,14 @@
 <div class="bg-light">
   <div class="container pt-3">
     <h1 class="border-bottom pb-2"><b>{{ event.name }}</b>のチケットを入手</h1>
+    <p class="lead">まだ入手は完了していません</p>
     <div class="row">
       {% if event.image %}
-      <div class="col-12 col-md-5 col-lg-6 text-center mb-3">
+      <div class="col-4 col-md-5 col-lg-6 text-center mb-3">
         <img class="img-fluid img-thumbnail" src="{{ event.image.url }}" alt="{{ event.name }}">
       </div>
       {% endif %}
-      <div class="col-12 col-md-7 col-lg-6 mb-3">
+      <div class="{{ event.image|yesno:'col-8 col-md-7 col-lg-6,col-12' }} mb-3">
         <ul class="list-group mb-2">
           <li class="list-group-item"><i class="fas fa-user"></i> <b>主催</b> {{ event.host.username }}</li>
           <li class="list-group-item"><i class="fas fa-calendar"></i> <b>日時</b> {{ event.date }}</li>

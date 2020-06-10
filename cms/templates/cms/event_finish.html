@@ -1,16 +1,20 @@
 {% extends 'cms/base.html' %}
 
+{% block js %}
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+{% endblock %}
+
 {% block title %}イベント終了 | {% endblock %}
 
 {% block content %}
 <div class="events">
     <div class="container py-3">
-        <h1 class="border-bottom pb-2">お疲れ様です！ イベントが終了しました！</h1>
+        <h1 class="border-bottom pb-2">イベント終了</h1>
+        <p class="lead">お疲れ様です！ イベントが終了しました！</p>
         <ul class="list-inline text-center mb-0">
-            <li class="list-inline-item"><a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-size="large" data-hashtags="OnAcu" data-show-count="false">Tweet</a></li>
+            <li class="list-inline-item"><a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="{{ event.name }}" data-url="{{ request.scheme }}://{{ request.get_host }}{% url 'cms:eve_de' event.id %}" data-via="onacu_official" data-hashtags="OnAcu" data-show-count="false">Tweet</a></li>
             <li class="list-inline-item align-top"><a class="btn btn-secondary btn-sm" href="{% url 'cms:top' %}">トップページに戻る</a></li>
         </ul>
     </div>
 </div>
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 {% endblock %}

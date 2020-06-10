@@ -10,6 +10,15 @@
 {% block content %}
 <div class="bg-light">
   <div class="container py-3">
+    {% if next %}
+    <div class="alert alert-warning" role="alert">
+      {% if user.is_authenticated %}
+      あなたのアカウントではこのページにアクセスできません。続けるにはアクセス権のあるアカウントでログインしてください。
+      {% else %}
+      このページを見るにはログインしてください。
+      {% endif %}
+    </div>
+    {% endif %}
     <h1 class="border-bottom pb-2">ログイン <small class="text-muted">Login</small></h1>
     <p class="lead">アカウントをお持ちでない方へ：会員登録は<a href="{% url 'cms:signup' %}">こちら</a></p>
     <form method="post" action="">

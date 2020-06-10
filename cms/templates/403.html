@@ -1,0 +1,13 @@
+{% extends 'cms/base.html' %}
+
+{% block title %}403 Forbidden | {% endblock %}
+
+{% block content %}
+<div class="bg-light">
+    <div class="container py-3">
+        <h1 class="border-bottom pb-2">403 Forbidden</h1>
+        <p class="lead">このページへのアクセスは禁止されています。</p>
+        <a class="btn btn-primary btn-block" href="{% url 'cms:top' %}">トップページに戻る</a>
+    </div>
+</div>
+{% endblock %}
