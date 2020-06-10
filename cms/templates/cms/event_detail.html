@@ -2,6 +2,23 @@
 
 {% block title %}{{ event.name }} イベント詳細 | {% endblock %}
 
+{% block ogp %}
+<meta property="og:title" content="{{ event.name }}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{% url 'cms:eve_de' event.id %}">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:site_name" content="OnAcu（オンアク）">
+{% if event.image %}
+<meta property="og:image" content="{{ event.image.url }}">
+<meta property="og:image:width" content="{{ event.image.width }}">
+<meta property="og:image:height" content="{{ event.image.height }}">
+<meta name="twitter:card" content="summary_large_image">
+{% else %}
+<meta name="twitter:card" content="summary">
+{% endif %}
+<meta name="twitter:site" content="@onacu_official">
+{% endblock %}
+
 {% block content %}
 <div class="events">
   <div class="container pt-3">
