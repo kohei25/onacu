@@ -319,9 +319,10 @@ def event_now(request, pk):
 @login_required
 def event_finish(request, pk):
     event = get_object_or_404(Event, pk=pk)
-    event.status = 2
-    event.save()
-    return render(request, "cms/event_finish.html")
+    if event.host == request.user:
+        event.status = 2
+        event.save()
+    return render(request, "cms/event_finish.html", {"event": event})
 
 
 @login_required
