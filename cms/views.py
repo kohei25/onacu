@@ -12,14 +12,14 @@ from django.contrib.auth.views import (
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponseBadRequest, Http404
+from django.http import HttpResponseRedirect, Http404
 from django.http.response import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import PermissionDenied
 from django.core.signing import BadSignature, SignatureExpired, loads, dumps
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
-from django.views import generic
 from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
@@ -71,12 +71,13 @@ class UserCreateDone(TemplateView):
     template_name = "cms/signup_done.html"
 
 
-class UserCreateComplete(generic.TemplateView):
-    """メール内URLアクセス後のユーザー本登録"""
+class UserCreateComplete(TemplateView):
+    """メール内URLアクセス後のユーザー本登録 https://narito.ninja/blog/detail/42/"""
     template_name = "cms/signup_complete.html"
+    success_url = reverse_lazy('cms:top')
     timeout_seconds = getattr(
-        settings, "ACTIVATION_TIMEOUT_SECONDS", 60 * 60 * 24
-    )  # デフォルトでは1日以内
+        settings, "ACTIVATION_TIMEOUT_SECONDS", 60 * 60 * 3
+    )  # デフォルトでは3時間以内
 
     def get(self, request, **kwargs):
         """tokenが正しければ本登録."""
@@ -86,27 +87,27 @@ class UserCreateComplete(generic.TemplateView):
 
         # 期限切れ
         except SignatureExpired:
-            return HttpResponseBadRequest()
+            raise Http404("Signature expired")
 
         # tokenが間違っている
         except BadSignature:
-            return HttpResponseBadRequest()
+            raise Http404("Bad signature")
 
         # tokenは問題なし
         else:
             try:
                 user = User.objects.get(pk=user_pk)
             except User.DoesNotExist:
-                return HttpResponseBadRequest()
-            else:
-                if not user.is_active:
-                    # 問題なければ本登録とする
-                    user.is_active = True
-                    user.save()
-                    login(request, user)
-                    return super().get(request, **kwargs)
-
-        return HttpResponseBadRequest()
+                raise Http404("User does not exist")
+        
+        if not user.is_active:
+            # 問題なければ本登録とする
+            user.is_active = True
+            user.save()
+            login(request, user)
+            return super().get(request, **kwargs)
+        messages.warning(request, '本登録が既に完了しています。')
+        return super().get(request, **kwargs)
 
 
 # Ajax
@@ -266,7 +267,7 @@ def eventBuyView(request, event_id):
 
     if request.method == "POST": # チケット購入処理
         if is_ticket or event.host == request.user: # 既に持っている or ホストはイベントチケットを買えない
-            return HttpResponseBadRequest()
+            raise PermissionDenied
         userId = request.user.id
         order = event.purchaced_ticket + 1
         ticket = Ticket(customer_id=userId, event_id=event.id, order=order)
