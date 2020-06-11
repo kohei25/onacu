@@ -95,6 +95,7 @@ var main = async () => {
     $('#js-start').remove(); // 「開始する」ボタンを削除
     const lastTicket = $('#js-lastTicket').attr('value')
     const personalTime = $('#js-personalTime').attr('value')
+    $('#note').modal('hide'); // 注意事項を非表示
     $('#noteButton').remove(); // 注意事項を表示するボタンを消して
     pleaseWait.remove(); // 「お待ちください」を消して
     remoteVideo.removeClass('d-none').addClass('d-block'); // remoteVideoを表示する．
