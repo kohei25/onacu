@@ -57,7 +57,7 @@
             <button class="btn btn-primary" disabled><i class="fas fa-ticket-alt"></i> 入手済み</button>
           {% endif %}
         {% elif event.status == 0 and event.remains_ticket > 0 and event.host != request.user %}
-        <a class="btn btn-primary" href="{% url 'cms:buy' event.id%}"><i class="fas fa-ticket-alt"></i>チケットの入手画面に進む</a>
+        <a class="btn btn-primary btn-lg" href="{% url 'cms:buy' event.id%}"><i class="fas fa-ticket-alt"></i> チケットの入手画面に進む</a>
         {% endif %}
       </div>
     </div>
