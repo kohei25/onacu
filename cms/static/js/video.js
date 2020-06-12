@@ -98,8 +98,7 @@ var main = async () => {
     $('#note').modal('hide'); // 注意事項を非表示
     $('#noteButton').remove(); // 注意事項を表示するボタンを消して
     pleaseWait.remove(); // 「お待ちください」を消して
-    remoteVideo.removeClass('d-none').addClass('d-block'); // remoteVideoを表示する．
-    $('#remoteVideoName').removeClass('d-none').addClass('d-block');
+    $('.remote-video-container').removeClass('d-none'); // remoteVideoを表示する．
     window.onbeforeunload = onBeforeunloadHandler; // イベント中のページ移動を阻止
     getPeerId(1, lastTicket, personalTime)
   })
@@ -149,8 +148,7 @@ var main = async () => {
     mediaConnection.on('stream', async function (stream) {
       $('#noteButton').remove();
       pleaseWait.remove(); // 「お待ちください」を消して
-      remoteVideo.removeClass('d-none').addClass('d-block'); // remoteVideoを表示する．
-      $('#remoteVideoName').removeClass('d-none').addClass('d-block');
+      $('.remote-video-container').removeClass('d-none'); // remoteVideoを表示する．
       // Render remote stream for callee
       remoteVideo.get(0).srcObject = stream;
       remoteVideo.get(0).playsInline = true;

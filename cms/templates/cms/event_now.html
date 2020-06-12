@@ -17,9 +17,9 @@
         {% if event.message %}<p><b>{{ event.host.username }}</b>: {{ event.message }}</p>{% endif %}{# TODO: event.message（約100文字以内） #}
       </div>
     </div>
-    <div class="remote-video-container">
-      <video id="remoteVideo" class="d-none"></video>
-      <div id="remoteVideoName" class="video-name d-none">{% if user != event.host %}{{ event.host.username }}{% endif %}</div>
+    <div class="remote-video-container d-none">
+      <video id="remoteVideo" class="d-block"></video>
+      <div id="remoteVideoName" class="video-name">{% if user != event.host %}{{ event.host.username }}{% endif %}</div>
     </div>
     <div class="local-video-container shadow">
       <video id="localVideo" class="img-fluid d-block"></video>
