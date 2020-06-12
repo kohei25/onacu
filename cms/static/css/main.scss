@@ -65,6 +65,8 @@ $video-height: 80vh;
 }
 
 .remote-video-container {
+  background-color: lightgray;
+  display: inline-block;
   position: relative;
 }
 
@@ -86,7 +88,7 @@ $video-height: 80vh;
 }
 
 #remoteVideo {
-  max-height: $video-height;
+  height: $video-height;
   max-width: 100%;
 }
 
