@@ -52,6 +52,12 @@ th.dow {
 
 // ビデオチャット画面
 $video-height: 80vh;
+
+.video-chat-container {
+  height: $video-height;
+  position: relative;
+}
+
 #noteButton {
   left: 15px;
   position: absolute;

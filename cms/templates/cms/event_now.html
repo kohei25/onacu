@@ -10,7 +10,7 @@
 
 {% block content %}
 <div class="hero py-3">
-  <div class="container-fluid position-relative">
+  <div class="container-fluid video-chat-container">
     <div id="pleaseWait" {% if event.image %} style="background-image: url('{{ event.image.url }}');" {% endif %}>
       <div id="pleaseWaitInner" class="p-2 d-flex flex-column align-items-center justify-content-center">
         <h1 class="h2">{{ event.name }}</h1>
