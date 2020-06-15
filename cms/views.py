@@ -196,6 +196,12 @@ def myPageView(request):
     )
 
 
+def userAd(request):
+    return render(
+        request, "cms/advertisement_config.html"
+    )
+
+
 class PasswordChange(LoginRequiredMixin, PasswordChangeView):
     """パスワード変更ビュー"""
     form_class = PwChangeForm

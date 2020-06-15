@@ -1,0 +1,33 @@
+{% extends 'cms/base.html' %}
+
+{% block title %}リンクの設定 | {% endblock %}
+
+{% load static %}
+{% block js %}
+<script defer src="{% static 'js/config-url.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="bg-light">
+  <div class="container py-3">
+    <h1 class="border-bottom pb-2"><i class="fas fa-link"></i> サイトのリンクを設定する</h1>
+    <div class="form-group" id="form-addsite">
+      <label for=""></label>
+      <div class="input-group">
+        <select name="content">
+          <option value="-">コンテンツ</option>
+          <option value="0">YouTube</option>
+          <option value="1">Twitter</option>
+          <option value="2">Instagram</option>
+          <option value="3">TikTok</option>
+          <option value="4">その他</option>
+        </select>
+        <input type="text" name="url">
+        <button id="delete-button" disabled>-</button>
+      </div>
+    </div>
+    <button id="add-button">+</button>
+    <button type="submit" id="url-update" class="btn btn-primary">更新</button>
+  </div>
+</div>
+{% endblock %}
