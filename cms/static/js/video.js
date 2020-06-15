@@ -1,6 +1,5 @@
-var main = async () => {
+var videoChat = async () => {
   $('#note').modal('show'); // 注意事項を表示
-  const Peer = window.Peer;
   // videochat
   const localVideo = $('#localVideo');
   const remoteVideo = $('#remoteVideo');
@@ -40,6 +39,7 @@ var main = async () => {
     const mediaConnection = peer.call(remotePeerId, localStream);
 
     mediaConnection.on('stream', async function (stream) {
+      setTimeout(closeFunc, personalTime * 1000);
       remoteVideo.get(0).srcObject = stream;
       remoteVideo.get(0).playsInline = true;
       await remoteVideo.get(0).play().catch(console.error);
@@ -56,10 +56,6 @@ var main = async () => {
       ticketOrder += 1
       getPeerId(ticketOrder, lastTicket, personalTime);
     }
-
-    console.log(personalTime * 1000)
-    setTimeout(closeFunc, personalTime * 1000);
-
   };
 
   function postPeerId(peerId) {
@@ -167,4 +163,4 @@ var main = async () => {
 
   peer.on('error', console.error);
 };
-document.addEventListener('DOMContentLoaded', main);
+document.addEventListener('DOMContentLoaded', videoChat);
