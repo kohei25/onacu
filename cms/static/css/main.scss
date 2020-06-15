@@ -56,6 +56,7 @@ $video-height: 80vh;
 .video-chat-container {
   height: $video-height;
   position: relative;
+  text-align: center;
 }
 
 #noteButton {
@@ -76,6 +77,16 @@ $video-height: 80vh;
   right: 15px;
   max-width: 30%;
 }
+@media (min-width: 576px) {
+  .local-video-container {
+    max-width: 25%;
+  }
+}
+@media (min-width: 992px) {
+  .local-video-container {
+    max-width: 20%;
+  }
+}
 
 #pleaseWait {
   background-size: contain;
@@ -88,11 +99,18 @@ $video-height: 80vh;
 }
 
 #remoteVideo {
-  height: $video-height;
+  max-height: $video-height;
   max-width: 100%;
+  object-position: top;
+}
+@media (min-width: 576px) {
+  #remoteVideo {
+    height: $video-height; // スマホ以外では画面に大きく表示
+  }
 }
 
 #localVideo {
+  max-height: $video-height;
   transform: scaleX(-1); // 自分の映像は左右反転
 }
 
