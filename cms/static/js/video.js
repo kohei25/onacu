@@ -1,9 +1,33 @@
+class CountDown {
+  constructor(countDownFrom) {
+    this.countDownFrom = this.remainingTime = countDownFrom;
+    this.countDownElm = document.getElementById('countDown');
+    this.timerId = null;
+  }
+  set() {
+    this.countDownElm.classList.remove('d-none');
+    this.countDownElm.innerText = this.remainingTime;
+    this.remainingTime--;
+    this.timerId = setInterval(() => this.timer(), 1000);
+    setTimeout(() => this.clear(), this.countDownFrom * 1000);
+  }
+  timer() {
+    this.countDownElm.innerText = this.remainingTime;
+    this.remainingTime--;
+  }
+  clear() {
+    clearInterval(this.timerId);
+    this.countDownElm.classList.add('d-none');
+  }
+}
+
 var videoChat = async () => {
   const localVideo = document.getElementById('localVideo');
   const remoteVideo = document.getElementById('remoteVideo');
   const pleaseWait = $('#pleaseWait');
   const $notes = $('#notes');
 
+  const countDownFrom = 5;
   const data = JSON.parse(document.getElementById('js-data').textContent);
   const eventId = data.eventId;
   const personalTime = data.personalTime;
@@ -54,6 +78,7 @@ var videoChat = async () => {
   } else {
     // Fan側のaction
     peer.on('open', () => {
+      // TODO: 開いたらdisabled削除
       $('#js-join').click(() => { // onbeforeunloadをトリガーするためにはクリック等の操作が必要
         $('#js-join').attr('disabled', 'disabled'); // 「参加する」ボタンを無効化
         postPeerId(peer.id);
@@ -65,6 +90,7 @@ var videoChat = async () => {
       mediaConnection.answer(localStream);
 
       mediaConnection.on('stream', async stream => {
+        setTimeout(() => new CountDown(countDownFrom).set(), (personalTime - countDownFrom) * 1000);
         $('#notesButton').remove();
         pleaseWait.remove(); // 「お待ちください」を消して
         $('.remote-video-container').removeClass('d-none'); // remoteVideoを表示する．
@@ -101,6 +127,7 @@ var videoChat = async () => {
 
     mediaConnection.on('stream', async stream => {
       setTimeout(closeFunc, personalTime * 1000);
+      setTimeout(() => new CountDown(countDownFrom).set(), (personalTime - countDownFrom) * 1000);
       remoteVideo.srcObject = stream;
       remoteVideo.playsInline = true;
       await remoteVideo.play().catch(console.error);

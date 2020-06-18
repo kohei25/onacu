@@ -127,3 +127,10 @@ $video-height: 80vh;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+#countDown {
+  font-size: large;
+  position: absolute;
+  right: 15px;
+  top: 0;
+}
