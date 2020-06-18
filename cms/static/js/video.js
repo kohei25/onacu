@@ -182,7 +182,10 @@ var videoChat = async () => {
     }).done(data => {
       window.onbeforeunload = onBeforeunloadHandler; // イベント中のページ移動を阻止
       $notes.modal('hide'); // 注意事項を非表示
-      $('#pleaseWaitInner').append('<p>このままお待ちください。</p>');
+      $('#pleaseWaitInner').append(
+        `<p>このままお待ちください。</p>
+        <div class="spinner-border" role="status"></div>`
+        );
     }).fail(() => {
       joinBtn.removeAttribute('disabled'); // 「参加する」ボタンを有効化
     });
