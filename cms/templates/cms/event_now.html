@@ -25,10 +25,10 @@
       <video id="localVideo" class="img-fluid d-block"></video>
       <div class="video-name">{{ user.username }}</div>
     </div>
-    <button id="noteButton" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#note"><i class="fas fa-info-circle"></i></button>
+    <button id="notesButton" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#notes"><i class="fas fa-info-circle"></i></button>
   </div>
 </div>
-<div class="modal fade" id="note" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="notes" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -39,7 +39,7 @@
       </div>
       <div class="modal-body">
         <ul>
-          <li>カメラとマイクへのアクセスを許可してください。許可しなかった場合はこのページを<a href="#" onclick="location.reload();return false">再読込</a>し許可してください。</li>
+          <li id="mediaNote" class="d-none">カメラとマイクへのアクセスが許可されていません。このページを<a href="#" onclick="location.reload();return false">再読み込み</a>して許可してください。</li>
           {% if user == event.host %}
           <li>開催日時（{{ event.date }}）<b>以降</b>に右下の「開始する」ボタンを押してください。</li>
           {% else %}
@@ -60,16 +60,5 @@
     </div>
   </div>
 </div>
-
-
-{# TODO: json_scriptでデータ記述 #}
-<div id="js-event" value="{{ event.id }}"></div>
-{% if user == event.host%}
-<div id="js-lastTicket" value="{{ ticket.order }}"></div>
-<div id="js-personalTime" value="{{ event.personal_time }}"></div>
-{% else %}
-<div id="js-user" value="user"></div>
-<div id="js-ticket" value="{{ ticket.id }}"></div>
-{% endif %}
-
+{{ json|json_script:"js-data" }}
 {% endblock %}

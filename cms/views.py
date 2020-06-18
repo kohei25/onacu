@@ -307,13 +307,21 @@ END:VCALENDAR""".format(start,end,event.name, request.scheme, request.get_host()
 @login_required
 def event_now(request, pk):
     event = get_object_or_404(Event, pk=pk)
+    json = dict(eventId=event.id,personalTime=event.personal_time,date=event.date)
     if request.user == event.host:
         event.status = 1
         event.save()
         ticket = Ticket.objects.filter(event_id=event.id).last()
+        if ticket:
+            json["lastTicket"] = ticket.order
+        else:
+            json["lastTicket"] = 0
+        json["host"] = True
     else:
         ticket = Ticket.objects.get(customer=request.user, event_id=event.id)
-    return render(request, "cms/event_now.html", {"event": event, "ticket": ticket})
+        json["ticketId"] = ticket.id
+        json["host"] = False
+    return render(request, "cms/event_now.html", {"event": event, "ticket": ticket, "json": json})
 
 
 @login_required
