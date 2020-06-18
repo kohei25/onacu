@@ -318,7 +318,7 @@ def event_now(request, pk):
             json["lastTicket"] = 0
         json["host"] = True
     else:
-        ticket = Ticket.objects.get(customer=request.user, event_id=event.id)
+        ticket = get_object_or_404(Ticket, customer=request.user, event_id=event.id)
         json["ticketId"] = ticket.id
         json["host"] = False
     return render(request, "cms/event_now.html", {"event": event, "ticket": ticket, "json": json})
