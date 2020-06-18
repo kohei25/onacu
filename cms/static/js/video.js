@@ -26,6 +26,7 @@ var videoChat = async () => {
   const remoteVideo = document.getElementById('remoteVideo');
   const pleaseWait = $('#pleaseWait');
   const $notes = $('#notes');
+  const joinBtn = document.getElementById('js-join');
 
   const countDownFrom = 5;
   const data = JSON.parse(document.getElementById('js-data').textContent);
@@ -78,11 +79,11 @@ var videoChat = async () => {
   } else {
     // Fan側のaction
     peer.on('open', () => {
-      // TODO: 開いたらdisabled削除
-      $('#js-join').click(() => { // onbeforeunloadをトリガーするためにはクリック等の操作が必要
-        $('#js-join').attr('disabled', 'disabled'); // 「参加する」ボタンを無効化
+      joinBtn.removeAttribute('disabled'); // 「参加する」ボタンを有効化
+      joinBtn.addEventListener('click', () => { // onbeforeunloadをトリガーするためにはクリック等の操作が必要
+        joinBtn.setAttribute('disabled', 'disabled'); // 「参加する」ボタンを無効化
         postPeerId(peer.id);
-      });
+      }, false);
     });
     // Register callee handler
     // call function
@@ -183,7 +184,7 @@ var videoChat = async () => {
       $notes.modal('hide'); // 注意事項を非表示
       $('#pleaseWaitInner').append('<p>このままお待ちください。</p>');
     }).fail(() => {
-      $('#js-join').removeAttr('disabled'); // 「参加する」ボタンを有効化
+      joinBtn.removeAttribute('disabled'); // 「参加する」ボタンを有効化
     });
   }
 
@@ -192,4 +193,4 @@ var videoChat = async () => {
     return 'イベントを中断しますか？';
   }
 };
-document.addEventListener('DOMContentLoaded', videoChat);
+document.addEventListener('DOMContentLoaded', videoChat, false);
