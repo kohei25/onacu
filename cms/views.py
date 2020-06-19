@@ -1,3 +1,4 @@
+import ipdb
 import logging
 from datetime import date, timedelta
 from django.conf import settings
@@ -11,8 +12,9 @@ from django.contrib.auth.views import (
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponseBadRequest, Http404
+from django.http import HttpResponseRedirect, HttpResponseBadRequest, Http404, QueryDict
 from django.http.response import JsonResponse, HttpResponse
+import json
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.signing import BadSignature, SignatureExpired, loads, dumps
@@ -22,7 +24,7 @@ from django.views import generic
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 
-from .models import User, Event, Ticket, Wallet
+from .models import User, Event, Ticket, Wallet, UserAd
 from .forms import LoginForm, UserCreateForm, PwChangeForm, PwResetForm, PwSetForm, EventForm, EventBuyForm
 
 UserModel = get_user_model()
@@ -200,6 +202,27 @@ def userAd(request):
     return render(
         request, "cms/advertisement_config.html"
     )
+
+def userAdUpdate(request):
+  if request.method == 'POST':
+    userId = request.user.id
+    json_str = request.body.decode("utf-8")
+    json_data = json.loads(json_str)
+    user_advertisement = UserAd.objects.update_or_create(
+      user_id=userId,
+      content=int(json_data["data"][0]["content"]),
+      url=json_data["data"][0]["url"]
+    )
+    ipdb.set_trace()
+    userAd = UserAd.objects.filter(user_id=userId).values('content', 'url')
+    ipdb.set_trace()
+    data = {
+      "content": userAd.content,
+      "url": userAd.url,
+    }
+    ipdb.set_trace()
+    return JsonResponse(data)
+
 
 
 class PasswordChange(LoginRequiredMixin, PasswordChangeView):

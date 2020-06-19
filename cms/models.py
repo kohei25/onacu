@@ -75,14 +75,14 @@ class Event(models.Model):
     def __str__(self):
         return self.name + "," + self.host.username + str(self.date)
 
-class UserAd(object):
+class UserAd(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     # 0:youtube, 1:twitter, 2:instagram, 3:tiktok, 4:その他サイト
     content = models.IntegerField()
-    url = models.CharField()
+    url = models.TextField()
 
-        
-
+    def __str__(self):
+        return "content: " + str(self.content) + ", url: " + self.url
 
 class Ticket(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
