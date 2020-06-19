@@ -27,10 +27,12 @@ var videoChat = async () => {
   const pleaseWait = $('#pleaseWait');
   const $notes = $('#notes');
   const joinBtn = document.getElementById('js-join');
+  const startBtn = document.getElementById('js-start');
 
   const countDownFrom = 5;
   const data = JSON.parse(document.getElementById('js-data').textContent);
   const eventId = data.eventId;
+  const eventDate = new Date(data.date);
   const personalTime = data.personalTime;
   const finUrl = '/event/' + eventId + '/finish';
 
@@ -64,20 +66,26 @@ var videoChat = async () => {
     key: '889cd639-6a9e-4947-b168-35ad15fb44cb',
   });
 
-  if (data.host) {
-    // host function!!
-    // Host側のaction
-    $('#js-start').click(() => {
-      $('#js-start').remove(); // 「開始する」ボタンを削除
+  if (data.host) { // Host側
+    // 開催日時になったらstartBtnを有効化
+    const dateDelta = eventDate.getTime() - new Date().getTime();
+    if (dateDelta < 0) {
+      enableStartBtn();
+    } else {
+      setTimeout(() => {
+        enableStartBtn();
+      }, dateDelta);
+    }
+    startBtn.addEventListener('click', () => {
+      startBtn.setAttribute('disabled', 'disabled');
       $notes.modal('hide'); // 注意事項を非表示
       $('#notesButton').remove(); // 注意事項を表示するボタンを消して
       pleaseWait.remove(); // 「お待ちください」を消して
       $('.remote-video-container').removeClass('d-none'); // remoteVideoを表示する．
       window.onbeforeunload = onBeforeunloadHandler; // イベント中のページ移動を阻止
       getPeerId(1);
-    });
-  } else {
-    // Fan側のaction
+    }, false);
+  } else { // Fan側
     peer.on('open', () => {
       joinBtn.removeAttribute('disabled'); // 「参加する」ボタンを有効化
       joinBtn.addEventListener('click', () => { // onbeforeunloadをトリガーするためにはクリック等の操作が必要
@@ -185,10 +193,21 @@ var videoChat = async () => {
       $('#pleaseWaitInner').append(
         `<p>あなたの順番は全体の${data.order}番目です。<br>このままお待ちください。</p>
         <div class="spinner-border" role="status"></div>`
-        );
+      );
     }).fail(() => {
       joinBtn.removeAttribute('disabled'); // 「参加する」ボタンを有効化
     });
+  }
+
+  // peerが開いているか判定してstartBtnを有効化
+  function enableStartBtn() {
+    if (peer.open) {
+      startBtn.removeAttribute('disabled');
+    } else {
+      peer.on('open', () => {
+        startBtn.removeAttribute('disabled');
+      });
+    }
   }
 
   // ページ移動を阻止するイベントハンドラ
