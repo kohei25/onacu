@@ -320,6 +320,7 @@ def event_now(request, pk):
     else:
         ticket = get_object_or_404(Ticket, customer=request.user, event_id=event.id)
         json["ticketId"] = ticket.id
+        json["order"] = ticket.order
         json["host"] = False
     return render(request, "cms/event_now.html", {"event": event, "ticket": ticket, "json": json})
 

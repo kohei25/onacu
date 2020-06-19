@@ -179,11 +179,11 @@ var videoChat = async () => {
         'ticketId': data.ticketId,
       },
       dataType: 'json',
-    }).done(data => {
+    }).done(resp => {
       window.onbeforeunload = onBeforeunloadHandler; // イベント中のページ移動を阻止
       $notes.modal('hide'); // 注意事項を非表示
       $('#pleaseWaitInner').append(
-        `<p>このままお待ちください。</p>
+        `<p>あなたの順番は全体の${data.order}番目です。<br>このままお待ちください。</p>
         <div class="spinner-border" role="status"></div>`
         );
     }).fail(() => {
