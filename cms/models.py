@@ -73,7 +73,7 @@ class Event(models.Model):
         return self.total_ticket - self.purchaced_ticket
 
     def __str__(self):
-        return self.name + "," + self.host.username + str(self.date)
+        return self.name + "," + self.host.username + str(self.date) + "," +  str(self.status)
 
 class UserAd(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
