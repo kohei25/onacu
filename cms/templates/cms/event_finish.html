@@ -1,12 +1,45 @@
 {% extends 'cms/base.html' %}
 
 {% block title %}イベント終了 | {% endblock %}
-
+{% load static %}
 {% block content %}
 <div class="events">
     <div class="container py-3">
         <h1 class="border-bottom pb-2">お疲れ様です！ イベントが終了しました！</h1>
-        <ul class="list-inline text-center mb-0">
+        {% if ads %}
+        <div class="card text-center pd-2">
+          <div class="card-header">
+            {{ event.host.username }}のコンテンツ
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">さっそくフォロる！</h5>
+              <ul class="list-inline text-center mb-0">
+                {% for ad in ads %}
+                  <li class="list-inline-item"><a href={{ad.url}} target="_blank">
+                  <!-- Youtube -->
+                  {% if ad.content == 0 %}
+                    <img src="{% static 'image/youtube.png' %}" class="ad-icon" style="height: 3rem;">
+                  <!-- twitter -->
+                  {% elif ad.content == 1 %}
+                    <img src="{% static 'image/twitter.png' %}" class="ad-icon" style="height: 3rem;">
+                  <!-- instagram -->
+                  {% elif ad.content == 2 %}
+                    <img src="{% static 'image/instagram.png' %}" class="ad-icon" style="height: 3rem;">
+                  <!-- tiktok -->
+                  {% elif ad.content == 3 %}
+                    <img src="{% static 'image/tiktok.svg' %}" class="ad-icon" style="height: 3rem;">
+                  <!-- その他 -->
+                  {% elif ad.content == 4 %}
+                    <img src="{% static 'image/website.png' %}" class="ad-icon" style="height: 3rem;">
+                  {% endif %}
+                  </a></li>
+                {% endfor %}
+                </li>
+              </ul>
+            </div>
+          </div>
+        {% endif %}
+        <ul class="list-inline text-center mb-0 pt-2">
             <li class="list-inline-item"><a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-size="large" data-hashtags="OnAcu" data-show-count="false">Tweet</a></li>
             <li class="list-inline-item align-top"><a class="btn btn-secondary btn-sm" href="{% url 'cms:top' %}">トップページに戻る</a></li>
         </ul>
