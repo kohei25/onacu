@@ -145,6 +145,7 @@ def topView(request):
     have_tickets = Ticket.objects.filter(customer_id=request.user.id)
     purchased_events = list(filter(lambda event: event.status != 2, map(lambda ticket: ticket.event, have_tickets))) # 終了した購入済みイベントは含まない
     purchased_events.sort(key=lambda event: event.date)
+    print(events)
     return render(
         request,
         "cms/top.html",
@@ -199,8 +200,11 @@ def myPageView(request):
 
 
 def userAd(request):
+    ads = list(UserAd.objects.filter(user_id=request.user.id))
     return render(
-        request, "cms/advertisement_config.html"
+        request,
+        "cms/advertisement_config.html",
+        {"ads": ads,},
     )
 
 def userAdUpdate(request):
@@ -213,15 +217,21 @@ def userAdUpdate(request):
       content=int(json_data["data"][0]["content"]),
       url=json_data["data"][0]["url"]
     )
-    ipdb.set_trace()
-    userAd = UserAd.objects.filter(user_id=userId).values('content', 'url')
-    ipdb.set_trace()
     data = {
-      "content": userAd.content,
-      "url": userAd.url,
+      "alert": "success"
     }
-    ipdb.set_trace()
     return JsonResponse(data)
+  elif request.method == 'DELETE':
+    json_str = request.body.decode("utf-8")
+    json_data = json.loads(json_str)
+    targetId = int(json_data['url_id'])
+    UserAd.objects.filter(pk=targetId).delete()
+    advertisements = list(UserAd.objects.filter(user_id=request.user.id))
+    data = {
+      "alert": "success"
+    }
+    return JsonResponse(data)
+
 
 
 
@@ -341,7 +351,9 @@ def event_finish(request, pk):
     event = get_object_or_404(Event, pk=pk)
     event.status = 2
     event.save()
-    return render(request, "cms/event_finish.html")
+    ads = list(UserAd.objects.filter(user_id=event.host_id))
+    print(ads)
+    return render(request, "cms/event_finish.html", {"event": event, "ads": ads})
 
 
 @login_required
