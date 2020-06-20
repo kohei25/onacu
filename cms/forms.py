@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm, PasswordResetForm, SetPasswordForm
 
-from .models import User, Event, Ticket
+from .models import User, Event, Ticket, UserAd
 
 UserModel = get_user_model()
 
@@ -50,6 +50,16 @@ class PwSetForm(SetPasswordForm):
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
 
+class UserAdForm(forms.ModelForm):
+    class Meta:
+        model = UserAd
+        fields = ('url',)
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+    
 class EventForm(forms.ModelForm):
   class Meta:
     model = Event

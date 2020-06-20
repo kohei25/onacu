@@ -1,6 +1,7 @@
 import logging
 from datetime import date, timedelta
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import (
     LoginView,
@@ -16,6 +17,7 @@ from django.http.response import JsonResponse, HttpResponse
 import json
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import ValidationError
 from django.core.signing import BadSignature, SignatureExpired, loads, dumps
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
@@ -24,7 +26,7 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 
 from .models import User, Event, Ticket, Wallet, UserAd
-from .forms import LoginForm, UserCreateForm, PwChangeForm, PwResetForm, PwSetForm, EventForm, EventBuyForm
+from .forms import LoginForm, UserCreateForm, PwChangeForm, PwResetForm, PwSetForm, EventForm, EventBuyForm, UserAdForm
 
 UserModel = get_user_model()
 
@@ -197,42 +199,39 @@ def myPageView(request):
         },
     )
 
-
+@login_required
 def userAd(request):
+    if request.method == 'POST':
+        form = UserAdForm(request.POST)
+        if form.is_valid():
+            ad = form.save(commit=False)
+            ad.user = request.user
+            try:
+                ad.validate_unique()
+            except ValidationError:
+                messages.warning(request, 'このリンクは既に設置されています。')
+            else:
+                ad.save()
+                form = UserAdForm()
+    else:
+        form = UserAdForm()
     ads = list(UserAd.objects.filter(user_id=request.user.id))
     return render(
         request,
         "cms/advertisement_config.html",
-        {"ads": ads,},
+        {"ads": ads, "form": form},
     )
 
-def userAdUpdate(request):
-  if request.method == 'POST':
-    userId = request.user.id
-    json_str = request.body.decode("utf-8")
-    json_data = json.loads(json_str)
-    user_advertisement = UserAd.objects.update_or_create(
-      user_id=userId,
-      content=int(json_data["data"][0]["content"]),
-      url=json_data["data"][0]["url"]
-    )
-    data = {
-      "alert": "success"
-    }
-    return JsonResponse(data)
-  elif request.method == 'DELETE':
-    json_str = request.body.decode("utf-8")
-    json_data = json.loads(json_str)
-    targetId = int(json_data['url_id'])
-    UserAd.objects.filter(pk=targetId).delete()
-    advertisements = list(UserAd.objects.filter(user_id=request.user.id))
-    data = {
-      "alert": "success"
-    }
-    return JsonResponse(data)
-
-
-
+@login_required
+def userAdDelete(request):
+    if request.method == 'POST':
+        id = request.POST["id"]
+        ad = get_object_or_404(UserAd, pk=id)
+        if ad.user == request.user:
+            ad.delete()
+        else:
+            return HttpResponse("You are not the owner of the ad.", status=403)
+    return redirect("cms:user-ad")
 
 class PasswordChange(LoginRequiredMixin, PasswordChangeView):
     """パスワード変更ビュー"""

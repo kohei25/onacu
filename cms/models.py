@@ -1,5 +1,5 @@
 import datetime
-
+import re
 from django.contrib.auth.models import AbstractUser,UserManager
 from django.db import models
 from django.utils import timezone
@@ -77,12 +77,39 @@ class Event(models.Model):
 
 class UserAd(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    # 0:youtube, 1:twitter, 2:instagram, 3:tiktok, 4:その他サイト
-    content = models.IntegerField()
-    url = models.TextField()
+    # サイト
+    YOUTUBE = 1
+    TWITTER = 2
+    INSTAGRAM = 3
+    TIKTOK = 4
+    OTHER = 0
+    SITE_CHOICES = [
+        (YOUTUBE, 'YouTube'),
+        (TWITTER, 'Twitter'),
+        (INSTAGRAM, 'Instagram'),
+        (TIKTOK, 'TikTok'),
+        (OTHER, 'その他'),
+    ]
+    site = models.IntegerField(choices=SITE_CHOICES,default=OTHER)
+    url = models.URLField(verbose_name="URL",help_text="例: https://twitter.com/onacu_official")
+
+    class Meta:
+        unique_together = ("user", "url")
+
+    def save(self, *args, **kwargs):
+        # URLに基づいてサイトを設定
+        if re.match(r'https?://(?:www\.)?(?:youtube\.com|youtu\.be)/', self.url):
+            self.site = self.YOUTUBE
+        elif re.match(r'https?://(?:www\.|mobile\.)?twitter\.com/', self.url):
+            self.site = self.TWITTER
+        elif re.match(r'https?://(?:www\.)?(?:instagram\.com|instagr\.am)/', self.url):
+            self.site = self.INSTAGRAM
+        elif re.match(r'https?://(?:www\.)?tiktok\.com/', self.url):
+            self.site = self.TIKTOK
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return "content: " + str(self.content) + ", url: " + self.url
+        return "site: " + str(self.site) + ", url: " + self.url
 
 class Ticket(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
