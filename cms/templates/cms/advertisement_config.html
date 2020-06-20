@@ -11,10 +11,42 @@
 <div class="bg-light">
   <div class="container py-3">
     <h1 class="border-bottom pb-2"><i class="fas fa-link"></i> サイトのリンクを設定する</h1>
+    {% if ads%}
+      <h3 class="pb-2">現在設定しているサイト</h3>
+      <ul class="list-unstyled">
+      {% for ad in ads %}
+        <li class="media">
+          <a href={{ad.url}} target="_blank">
+          <!-- Youtube -->
+          {% if ad.content == 0 %}
+          <img src="{% static 'image/youtube.png' %}" class="img-fluid mr-3" width="100" >
+          <!-- twitter -->
+          {% elif ad.content == 1 %}
+          <img src="{% static 'image/twitter.png' %}" class="img-fluid mr-3" width="100">
+          <!-- instagram -->
+          {% elif ad.content == 2 %}
+          <img src="{% static 'image/instagram.png' %}" class="img-fluid mr-3" width="100">
+          <!-- tiktok -->
+          {% elif ad.content == 3 %}
+          <img src="{% static 'image/tiktok.svg' %}" class="img-fluid mr-3" width="100">
+          <!-- その他 -->
+          {% elif ad.content == 4 %}
+          <img src="{% static 'image/website.png' %}" class="img-fluid mr-3" width="100">
+          {% endif %}
+          </a>
+          <div class="media-body">
+            <h5 class="mt-0 mb-1">{{ ad.url }}</h5>
+            <button class="delete" data-url={{ad.id}}>削除</button>
+          </div>
+        </li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+    <h3>サイトのリンクを追加する</h3>
     <div class="form-group" id="form-addsite">
       <label for=""></label>
       <div class="input-group">
-        <select name="content">
+        <select name="content" id="content">
           <option value="-">コンテンツ</option>
           <option value="0">YouTube</option>
           <option value="1">Twitter</option>
@@ -22,12 +54,10 @@
           <option value="3">TikTok</option>
           <option value="4">その他</option>
         </select>
-        <input type="text" name="url">
-        <button id="delete-button" disabled>-</button>
+        <input type="text" name="url" value="">
       </div>
     </div>
-    <button id="add-button">+</button>
-    <button type="submit" id="url-update" class="btn btn-primary">更新</button>
+    <button type="submit" id="add-url" class="btn btn-primary">追加</button>
   </div>
 </div>
 {% endblock %}
