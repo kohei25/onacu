@@ -9,37 +9,60 @@
 {% endblock %}
 
 {% block content %}
-<div class="hero pt-3">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-12 col-sm-9 mb-3">
-        <div class="remote-video-container">
-          <div id="pleaseWait" class="embed-responsive embed-responsive-16by9"{% if event.image %} style="background-image: url('{{ event.image.url }}');"{% endif %}>
-            <div id="pleaseWaitInner" class="embed-responsive-item p-2 d-flex flex-column align-items-center justify-content-center">
-              <h1 class="h2">{{ event.name }}</h1>
-              <p><b>{{ event.host.username }}</b>: 今日は楽しんでいきましょう！</p>{# TODO: message（約100文字以内） #}
-            </div>
-          </div>
-          <video id="remoteVideo" class="d-none"></video>
-          <div id="remoteVideoName" class="video-name d-none">{% if user != event.host %}{{ event.host.username }}{% endif %}</div>
-        </div>
+<div class="hero py-3">
+  <div class="container-fluid video-chat-container">
+    <div id="pleaseWait" {% if event.image %} style="background-image: url('{{ event.image.url }}');" {% endif %}>
+      <div id="pleaseWaitInner" class="p-2 d-flex flex-column align-items-center justify-content-center">
+        <h1 class="h2">{{ event.name }}</h1>
+        {% if event.message %}<p><b>{{ event.host.username }}</b>: {{ event.message }}</p>{% endif %}{# TODO: event.message（約100文字以内） #}
       </div>
-      <div class="col-12 col-sm-3 mb-3">
+    </div>
+    <div class="remote-video-container d-none">
+      <video id="remoteVideo" class="d-block"></video>
+      <div id="remoteVideoName" class="video-name">{% if user != event.host %}{{ event.host.username }}{% endif %}</div>
+    </div>
+    <div class="local-video-container shadow">
+      <video id="localVideo" class="img-fluid d-block"></video>
+      <div class="video-name">{{ user.username }}</div>
+    </div>
+    <button id="noteButton" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#note"><i class="fas fa-info-circle"></i></button>
+  </div>
+</div>
+<div class="modal fade" id="note" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-info-circle"></i> 注意事項</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="閉じる">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul>
+          <li>カメラとマイクへのアクセスを許可してください。許可しなかった場合はこのページを<a href="#" onclick="location.reload();return false">再読込</a>し許可してください。</li>
+          {% if user == event.host %}
+          <li>開催日時（{{ event.date }}）<b>以降</b>に右下の「開始する」ボタンを押してください。</li>
+          {% else %}
+          <li>開催日時（{{ event.date }}）<b>まで</b>に右下の「参加する」ボタンを押してください。</li>
+          {% endif %}
+          <li>開催日時までであれば再入場可能です。</li>
+          <li>このメッセージは一度閉じた後でも<button class="btn btn-secondary btn-sm"><i class="fas fa-info-circle"></i></button>を押すことで再度表示できます。</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
         {% if user == event.host %}
-        <button id="js-start" class="btn btn-primary btn-lg btn-block mb-2"><i class="fas fa-video"></i> 開始する</button>
+        <button id="js-start" class="btn btn-primary"><i class="fas fa-video"></i> 開始する</button>
         {% else %}
-        <button id="js-join" class="btn btn-primary btn-lg btn-block mb-2"><i class="fas fa-video"></i> 参加する</button>
+        <button id="js-join" type="button" class="btn btn-primary" data-dismiss="modal"><i class="fas fa-video"></i> 参加する</button>
         {% endif %}
-        <div class="local-video-container">
-          <video id="localVideo" class="img-fluid d-block"></video>
-          <div class="video-name">{{ user.username }}</div>
-        </div>
       </div>
     </div>
   </div>
 </div>
 
-{# TODO: インラインJSでデータ記述 #}
+
+{# TODO: json_scriptでデータ記述 #}
 <div id="js-event" value="{{ event.id }}"></div>
 {% if user == event.host%}
 <div id="js-lastTicket" value="{{ ticket.order }}"></div>
@@ -49,15 +72,4 @@
 <div id="js-ticket" value="{{ ticket.id }}"></div>
 {% endif %}
 
-<script>
-window.onacu = {
-  event: {{ event.id }},
-  {% if user == event.host %}
-    lastTicket: {% if ticket %}{{ ticket.order }}{% else %}0{% endif %},
-    personalTime: {{ event.personal_time }}
-  {% else %}
-    ticket:  {{ ticket.id }}
-  {% endif %}
-};
-</script>
 {% endblock %}

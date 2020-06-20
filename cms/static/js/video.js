@@ -1,4 +1,5 @@
 var main = async () => {
+  $('#note').modal('show'); // 注意事項を表示
   const Peer = window.Peer;
   // videochat
   const localVideo = $('#localVideo');
@@ -73,7 +74,7 @@ var main = async () => {
     })
       .done(function (data) {
         window.onbeforeunload = onBeforeunloadHandler; // イベント中のページ移動を阻止
-        $('#js-join').remove(); // 「参加する」ボタンを削除
+        $('#note').modal('hide'); // 注意事項を非表示
         $('#pleaseWaitInner').append('<p>このままお待ちください。</p>');
       }).fail(function () {
         $('#js-join').removeAttr('disabled'); // 「参加する」ボタンを有効化
@@ -94,9 +95,10 @@ var main = async () => {
     $('#js-start').remove(); // 「開始する」ボタンを削除
     const lastTicket = $('#js-lastTicket').attr('value')
     const personalTime = $('#js-personalTime').attr('value')
+    $('#note').modal('hide'); // 注意事項を非表示
+    $('#noteButton').remove(); // 注意事項を表示するボタンを消して
     pleaseWait.remove(); // 「お待ちください」を消して
-    remoteVideo.removeClass('d-none').addClass('d-block'); // remoteVideoを表示する．
-    $('#remoteVideoName').removeClass('d-none').addClass('d-block');
+    $('.remote-video-container').removeClass('d-none'); // remoteVideoを表示する．
     window.onbeforeunload = onBeforeunloadHandler; // イベント中のページ移動を阻止
     getPeerId(1, lastTicket, personalTime)
   })
@@ -144,9 +146,9 @@ var main = async () => {
     mediaConnection.answer(localStream);
 
     mediaConnection.on('stream', async function (stream) {
+      $('#noteButton').remove();
       pleaseWait.remove(); // 「お待ちください」を消して
-      remoteVideo.removeClass('d-none').addClass('d-block'); // remoteVideoを表示する．
-      $('#remoteVideoName').removeClass('d-none').addClass('d-block');
+      $('.remote-video-container').removeClass('d-none'); // remoteVideoを表示する．
       // Render remote stream for callee
       remoteVideo.get(0).srcObject = stream;
       remoteVideo.get(0).playsInline = true;

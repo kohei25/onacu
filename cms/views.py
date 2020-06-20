@@ -12,16 +12,16 @@ from django.contrib.auth.views import (
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponseBadRequest, Http404, QueryDict
+from django.http import HttpResponseRedirect, Http404
 from django.http.response import JsonResponse, HttpResponse
 import json
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.exceptions import ValidationError
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.signing import BadSignature, SignatureExpired, loads, dumps
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
-from django.views import generic
+from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 
@@ -72,12 +72,13 @@ class UserCreateDone(TemplateView):
     template_name = "cms/signup_done.html"
 
 
-class UserCreateComplete(generic.TemplateView):
-    """メール内URLアクセス後のユーザー本登録"""
+class UserCreateComplete(TemplateView):
+    """メール内URLアクセス後のユーザー本登録 https://narito.ninja/blog/detail/42/"""
     template_name = "cms/signup_complete.html"
+    success_url = reverse_lazy('cms:top')
     timeout_seconds = getattr(
-        settings, "ACTIVATION_TIMEOUT_SECONDS", 60 * 60 * 24
-    )  # デフォルトでは1日以内
+        settings, "ACTIVATION_TIMEOUT_SECONDS", 60 * 60 * 3
+    )  # デフォルトでは3時間以内
 
     def get(self, request, **kwargs):
         """tokenが正しければ本登録."""
@@ -87,27 +88,27 @@ class UserCreateComplete(generic.TemplateView):
 
         # 期限切れ
         except SignatureExpired:
-            return HttpResponseBadRequest()
+            raise Http404("Signature expired")
 
         # tokenが間違っている
         except BadSignature:
-            return HttpResponseBadRequest()
+            raise Http404("Bad signature")
 
         # tokenは問題なし
         else:
             try:
                 user = User.objects.get(pk=user_pk)
             except User.DoesNotExist:
-                return HttpResponseBadRequest()
-            else:
-                if not user.is_active:
-                    # 問題なければ本登録とする
-                    user.is_active = True
-                    user.save()
-                    login(request, user)
-                    return super().get(request, **kwargs)
-
-        return HttpResponseBadRequest()
+                raise Http404("User does not exist")
+        
+        if not user.is_active:
+            # 問題なければ本登録とする
+            user.is_active = True
+            user.save()
+            login(request, user)
+            return super().get(request, **kwargs)
+        messages.warning(request, '本登録が既に完了しています。')
+        return super().get(request, **kwargs)
 
 
 # Ajax
@@ -157,6 +158,7 @@ def topView(request):
         },
     )
 
+@cache_page(60) # 1分間キャッシュ
 def searchView(request, year, month, day):
     MIN_DATE = date(2020,6,1) # サイト開設日（event_search.html中にも記載あり）
     try:
@@ -271,7 +273,7 @@ class PasswordResetComplete(PasswordResetCompleteView):
     template_name = 'cms/password_reset_complete.html'
 
 
-class EventCreateView(CreateView):
+class EventCreateView(LoginRequiredMixin, CreateView):
     model = Event
     form_class = EventForm
     template_name = "cms/event_new.html"
@@ -281,9 +283,10 @@ class EventCreateView(CreateView):
         event = form.save(commit=False)
         event.host = self.request.user
         event.save()
+        messages.success(self.request, f'イベント「{event.name}」を作成しました。')
         return super(EventCreateView, self).form_valid(form)
 
-@login_required
+
 def eventDetail(request, pk):
     event = get_object_or_404(Event, pk=pk)
     is_ticket = Ticket.objects.filter(event_id=event.id, customer_id=request.user.id)
@@ -292,13 +295,14 @@ def eventDetail(request, pk):
     )
 
 
+@login_required
 def eventBuyView(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     is_ticket = Ticket.objects.filter(event_id=event.id, customer_id=request.user.id)
 
     if request.method == "POST": # チケット購入処理
         if is_ticket or event.host == request.user: # 既に持っている or ホストはイベントチケットを買えない
-            return HttpResponseBadRequest()
+            raise PermissionDenied
         userId = request.user.id
         order = event.purchaced_ticket + 1
         ticket = Ticket(customer_id=userId, event_id=event.id, order=order)
@@ -313,6 +317,8 @@ def eventBuyView(request, event_id):
 def ticketBuyAfter(request, event_id):
     return render(request, "cms/event_buy_after.html", {"event_id": event_id})
 
+
+@cache_page(60 * 60 * 24)
 def event_ical(request, pk):
     """イベントのカレンダーファイルを配信"""
     event = get_object_or_404(Event, pk=pk)
@@ -327,10 +333,11 @@ DTEND:{}
 SUMMARY:{}
 URL:{}://{}/event/{}/
 END:VEVENT
-END:VCALENDAR""".format(start,end,event.name, request.scheme, request.get_host(), event.pk)
+END:VCALENDAR""".format(start,end,event.name, request.scheme, request.get_host(), event.id)
     response = HttpResponse(content, content_type='text/calendar')
-    response['Content-Disposition'] = 'attachment; filename=event{}.ics'.format(event.pk)
+    response['Content-Disposition'] = 'attachment; filename=event{}.ics'.format(event.id)
     return response
+
 
 @login_required
 def event_now(request, pk):
@@ -347,10 +354,10 @@ def event_now(request, pk):
 @login_required
 def event_finish(request, pk):
     event = get_object_or_404(Event, pk=pk)
-    event.status = 2
-    event.save()
-    ads = list(UserAd.objects.filter(user_id=event.host_id))
-    print(ads)
+    if event.host == request.user:
+        event.status = 2
+        event.save()
+        ads = list(UserAd.objects.filter(user_id=event.host_id))
     return render(request, "cms/event_finish.html", {"event": event, "ads": ads})
 
 
