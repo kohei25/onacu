@@ -357,7 +357,7 @@ def event_finish(request, pk):
     if event.host == request.user:
         event.status = 2
         event.save()
-        ads = list(UserAd.objects.filter(user_id=event.host_id))
+    ads = list(UserAd.objects.filter(user_id=event.host_id))
     return render(request, "cms/event_finish.html", {"event": event, "ads": ads})
 
 
