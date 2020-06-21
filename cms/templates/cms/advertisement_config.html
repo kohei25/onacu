@@ -1,0 +1,71 @@
+{% extends 'cms/base.html' %}
+
+{% block title %}リンクの設定 | {% endblock %}
+
+{% load static %}
+{% block js %}
+<script defer src="{% static 'js/prevent-double-submit.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="bg-light">
+  <div class="container py-3">
+    <h1 class="border-bottom pb-2"><i class="fas fa-link"></i> リンクを設定</h1>
+    <p class="lead">ご自身のSNS等へのリンクをイベント終了ページに設置することができます。</p>
+    <div class="row">
+      <div class="col-12 col-md-5 col-lg-6 mb-3">
+        <h3>リンクを追加する</h3>
+        <form method="post" action="">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="{{ form.url.id_for_label }}">{{ form.url.label }}</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-link"></i></span>
+              </div>
+              {{ form.url }}
+            </div>
+            {% if form.url.help_text %}<small class="form-text text-muted">{{ form.url.help_text }}</small>{% endif %}
+          </div>
+          {% include "./error_alert.html" with errors=form.url.errors %}
+          <button type="submit" class="btn btn-primary">追加</button>
+        </form>
+      </div>
+      <div class="col-12 col-md-7 col-lg-6">
+        <h3>設定しているリンク</h3>
+        <div class="row align-items-center">
+          {% for ad in ads %}
+          <div class="col-3 mb-4">
+            <a href="{{ ad.url }}" target="_blank" rel="noopener nofollow">
+              {% if ad.site == ad.YOUTUBE %}
+              <img src="{% static 'image/youtube.png' %}" class="img-fluid" width="734" height="734">
+              {% elif ad.site == ad.TWITTER %}
+              <img src="{% static 'image/twitter.png' %}" class="img-fluid" width="250" height="250">
+              {% elif ad.site == ad.INSTAGRAM %}
+              <img src="{% static 'image/instagram.png' %}" class="img-fluid" width="1024" height="1024">
+              {% elif ad.site == ad.TIKTOK %}
+              <img src="{% static 'image/tiktok.svg' %}" class="img-fluid" width="250" height="250">
+              {% else %}
+              <img src="{% static 'image/website.png' %}" class="img-fluid" width="256" height="256">
+              {% endif %}
+            </a>
+          </div>
+          <div class="col-6 mb-4">
+            <a class="text-break" href="{{ ad.url }}" target="_blank" rel="noopener nofollow">{{ ad.url }}</a>
+          </div>
+          <div class="col-3 mb-4">
+            <form method="post" action="{% url 'cms:ad-delete' %}">
+              {% csrf_token %}
+              <input type="hidden" name="id" value="{{ ad.id }}">
+              <button class="btn btn-secondary" type="submit">削除</button>
+            </form>
+          </div>
+          {% empty %}
+          <div class="col-12 mb-4">まだ設定しているリンクはありません。</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

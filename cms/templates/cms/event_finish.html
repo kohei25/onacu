@@ -5,16 +5,46 @@
 {% endblock %}
 
 {% block title %}イベント終了 | {% endblock %}
-
+{% load static %}
 {% block content %}
 <div class="events">
-    <div class="container py-3">
-        <h1 class="border-bottom pb-2">イベント終了</h1>
-        <p class="lead">お疲れ様です！ イベントが終了しました！</p>
-        <ul class="list-inline text-center mb-0">
-            <li class="list-inline-item"><a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="{{ event.name }}" data-url="{{ request.scheme }}://{{ request.get_host }}{% url 'cms:eve_de' event.id %}" data-via="onacu_official" data-hashtags="OnAcu" data-size="large" data-show-count="false">Tweet</a></li>
-            <li class="list-inline-item align-top"><a class="btn btn-secondary btn-sm" href="{% url 'cms:top' %}">トップページに戻る</a></li>
-        </ul>
+  <div class="container py-3">
+    <h1 class="border-bottom pb-2">イベント終了</h1>
+    <p class="lead">お疲れ様です！ イベントが終了しました！</p>
+    {% if ads %}
+    <div class="card text-center mb-3">
+      <div class="card-header">
+        <b>{{ event.host.username }}</b>のコンテンツ
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">さっそくフォロる！</h5>
+        <div class="row justify-content-center">
+          {% for ad in ads %}
+          <div class="col-6 col-md-4 col-lg-2 text-truncate mb-3">
+            <a href="{{ ad.url }}" target="_blank" rel="noopener nofollow">
+              {% if ad.site == ad.YOUTUBE %}
+              <img src="{% static 'image/youtube.png' %}" class="img-fluid" width="734" height="734">
+              {% elif ad.site == ad.TWITTER %}
+              <img src="{% static 'image/twitter.png' %}" class="img-fluid" width="250" height="250">
+              {% elif ad.site == ad.INSTAGRAM %}
+              <img src="{% static 'image/instagram.png' %}" class="img-fluid" width="1024" height="1024">
+              {% elif ad.site == ad.TIKTOK %}
+              <img src="{% static 'image/tiktok.svg' %}" class="img-fluid" width="250" height="250">
+              {% else %}
+              <img src="{% static 'image/website.png' %}" class="img-fluid" width="256" height="256">
+              {% endif %}
+              <br>{{ ad.url }}
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
     </div>
+    {% endif %}
+    <ul class="list-inline text-center mb-0">
+      <li class="list-inline-item"><a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="{{ event.name }}" data-url="{{ request.scheme }}://{{ request.get_host }}{% url 'cms:eve_de' event.id %}" data-via="onacu_official" data-hashtags="OnAcu" data-size="large" data-show-count="false">Tweet</a></li>
+      <li class="list-inline-item align-top"><a class="btn btn-secondary btn-sm" href="{% url 'cms:top' %}">トップページに戻る</a></li>
+    </ul>
+  </div>
 </div>
 {% endblock %}

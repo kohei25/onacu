@@ -14,9 +14,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, Http404
 from django.http.response import JsonResponse, HttpResponse
+import json
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.signing import BadSignature, SignatureExpired, loads, dumps
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
@@ -24,8 +25,8 @@ from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 
-from .models import User, Event, Ticket, Wallet
-from .forms import LoginForm, UserCreateForm, PwChangeForm, PwResetForm, PwSetForm, EventForm, EventBuyForm
+from .models import User, Event, Ticket, Wallet, UserAd
+from .forms import LoginForm, UserCreateForm, PwChangeForm, PwResetForm, PwSetForm, EventForm, EventBuyForm, UserAdForm
 
 UserModel = get_user_model()
 
@@ -146,6 +147,7 @@ def topView(request):
     have_tickets = Ticket.objects.filter(customer_id=request.user.id)
     purchased_events = list(filter(lambda event: event.status != 2, map(lambda ticket: ticket.event, have_tickets))) # 終了した購入済みイベントは含まない
     purchased_events.sort(key=lambda event: event.date)
+    print(events)
     return render(
         request,
         "cms/top.html",
@@ -199,6 +201,39 @@ def myPageView(request):
         },
     )
 
+@login_required
+def userAd(request):
+    if request.method == 'POST':
+        form = UserAdForm(request.POST)
+        if form.is_valid():
+            ad = form.save(commit=False)
+            ad.user = request.user
+            try:
+                ad.validate_unique()
+            except ValidationError:
+                messages.warning(request, 'このリンクは既に設置されています。')
+            else:
+                ad.save()
+                form = UserAdForm()
+    else:
+        form = UserAdForm()
+    ads = list(UserAd.objects.filter(user_id=request.user.id))
+    return render(
+        request,
+        "cms/advertisement_config.html",
+        {"ads": ads, "form": form},
+    )
+
+@login_required
+def userAdDelete(request):
+    if request.method == 'POST':
+        id = request.POST["id"]
+        ad = get_object_or_404(UserAd, pk=id)
+        if ad.user == request.user:
+            ad.delete()
+        else:
+            return HttpResponse("You are not the owner of the ad.", status=403)
+    return redirect("cms:user-ad")
 
 class PasswordChange(LoginRequiredMixin, PasswordChangeView):
     """パスワード変更ビュー"""
@@ -331,7 +366,8 @@ def event_finish(request, pk):
     if event.host == request.user:
         event.status = 2
         event.save()
-    return render(request, "cms/event_finish.html", {"event": event})
+    ads = list(UserAd.objects.filter(user_id=event.host_id))
+    return render(request, "cms/event_finish.html", {"event": event, "ads": ads})
 
 
 @login_required
