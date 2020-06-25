@@ -33,3 +33,7 @@ SASS_OUTPUT_STYLE = 'compressed'
 
 # Email
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # Emailをコンソールに表示
+
+# Stripe
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51Gx7y3Gs0MtkpAsanSqJDIDkTuQJUJXauJtxAOvCd8AQe8kYAYg21v07uWqiIdN9C5HN7RdbBWs2vDbnG3tXnaF600fVCybQgZ'
+STRIPE_SECRET_KEY = 'sk_test_51Gx7y3Gs0MtkpAsakzu62buZUcPRBTfIUlUexXL3Uu8O0HVxmdJ5Mk0MshjdnoglY6oj8Kqcwm3H16KLCsAZTbMy00q2kzyrEZ'
