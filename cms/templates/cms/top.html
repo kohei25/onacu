@@ -2,6 +2,15 @@
 
 {% block title %}{% endblock %}
 
+{% block css %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha256-XPTBwC3SBoWHSmKasAk01c08M6sIA5gF5+sRxqak2Qs=" crossorigin="anonymous"> {# tempusdominus CSS #}
+{% endblock %}
+
+{% block js %}
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment-with-locales.min.js" integrity="sha256-4HOrwHz9ACPZBxAav7mYYlbeMiAL0h6+lZ36cLNpR+E=" crossorigin="anonymous"></script> {# moment.js #}
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha256-z0oKYg6xiLq3yJGsp/LsY9XykbweQlHl42jHv2XTBz4=" crossorigin="anonymous"></script> {# tempusdominus JS (depends on moment.js) #}
+{% endblock %}
+
 {% block content %}
 <div class="hero">
   <div class="container">
@@ -59,7 +68,7 @@
           <div class="row flex-nowrap">
             {% for event in purchased_events %}
             <div class="col-10 col-lg-7">
-              {% include "./event_card.html" with event=event purchased_events=purchased_events %}
+              {% include "./event_card.html" with event=event %}
             </div>
             {% endfor %}
           </div>
@@ -74,7 +83,7 @@
           <p class="lead"></p>
           <hr class="my-4">
           <p>OnAcu（オンアク）は、オンライン握手会プラットフォームです。</p>
-          <a class="btn btn-primary btn-lg" href="#" role="button">詳しく</a>
+          <a class="btn btn-primary btn-lg" href="https://note.com/onacu_official/m/mff8695f0745c" target="_blank" rel="noopener" role="button">詳しく</a>
         </div>
         {% endif %}
       </div>
@@ -85,12 +94,12 @@
           document.addEventListener('DOMContentLoaded', (event) => {
             $('#datetimepicker').datetimepicker({
               format: 'L',
-              minDate: new Date(),
+              minDate: '2020-06-01',
               inline: true,
               locale: 'ja',
             });
             $('#datetimepicker').on('change.datetimepicker', ({ date, oldDate }) => {
-              location.assign('/?date=' + date.format('YYYY-MM-DD'));
+              location.assign('/search/date/' + date.format('YYYY/M/D') + '/');
             });
           }); 
         </script>
@@ -99,7 +108,7 @@
   </div>
 </div>
 <div class="events">
-  <div class="container pt-3">
+  <div class="container py-3">
     <h3><i class="far fa-calendar-check"></i> イベント情報</h3>
     {% if events %}
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">

@@ -18,3 +18,7 @@ NOTE: ```-rm```オプションをつけないとPCに使用済みコンテナが
 
 コンテナをすべて停止する  
 docker stop $(docker ps -q)
+
+## zip作成
+css交換する
+zip ../onacu.zip -r * .ebextensions

@@ -1,25 +1,36 @@
 {% extends 'cms/base.html' %}
 
-{% block title %}{{ event.name }}のチケット購入 | {% endblock %}
+{% block title %}{{ event.name }}のチケット入手 | {% endblock %}
+
+{% load static %}
+{% block js %}
+<script defer src="{% static 'js/prevent-double-submit.js' %}"></script>
+{% endblock %}
 
 {% block content %}
 <div class="bg-light">
   <div class="container pt-3">
-    <h1 class="border-bottom pb-2"><b>{{ event.name }}</b>のチケットを購入</h1>
+    <h1 class="border-bottom pb-2"><b>{{ event.name }}</b>のチケットを入手</h1>
+    <p class="lead">まだ入手は完了していません</p>
     <div class="row">
-      <div class="col-12 col-md-5 col-lg-6 text-center mb-3">
-        {# TODO: イベント画像 #}
-        <img class="img-fluid img-thumbnail" src="https://img-mdpr.freetls.fastly.net/article/AyLL/nm/AyLLp1iWF2PLmWppqJElOzmT4SnkPJMnpaIPm7pEMTM.jpg?width=700&disable=upscale&auto=webp" alt="{{ event.name }}">
+      {% if event.image %}
+      <div class="col-4 col-md-5 col-lg-6 text-center mb-3">
+        <img class="img-fluid img-thumbnail" src="{{ event.image.url }}" alt="{{ event.name }}">
       </div>
-      <div class="col-12 col-md-7 col-lg-6 mb-3">
+      {% endif %}
+      <div class="{{ event.image|yesno:'col-8 col-md-7 col-lg-6,col-12' }} mb-3">
         <ul class="list-group mb-2">
           <li class="list-group-item"><i class="fas fa-user"></i> <b>主催</b> {{ event.host.username }}</li>
           <li class="list-group-item"><i class="fas fa-calendar"></i> <b>日時</b> {{ event.date }}</li>
           <li class="list-group-item"><i class="fas fa-clock"></i> <b>時間</b> {{ event.personal_time }}秒</li>
-          <li class="list-group-item"><i class="fas fa-ticket-alt"></i> <b>残り</b> {{ event.total_ticket }}枚</li>
+          <li class="list-group-item"><i class="fas fa-ticket-alt"></i> <b>残り</b> {{ event.remains_ticket }}枚</li>
           <li class="list-group-item"><i class="fas fa-bullhorn"></i> <b>状態</b>
-            {% if event.status == 0 %}{# TODO: 完売表示 #}
-            販売中
+            {% if event.status == 0 %}
+            {% if event.remains_ticket > 0 %}
+            入手可能
+            {% else %}
+            完売
+            {% endif %}
             {% elif event.status == 1 %}
             開催中
             {% elif event.status == 2 %}
@@ -27,10 +38,16 @@
             {% endif %}
           </li>
         </ul>
-        {% if event.status == 0 %}{# TODO: 完売では表示しない．開催中も表示する？ #}
+        {% if is_ticket %}
+          {% if event.status != 2 and event.is_able_to_enter %}
+            <a class="btn btn-info" href="{% url 'cms:eve_now' event.id %}">参加する</a>
+          {% else %}
+            <button class="btn btn-primary" disabled><i class="fas fa-ticket-alt"></i> 入手済み</button>
+          {% endif %}
+        {% elif event.status == 0 and event.remains_ticket > 0 and event.host != request.user %}{# TODO: 開催中も表示する？ #}
         <form method="post" action="">
           {% csrf_token %}
-          <button type="submit" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> 購入を確定する</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fas fa-ticket-alt"></i> 入手を確定する</button>
         </form>
         {% endif %}
       </div>

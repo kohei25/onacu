@@ -1,0 +1,66 @@
+{% extends 'cms/base.html' %}
+
+{% block title %}マイページ | {% endblock %}
+
+{% block content %}
+<div class="bg-light">
+  <div class="container pt-3">
+    <h1 class="border-bottom pb-2">{{ user.username }}のマイページ</h1>
+    <div class="row">
+      <div class="col-12 col-md-3 mb-2">
+        <div class="nav flex-md-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+          <a class="nav-link active" id="v-pills-futureEvents-tab" data-toggle="pill" href="#v-pills-futureEvents" role="tab" aria-controls="v-pills-futureEvents" aria-selected="true">今後のマイイベント</a>
+          <a class="nav-link" id="v-pills-pastEvents-tab" data-toggle="pill" href="#v-pills-pastEvents" role="tab" aria-controls="v-pills-pastEvents" aria-selected="false">過去のマイイベント</a>
+          <a class="nav-link" href="{% url 'cms:eve_new' %}">イベント作成</a>
+          <!-- <a class="nav-link" href="{% url 'cms:point_buy' %}">ポイント購入</a> -->
+          <a class="nav-link" href="{% url 'cms:user-ad' %}">リンクの設定</a>
+          <a class="nav-link" id="v-pills-account-tab" data-toggle="pill" href="#v-pills-account" role="tab" aria-controls="v-pills-account" aria-selected="false">アカウント情報</a>
+          <a class="nav-link" href="{% url 'cms:password_change' %}">パスワード変更</a>
+        </div>
+      </div>
+      <div class="col-12 col-md-9 mb-3">
+        <div class="tab-content" id="v-pills-tabContent">
+          <div class="tab-pane fade show active" id="v-pills-futureEvents" role="tabpanel" aria-labelledby="v-pills-futureEvents-tab">
+            {% if future_events %}
+            <div class="row row-cols-1 row-cols-lg-2">
+              {% for event in future_events %}
+              <div class="col mb-3">
+                {% include "./event_card.html" with event=event purchased_events=purchased_events %}
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <p>今後のマイイベントはありません。</p>
+            {% endif %}
+          </div>
+          <div class="tab-pane fade" id="v-pills-pastEvents" role="tabpanel" aria-labelledby="v-pills-pastEvents-tab">
+            {% if past_events %}
+            <div class="row row-cols-1 row-cols-lg-2">
+              {% for event in past_events %}
+              <div class="col mb-3">
+                {% include "./event_card.html" with event=event purchased_events=purchased_events %}
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <p>過去のマイイベントはありません。</p>
+            {% endif %}
+          </div>
+          <div class="tab-pane fade" id="v-pills-account" role="tabpanel" aria-labelledby="v-pills-account-tab">
+            <dl>
+              <dt>ユーザーネーム</dt>
+              <dd>{{ user.username }}</dd>
+              <dt>メールアドレス</dt>
+              <dd>{{ user.email }}</dd>
+              <dt>最終ログイン日時</dt>
+              <dd>{{ user.last_login }}</dd>
+              <dt>登録日時</dt>
+              <dd>{{ user.date_joined }}</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

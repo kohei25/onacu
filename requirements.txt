@@ -5,3 +5,7 @@ psycopg2>=2.7,<3.0  #config PostgresSQL
 libsass
 django-compressor
 django-sass-processor
+pillow
+boto3
+django-storages
+django-ses
